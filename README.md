@@ -27,7 +27,7 @@ The pipeline consists of four distinct LLM agents, each utilizing specific promp
     * *Actions:* Evaluates newly generated skills and decides to `ADD`, `MERGE`, `SKIP`, or `DELETE` based on redundancy and impact, returning operations in JSON format.
 
 ## 🛠️ Tech Stack
-* **LLM Engine:** `Google Gemini 1.5 Flash/Pro` (Optimized for long context and complex JSON structured outputs)
+* **LLM Engine:** `Google Gemini 3.0 Flash/Pro` (Optimized for long context and complex JSON structured outputs)
 * **Parsing & Validation:** `Pydantic` (Strict schema enforcement for Entity and Hyperedge structures)
 * **Graph Database:** `Neo4j` (Cypher queries for reified hypergraph storage)
 * **Environment Management:** `python-dotenv` (Secure API key handling)
