@@ -47,40 +47,53 @@ def enrich_document_batch(doc_text: str, facts_to_analyze: list):
 
     facts_str = "\n".join([f"[Fact ID: {f['id']}] {f['head']} --({f['relation']})--> {f['tail']}" for f in facts_to_analyze])
     
-    # 🌟 5W1H 기반 Qualifier 가이드라인
     prompt = f"""
-    You are a Knowledge Graph Restructuring Expert. Your mission is to transform static triples into **Dynamic Event-Centric Hyper-Relational Facts** using the 5W1H framework.
+    You are an Expert Data Pipeline Parser for Knowledge Graphs. Your primary responsibility is zero-redundancy entity unification.
 
-    [Core Philosophy]
-    1. IDENTIFY THE MAIN EVENT: Look beyond the Base Fact to find the actual 'Action' or 'Event' described in the Document.
-    2. RESTRUCTURE: The 'Action' must be the Main Relation. Move static attributes (Dates, sub-locations, modes) to Qualifiers.
-    3. 5W1H SCHEMA:
-    - WHEN: Temporal context (point in time, start/end time).
-    - WHERE: Geographical context (specific locations, regions).
-    - WHY: Reason, cause, motive, or strategic purpose.
-    - HOW: Method, means, instrument, or operating condition.
-    - WHO/WHAT: Additional participants, roles, or specific parts involved.
+    [CRITICAL PIPELINE INSTRUCTIONS: FOLLOW IN EXACT ORDER]
 
-    [Strict Rules]
-    - 'qualifier_value_text' MUST be an EXACT contiguous substring from the Document.
-    - NO REDUNDANCY: Do not repeat the 'refined_tail' in the Qualifiers.
-    - LOGICAL HIERARCHY: The Main Fact should represent the "What happened", and Qualifiers should represent "In what context".
-    - If an entity in the vertexSet is actually a temporal(When) or quantitative(How much) detail of an event, REPLACE it. Move that information into a Qualifier and signal that it should be removed from the main Vertex list.
+    **STEP 1: Global Entity Unification (The Most Important Step)**
+    - Scan the entire text. Identify the primary subjects/entities.
+    - If multiple names refer to the exact same entity (e.g., full names, acronyms, shortened names, pronouns like "it" or "the company"), you MUST mentally map ALL of them to a SINGLE, longest, most descriptive Canonical Name.
+    - If there is different name meaning same entity, you MUST use the most complete name as the Canonical Name and map all other mentions to it.
+    - Example Logic: If [Company XYZ Inc], [XYZ], and [It] exist, map ALL to "Company XYZ Corp".
+    - You must apply this mapping to BOTH the Head and Tail of every relationship.
 
-    [Example]
-    - Input Fact: Asian Spirit --(founded as)--> first airline
-    - Context: "Asian Spirit was founded as the first airline in the Philippines to be run as a cooperative in 1996."
-    - Analysis: The primary identity is 'first airline', and 'cooperative' is 'HOW' it was operated.
-    - Result: 
-    * Refined Relation: founded as
-    * Refined Tail: first airline
-    * Qualifiers: [{{"qualifier_relation": "WHERE", "qualifier_value_text": "the Philippines"}}, {{"qualifier_relation": "WHEN", "qualifier_value_text": "1996"}}, {{"qualifier_relation": "HOW", "qualifier_value_text": "cooperative"}}]
+    **STEP 2: Event and Concept Extraction**
+    - Map "What happened", not just static states.
+    - If the text describes a specific activity, service, legal action, or physical incident, that Action/Concept MUST become a distinct node (Tail) connected to the main Entity (Head).
+    - Ensure all extracted events connect back to the Canonical Entities, creating a cohesive "Hub and Spoke" topology rather than disconnected islands.
+
+    **STEP 3: Aggregation and Purging**
+    - If multiple facts state the exact same relationship between the exact same Canonical Head and Canonical Tail, group them into a single JSON object.
+    - Do NOT output dates, times, or raw numbers as standalone `refined_tail` nodes. Move them to the `qualifiers` array and set `"is_vertex_purged": true`.
+    - If a geographical relationship is redundant (e.g., A is located in City X, A is located in Country Y), output ONLY the most specific one (City X) and put the broader one (Country Y) in the `qualifiers`.
+
+    [MANDATORY JSON STRUCTURE]
+    You MUST output an array containing ONLY valid JSON objects. EVERY object MUST have all keys populated.
+    [
+      {{
+        "fact_id": <Integer>,
+        "refined_head": "<String: The SINGLE Canonical Name determined in STEP 1>",
+        "refined_relation": "<String: The exact Wikidata P-ID>",
+        "refined_tail": "<String: The Canonical Name OR Extracted Concept>",
+        "qualifiers": [
+          {{
+            "qualifier_relation": "<String: e.g., WHEN, WHERE, WHY, HOW>",
+            "qualifier_value_text": "<String: Contextual detail>"
+          }}
+        ],
+        "is_vertex_purged": <Boolean>
+      }}
+    ]
 
     [Document]
     {doc_text}
 
     [Base Facts to Restructure]
     {facts_str}
+
+    Output the final JSON array strictly adhering to the pipeline.
     """
 
     try:
@@ -105,18 +118,18 @@ def process_split(split_name: str, dataset_path: str, output_base_dir: str):
     split_output_dir = os.path.join(output_base_dir, split_name)
     os.makedirs(split_output_dir, exist_ok=True)
     
-    output_file = os.path.join(split_output_dir, f"{split_name}_enriched.jsonl")
+    output_file = os.path.join(split_output_dir, f"{split_name}_enriched_v2.jsonl")
     
     # 이어하기 체크: 기존 파일의 줄 수 확인
     start_idx = 0
     if os.path.exists(output_file):
         with open(output_file, 'r', encoding='utf-8') as f:
-            start_idx = sum(1 for _ in f) + 1 # 중간에 1개 스킵됌
+            start_idx = sum(1 for _ in f)
         print(f"📦 [{split_name}] {start_idx}번 문서부터 작업을 재개합니다.")
     else:
         print(f"🚀 [{split_name}] 처음부터 처리를 시작합니다.")
 
-    for i in range(start_idx, len(dataset)):
+    for i in range(start_idx, start_idx + 1):
         sample = dataset[i]
         doc_text = flatten_document(sample['sents'])
         
@@ -153,7 +166,7 @@ if __name__ == "__main__":
     SOURCE_PATH = "./Dataset/Re-DocRED"  # 기존 데이터셋 경로
     OUTPUT_PATH = "./Dataset/HypeRelDocRED"   # 결과 저장 경로
     
-    for split in ["train", "validation"]:
+    for split in ["train"]:
         process_split(split, SOURCE_PATH, OUTPUT_PATH)
 
 
