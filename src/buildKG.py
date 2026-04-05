@@ -62,4 +62,4 @@ if __name__ == "__main__":
     ORIGINAL_PATH = "./Dataset/Re-DocRED/train" 
     
     # AirAsia Zest(0번) 문서 기준으로 그래프 생성
-    create_redocred_kg(ORIGINAL_PATH, target_index=0)
+    create_redocred_kg(ORIGINAL_PATH, target_index=15)

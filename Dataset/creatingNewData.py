@@ -6,7 +6,7 @@ from google.genai import Client
 from google.genai import types  # 구조화된 출력을 위해 필요
 from datasets import load_from_disk
 from pydantic import BaseModel, Field
-from typing import List, Optional
+from typing import List
 
 # --- 1. 설정 및 클라이언트 초기화 ---
 load_dotenv()
@@ -14,25 +14,23 @@ client = Client(api_key=os.getenv("GEMINI_API_KEY2"))
 
 RELATION_MAP = {
     "P159": "headquarters location", "P17": "country",
-    "P131": "located in administrative entity", "P150": "contains administrative entity",
     "P576": "dissolved date", "P355": "subsidiary", "P749": "parent organization"
 }
 
 # --- 2. 데이터 구조 정의 (Pydantic - 필드 완벽 추가) ---
 class Qualifier(BaseModel):
-    qualifier_relation: str
-    qualifier_value_text: str
+    qualifier: str = Field(description="e.g., WHEN, WHERE, WHY, HOW")
+    qualifier_value: str = Field(description="Contextual detail (within 5 words)")
 
-class FactEnrichment(BaseModel):
-    fact_id: int
-    refined_relation: Optional[str] = Field(None, description="The improved, action-oriented relation name")
-    refined_tail: Optional[str] = Field(None, description="The primary target entity of the action")
-    qualifiers: List[Qualifier]
-    is_vertex_purged: Optional[bool] = Field(False, description="True if the original tail should be removed from VertexSet")
-    purged_vertex_value: Optional[str] = Field(None, description="The value of the purged vertex")
+class Label(BaseModel):
+    evidence: List[int] = Field(description="The sentence indices in the document that support this fact")
+    h: int = Field(description="The index of the Canonical Head Entity")
+    r: str = Field(description="The exact Wikidata P-ID or Extracted Action/Relation")
+    t: int = Field(description="The index of the Canonical Tail Entity OR Extracted Concept")
+    qualifiers: List[Qualifier] = Field(default_factory=list, description="List of qualifiers for this relation")
 
-class BatchEnrichmentResult(BaseModel):
-    results: List[FactEnrichment]
+class DocumentEnrichmentResult(BaseModel):
+    labels: List[Label]
 
 # --- 3. 헬퍼 함수 ---
 def flatten_document(sents: list) -> str:
@@ -45,47 +43,50 @@ def get_entity_name(vertex_set: list, entity_idx: int) -> str:
 def enrich_document_batch(doc_text: str, facts_to_analyze: list):
     if not facts_to_analyze: return None
 
-    facts_str = "\n".join([f"[Fact ID: {f['id']}] {f['head']} --({f['relation']})--> {f['tail']}" for f in facts_to_analyze])
+    facts_str = "\n".join([f"[evidence: {f['evidence']}] {f['h']} --({f['r']})--> {f['t']}" for f in facts_to_analyze])
     
     prompt = f"""
-    You are an Expert Data Pipeline Parser for Knowledge Graphs. Your primary responsibility is zero-redundancy entity unification.
+    You are an Expert Data reconstructor for Knowledge Graphs. Your task is to analyze the provided document and the associated base facts, then output a refined set of relationships in a structured JSON format.
 
     [CRITICAL PIPELINE INSTRUCTIONS: FOLLOW IN EXACT ORDER]
 
     **STEP 1: Global Entity Unification (The Most Important Step)**
     - Scan the entire text. Identify the primary subjects/entities.
     - If multiple names refer to the exact same entity (e.g., full names, acronyms, shortened names, pronouns like "it" or "the company"), you MUST mentally map ALL of them to a SINGLE, longest, most descriptive Canonical Name.
-    - If there is different name meaning same entity, you MUST use the most complete name as the Canonical Name and map all other mentions to it.
-    - Example Logic: If [Company XYZ Inc], [XYZ], and [It] exist, map ALL to "Company XYZ Corp".
     - You must apply this mapping to BOTH the Head and Tail of every relationship.
 
     **STEP 2: Event and Concept Extraction**
     - Map "What happened", not just static states.
+    - Consider all nouns as an entity, but only if they are involved in an importantaction or event.
     - If the text describes a specific activity, service, legal action, or physical incident, that Action/Concept MUST become a distinct node (Tail) connected to the main Entity (Head).
     - Ensure all extracted events connect back to the Canonical Entities, creating a cohesive "Hub and Spoke" topology rather than disconnected islands.
 
     **STEP 3: Aggregation and Purging**
     - If multiple facts state the exact same relationship between the exact same Canonical Head and Canonical Tail, group them into a single JSON object.
-    - Do NOT output dates, times, or raw numbers as standalone `refined_tail` nodes. Move them to the `qualifiers` array and set `"is_vertex_purged": true`.
-    - If a geographical relationship is redundant (e.g., A is located in City X, A is located in Country Y), output ONLY the most specific one (City X) and put the broader one (Country Y) in the `qualifiers`.
+    - Do NOT output dates, times, or raw numbers as standalone `refined_tail` nodes. Move them to the `qualifiers` array.
+    - If there is a date, time, or number in the vertexSet, remove it from the vertexSet and add it as a qualifier to the relevant relationship.
+    - If the dates, times, or numbers are critical to multiple relationships, they should be included as entities (not in qualifier).
 
     [MANDATORY JSON STRUCTURE]
-    You MUST output an array containing ONLY valid JSON objects. EVERY object MUST have all keys populated.
+    You MUST output a single JSON object containing exactly ONE key named "labels". 
+    DO NOT generate any other root-level keys. 
+    Qualifier values must be short and concise. (within 5 words)
+    The "labels" array must contain all facts and qualifiers (if exists) formatted exactly like this:
     [
       {{
-        "fact_id": <Integer>,
-        "refined_head": "<String: The SINGLE Canonical Name determined in STEP 1>",
-        "refined_relation": "<String: The exact Wikidata P-ID>",
-        "refined_tail": "<String: The Canonical Name OR Extracted Concept>",
-        "qualifiers": [
+        "evidence": <Array of integers: The sentence indices in the document that support this fact>,
+        "h": <Integer: The index of the Canonical Name determined in STEP 1>,
+        "r": <String: The exact Wikidata P-ID>,
+        "t": <Integer: The index of the Canonical Name OR Extracted Concept>,
+        "qualifiers": [ 
           {{
-            "qualifier_relation": "<String: e.g., WHEN, WHERE, WHY, HOW>",
-            "qualifier_value_text": "<String: Contextual detail>"
+            "qualifier": <String: e.g., WHEN, WHERE, WHY, HOW>,
+            "qualifier_value": <String: Contextual detail>
           }}
-        ],
-        "is_vertex_purged": <Boolean>
+        ]
       }}
     ]
+   
 
     [Document]
     {doc_text}
@@ -102,7 +103,7 @@ def enrich_document_batch(doc_text: str, facts_to_analyze: list):
             contents=prompt,
             config=types.GenerateContentConfig(
                 response_mime_type='application/json',
-                response_schema=BatchEnrichmentResult,
+                response_schema=DocumentEnrichmentResult,
                 temperature=0.1,
             ),
         )
@@ -136,10 +137,10 @@ def process_split(split_name: str, dataset_path: str, output_base_dir: str):
         facts_batch = []
         for idx, lbl in enumerate(sample['labels']):
             facts_batch.append({
-                "id": idx,
-                "head": get_entity_name(sample['vertexSet'], lbl['h']),
-                "relation": RELATION_MAP.get(lbl['r'], lbl['r']),
-                "tail": get_entity_name(sample['vertexSet'], lbl['t'])
+                "evidence": idx,
+                "h": get_entity_name(sample['vertexSet'], lbl['h']),
+                "r": RELATION_MAP.get(lbl['r'], lbl['r']),
+                "t": get_entity_name(sample['vertexSet'], lbl['t'])
             })
 
         print(f"[{split_name}] [{i+1}/{len(dataset)}] 처리 중...", end=" ", flush=True)
@@ -148,10 +149,11 @@ def process_split(split_name: str, dataset_path: str, output_base_dir: str):
         batch_res = enrich_document_batch(doc_text, facts_batch)
         
         if batch_res:
-            # 신규 하이퍼 레이블 저장
-            sample['hyper_labels'] = [res.model_dump() for res in batch_res.results]
+            # 💡 수정됨: hyper_labels 대신 기존 labels 구조를 대체(또는 병합)
+            # Pydantic 모델(DocumentEnrichmentResult) 안에 있는 labels 리스트를 dict로 변환
+            sample['labels'] = [lbl.model_dump() for lbl in batch_res.labels]
             
-            # 한 줄씩 추가 저장 (중간에 끊겨도 데이터 보존됨)
+            # 한 줄씩 추가 저장
             with open(output_file, 'a', encoding='utf-8') as f:
                 f.write(json.dumps(sample, ensure_ascii=False) + '\n')
             print("✅")

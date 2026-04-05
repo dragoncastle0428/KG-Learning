@@ -1,0 +1,164 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 800px;
+                 background-color: #222222;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#ff99cc", "font": {"color": "white"}, "id": 0, "label": "Andrew Kiss", "shape": "dot", "title": "Type: PER\nName: Andrew Kiss"}, {"color": "#ff99cc", "font": {"color": "white"}, "id": 1, "label": "artist", "shape": "dot", "title": "Type: PER\nName: artist"}, {"color": "#99ff99", "font": {"color": "white"}, "id": 2, "label": "Hungary", "shape": "dot", "title": "Type: LOC\nName: Hungary"}, {"color": "#ffff99", "font": {"color": "white"}, "id": 3, "label": "1946", "shape": "dot", "title": "Type: TIME\nName: 1946"}, {"color": "#99ff99", "font": {"color": "white"}, "id": 4, "label": "Canada", "shape": "dot", "title": "Type: LOC\nName: Canada"}, {"color": "#99ff99", "font": {"color": "white"}, "id": 5, "label": "Cowichan Lake area", "shape": "dot", "title": "Type: LOC\nName: Cowichan Lake area"}, {"color": "#ff99cc", "font": {"color": "white"}, "id": 6, "label": "draftsman", "shape": "dot", "title": "Type: PER\nName: draftsman"}, {"color": "#99ff99", "font": {"color": "white"}, "id": 7, "label": "Mackenzie", "shape": "dot", "title": "Type: LOC\nName: Mackenzie"}, {"color": "#99ff99", "font": {"color": "white"}, "id": 8, "label": "Hong Kong", "shape": "dot", "title": "Type: LOC\nName: Hong Kong"}, {"color": "#99ff99", "font": {"color": "white"}, "id": 9, "label": "Switzerland", "shape": "dot", "title": "Type: LOC\nName: Switzerland"}, {"color": "#99ff99", "font": {"color": "white"}, "id": 10, "label": "England", "shape": "dot", "title": "Type: LOC\nName: England"}, {"color": "#99ff99", "font": {"color": "white"}, "id": 11, "label": "Austria", "shape": "dot", "title": "Type: LOC\nName: Austria"}, {"color": "#99ff99", "font": {"color": "white"}, "id": 12, "label": "New Zealand", "shape": "dot", "title": "Type: LOC\nName: New Zealand"}, {"color": "#99ff99", "font": {"color": "white"}, "id": 13, "label": "Germany", "shape": "dot", "title": "Type: LOC\nName: Germany"}, {"color": "#99ff99", "font": {"color": "white"}, "id": 14, "label": "Florida", "shape": "dot", "title": "Type: LOC\nName: Florida"}, {"color": "#99ff99", "font": {"color": "white"}, "id": 15, "label": "South Carolina", "shape": "dot", "title": "Type: LOC\nName: South Carolina"}, {"color": "#99ff99", "font": {"color": "white"}, "id": 16, "label": "Las Vegas", "shape": "dot", "title": "Type: LOC\nName: Las Vegas"}, {"color": "#99ff99", "font": {"color": "white"}, "id": 17, "label": "Montana", "shape": "dot", "title": "Type: LOC\nName: Montana"}, {"color": "#99ff99", "font": {"color": "white"}, "id": 18, "label": "Phoenix", "shape": "dot", "title": "Type: LOC\nName: Phoenix"}, {"color": "#99ff99", "font": {"color": "white"}, "id": 19, "label": "Seattle", "shape": "dot", "title": "Type: LOC\nName: Seattle"}, {"color": "#99ff99", "font": {"color": "white"}, "id": 20, "label": "Calgary", "shape": "dot", "title": "Type: LOC\nName: Calgary"}]);
+                  edges = new vis.DataSet([{"arrows": "to", "color": "#aaaaaa", "from": 0, "label": "occupation", "title": "Relation: occupation (P106)", "to": 1}, {"arrows": "to", "color": "#aaaaaa", "from": 0, "label": "place of birth", "title": "Relation: place of birth (P19)\n--------------------\n[WHEN]: 1946\n", "to": 2}, {"arrows": "to", "color": "#aaaaaa", "from": 0, "label": "date of birth", "title": "Relation: date of birth (P569)", "to": 3}, {"arrows": "to", "color": "#aaaaaa", "from": 0, "label": "country", "title": "Relation: country (P17)\n--------------------\n[WHEN]: 1957\n", "to": 4}, {"arrows": "to", "color": "#aaaaaa", "from": 0, "label": "located in", "title": "Relation: located in (P131)\n--------------------\n[WHERE]: Vancouver Island\n[WHERE]: British Columbia\n", "to": 5}, {"arrows": "to", "color": "#aaaaaa", "from": 0, "label": "occupation", "title": "Relation: occupation (P106)", "to": 6}, {"arrows": "to", "color": "#aaaaaa", "from": 0, "label": "located in", "title": "Relation: located in (P131)\n--------------------\n[WHERE]: British Columbia\n[WHEN]: 1974\n", "to": 7}, {"arrows": "to", "color": "#aaaaaa", "from": 0, "label": "located in", "title": "Relation: located in (P131)", "to": 8}, {"arrows": "to", "color": "#aaaaaa", "from": 0, "label": "located in", "title": "Relation: located in (P131)", "to": 9}, {"arrows": "to", "color": "#aaaaaa", "from": 0, "label": "located in", "title": "Relation: located in (P131)", "to": 10}, {"arrows": "to", "color": "#aaaaaa", "from": 0, "label": "located in", "title": "Relation: located in (P131)", "to": 11}, {"arrows": "to", "color": "#aaaaaa", "from": 0, "label": "located in", "title": "Relation: located in (P131)", "to": 12}, {"arrows": "to", "color": "#aaaaaa", "from": 0, "label": "located in", "title": "Relation: located in (P131)", "to": 13}, {"arrows": "to", "color": "#aaaaaa", "from": 0, "label": "located in", "title": "Relation: located in (P131)", "to": 14}, {"arrows": "to", "color": "#aaaaaa", "from": 0, "label": "located in", "title": "Relation: located in (P131)", "to": 15}, {"arrows": "to", "color": "#aaaaaa", "from": 0, "label": "located in", "title": "Relation: located in (P131)", "to": 16}, {"arrows": "to", "color": "#aaaaaa", "from": 0, "label": "located in", "title": "Relation: located in (P131)", "to": 17}, {"arrows": "to", "color": "#aaaaaa", "from": 0, "label": "located in", "title": "Relation: located in (P131)", "to": 18}, {"arrows": "to", "color": "#aaaaaa", "from": 0, "label": "located in", "title": "Relation: located in (P131)", "to": 19}, {"arrows": "to", "color": "#aaaaaa", "from": 0, "label": "located in", "title": "Relation: located in (P131)", "to": 4}, {"arrows": "to", "color": "#aaaaaa", "from": 0, "label": "located in", "title": "Relation: located in (P131)\n--------------------\n[WHERE]: Alberta\n[WHERE]: Canada\n", "to": 20}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "forceAtlas2Based": {
+            "avoidOverlap": 0,
+            "centralGravity": 0.01,
+            "damping": 0.4,
+            "gravitationalConstant": -50,
+            "springConstant": 0.08,
+            "springLength": 100
+        },
+        "solver": "forceAtlas2Based",
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>
