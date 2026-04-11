@@ -1,0 +1,2352 @@
+[
+  {
+    "original_score": {
+      "hallucination": {
+        "score": 40.0,
+        "reason": "Elias Magnus Fries의 사망 연도(1778)는 원문의 오타를 그대로 반영하여 사실과 다른 정보를 포함하며, 'Swedish'를 국가 엔티티로 오인하여 부적절하게 매핑하는 등 왜곡된 정보가 다수 발견됩니다."
+      },
+      "comprehensiveness": {
+        "score": 55.0,
+        "reason": "인물의 생년월일, 사망일, 출생지, 학력, 직장, 소속 등 기본적인 정보는 추출되었으나, 학위 종류, 직위, 재직 기간, 선임자 정보, 연구 분야, 명예 등 중요한 세부 정보가 다수 누락되었습니다."
+      },
+      "schema_mapping": {
+        "score": 35.0,
+        "reason": "'Swedish'를 국가 엔티티로 오인하여 'country' 또는 'located in' 관계로 매핑한 부분이 많고, 'P1412'(언어)와 'P27'(국적) 관계가 혼용되는 등 스키마 매핑의 정확도가 매우 낮습니다."
+      },
+      "salience": {
+        "score": 50.0,
+        "reason": "인물의 기본적인 생애 정보는 추출되었으나, 'Swedish'와 'Scandinavian' 관련 관계들이 과도하게 추출되어 핵심 주제인 인물의 학문적 업적이나 유산에 대한 정보가 부족합니다."
+      },
+      "entity_clarity": {
+        "score": 45.0,
+        "reason": "'Swedish' 엔티티가 국가, 국적, 언어 등 다양한 의미로 사용되어 엔티티의 명확성이 떨어집니다. 주요 인물 엔티티는 명확하나, 보조 엔티티의 모호한 사용이 문제입니다."
+      }
+    },
+    "new_score": {
+      "hallucination": {
+        "score": 100.0,
+        "reason": "원문에 제시된 모든 정보만을 기반으로 추출되었으며, 사실과 다른 내용을 생성하거나 왜곡한 부분이 전혀 없습니다. Elias Magnus Fries의 사망 연도 오타도 포함하지 않았습니다."
+      },
+      "comprehensiveness": {
+        "score": 88.0,
+        "reason": "인물의 생년월일, 사망일, 출생지, 학력, 직장, 선임자, 소속 등 핵심 정보를 상세한 시간 및 방식(WHEN, HOW)과 함께 풍부하게 추출했습니다. 원문의 중요한 세부 사항들을 관계의 속성으로 잘 포함하여 정보의 깊이가 뛰어납니다. 다만, 연구 분야나 명명된 속, 저자 약어 등 일부 정보는 여전히 누락되었습니다."
+      },
+      "schema_mapping": {
+        "score": 97.0,
+        "reason": "각 관계(date of birth, educated at, employer, replaces, affiliation 등)가 원문의 맥락에 매우 적절하게 매핑되었습니다. 특히, 'Details' 필드를 활용하여 시간(WHEN)과 방식(HOW) 같은 세부 정보를 관계의 속성으로 정확하게 표현한 점이 매우 뛰어납니다."
+      },
+      "salience": {
+        "score": 92.0,
+        "reason": "원문의 핵심 주제인 'Johan Erhard Areschoug'의 생애와 경력에 대한 가장 중요한 정보들을 중심으로 추출했습니다. 불필요하거나 모호한 관계를 배제하고, 핵심 관계에 대한 상세 정보(WHEN, HOW)를 추가하여 정보의 중요도를 높였습니다."
+      },
+      "entity_clarity": {
+        "score": 98.0,
+        "reason": "모든 엔티티(Johan Erhard Areschoug, Elias Magnus Fries, University of Lund 등)가 명확하고 고유하게 식별됩니다. 대명사나 모호한 표현 없이 원문의 고유명사를 정확히 사용하고, 'Swedish'와 같은 모호한 엔티티를 관계의 주체나 객체로 사용하지 않아 혼란이 없습니다."
+      }
+    },
+    "overall_verdict": "New Dataset (HypeRelDocRED)이 Original Dataset (Re-DocRED)보다 모든 면에서 월등히 우수합니다. New Dataset은 환각 없이 원문의 정보를 정확하고 상세하게 추출했으며, 스키마 매핑의 정확도와 엔티티 명확성 또한 매우 높습니다. 특히 'Details' 필드를 활용하여 관계의 세부 맥락을 풍부하게 담아낸 점이 인상적입니다. 반면 Original Dataset은 원문의 오타를 그대로 반영하거나 'Swedish' 엔티티를 잘못 해석하여 환각 및 스키마 매핑 오류가 많고, 정보 포괄성도 떨어집니다."
+  },
+  {
+    "original_score": {
+      "hallucination": {
+        "score": 75.0,
+        "reason": "Adelchis와 Lombards의 P27(국적) 관계, 그리고 San Salvatore 및 San Michele e San Pietro가 Brescia에 위치한다는 관계는 원문에 직접적인 근거가 부족하거나 잘못된 추론입니다."
+      },
+      "comprehensiveness": {
+        "score": 45.0,
+        "reason": "안셀페르가의 주요 직책(수도원장), 토지 기부, 관할권 변경, 특권 수여, 교체 등 핵심적인 많은 정보가 누락되었습니다."
+      },
+      "schema_mapping": {
+        "score": 65.0,
+        "reason": "father, mother, spouse, child, sibling 등 일부 관계는 적절하나, P27(국적)과 located in 관계는 원문의 맥락과 맞지 않거나 부정확하게 사용되었습니다. 스키마가 너무 일반적입니다."
+      },
+      "salience": {
+        "score": 55.0,
+        "reason": "가족 관계는 잘 추출했지만, 안셀페르가의 수도원장으로서의 역할이나 재임 중 발생한 중요한 사건들을 놓쳐 문서의 핵심 주제를 충분히 반영하지 못했습니다."
+      },
+      "entity_clarity": {
+        "score": 88.0,
+        "reason": "대부분의 엔티티는 명확하지만, 'San Salvatore'와 'San Salvatore e Santa Giulia'를 분리하여 추출한 점과 'Lombards'와의 관계 설정이 다소 모호합니다."
+      }
+    },
+    "new_score": {
+      "hallucination": {
+        "score": 100.0,
+        "reason": "모든 추출된 정보는 원문에 명확한 근거를 두고 있으며, 'Details' 필드를 통해 추가된 정보도 원문에서 정확히 파악할 수 있습니다."
+      },
+      "comprehensiveness": {
+        "score": 90.0,
+        "reason": "안셀페르가의 직책, 수도원 설립 및 합병, 관할권 변경, 특권 수여, 교체 등 주요 사건과 세부 정보를 매우 잘 포괄합니다. 다만, 안셀페르가의 토지 기부 및 기부금 수령에 대한 정보는 누락되었습니다."
+      },
+      "schema_mapping": {
+        "score": 98.0,
+        "reason": "employer, founded by, merged into, service provided, replaced by 등 관계가 원문의 맥락에 매우 적합하며, 'Details' 필드를 활용하여 시간, 장소, 방법 등 세부 정보를 정확하게 표현했습니다."
+      },
+      "salience": {
+        "score": 95.0,
+        "reason": "안셀페르가의 주요 역할과 그녀가 관련된 핵심적인 사건들을 중심으로 정보를 추출하여 문서의 핵심 내용을 효과적으로 전달합니다."
+      },
+      "entity_clarity": {
+        "score": 100.0,
+        "reason": "모든 엔티티가 고유명사로 명확하게 식별되고 통합되었으며, 대명사나 모호한 표현이 없습니다."
+      }
+    },
+    "overall_verdict": "새로운 데이터셋(HypeRelDocRED)이 원본 데이터셋(Re-DocRED)보다 훨씬 우수합니다. 새로운 데이터셋은 원문에 충실하면서도 더 풍부하고 정확한 정보를 추출했으며, 특히 'Details' 필드를 활용하여 시간, 장소, 방법 등 세부 맥락을 효과적으로 담아냈습니다. 스키마 매핑의 정확성과 정보 포괄성, 핵심성 면에서 압도적인 성능을 보입니다. 원본 데이터셋은 정보 누락이 많고, 일부 관계 설정에서 부정확한 추론을 포함하고 있습니다."
+  },
+  {
+    "original_score": {
+      "hallucination": {
+        "score": 40.0,
+        "reason": "Haitian을 국가나 위치 엔티티로 잘못 매핑하고, 원문에 명시되지 않은 지리적 상식(예: Haiti의 수도)을 포함하여 환각이 발생했습니다."
+      },
+      "comprehensiveness": {
+        "score": 20.0,
+        "reason": "인물의 직업, 교육 상세, 저술 활동, 외교관으로서의 역할 등 핵심 정보 대부분을 누락하고 기본적인 생몰 정보와 지리적 관계에만 치중했습니다."
+      },
+      "schema_mapping": {
+        "score": 30.0,
+        "reason": "Haitian을 국가로 매핑하거나 country 관계를 부적절하게 사용하는 등 스키마 매핑 오류가 많습니다. P-ID 사용도 원문 기반이 아닌 상식에 의존하는 경우가 있습니다."
+      },
+      "salience": {
+        "score": 25.0,
+        "reason": "인물의 생애와 업적보다는 주변 지리적 관계에 과도하게 집중하여 문서의 핵심 주제를 제대로 반영하지 못했습니다."
+      },
+      "entity_clarity": {
+        "score": 40.0,
+        "reason": "Haitian을 국가 엔티티로 오용하여 엔티티의 명확성이 떨어지며, Port - au - Prince의 하이픈 사용이 일관되지 않습니다."
+      }
+    },
+    "new_score": {
+      "hallucination": {
+        "score": 95.0,
+        "reason": "모든 정보가 원문에서 직접 추출되었으며, 원문에 없는 내용을 추가하거나 왜곡한 부분이 없습니다. university는 합리적인 추론입니다."
+      },
+      "comprehensiveness": {
+        "score": 85.0,
+        "reason": "인물의 주요 직업, 교육, 외교 활동 등 핵심 정보를 매우 상세하게 포함하고 있습니다. 다만, 모든 세부 학위나 저술 목록, 유럽 체류 기간 등 일부 디테일은 누락되었습니다."
+      },
+      "schema_mapping": {
+        "score": 90.0,
+        "reason": "표준 관계 외에 Details 필드를 활용하여 시간, 장소, 방법 등 풍부한 문맥 정보를 정확하게 매핑했습니다. 이는 원문의 복잡한 정보를 효과적으로 표현합니다."
+      },
+      "salience": {
+        "score": 95.0,
+        "reason": "문서의 핵심 주제인 Louis-Joseph Janvier의 생애, 직업, 교육, 외교 활동에 완벽하게 초점을 맞춰 중요한 정보를 놓치지 않았습니다."
+      },
+      "entity_clarity": {
+        "score": 95.0,
+        "reason": "모든 엔티티가 명확하게 정의되었고, 대명사나 모호한 표현 없이 고유명사와 일반 명사가 일관되게 사용되었습니다. Port-au-Prince의 하이픈 사용도 일관됩니다."
+      }
+    },
+    "overall_verdict": "New Dataset (HypeRelDocRED)이 Original Dataset (Re-DocRED)보다 월등히 우수합니다. New Dataset은 원문에 충실하고, 더 많은 정보를 포괄하며, Details 필드를 통해 관계의 문맥을 풍부하게 표현하여 스키마 매핑 정확도가 높습니다. 또한, 문서의 핵심 주제에 집중하고 엔티티를 명확하게 정의했습니다. 반면 Original Dataset은 환각, 정보 누락, 스키마 매핑 오류, 핵심성 부족 등 여러 문제점을 보였습니다."
+  },
+  {
+    "original_score": {
+      "hallucination": {
+        "score": 40.0,
+        "reason": "원문에 직접적으로 명시되지 않은 영국과 잉글랜드 간의 관계를 추출했으며, 크리스마스 푸딩의 원산지를 영국으로 잘못 매핑했습니다."
+      },
+      "comprehensiveness": {
+        "score": 10.0,
+        "reason": "크리스마스 푸딩의 기원과 관련된 일부 정보만 추출하고, 제공 방식, 재료, 숙성 과정 등 핵심적인 세부 정보를 대부분 누락했습니다."
+      },
+      "schema_mapping": {
+        "score": 30.0,
+        "reason": "크리스마스 푸딩의 원산지를 영국으로 매핑한 것은 적절하나, 영국을 원산지로 매핑한 것은 원문의 내용과 스키마 정의에 부합하지 않습니다."
+      },
+      "salience": {
+        "score": 20.0,
+        "reason": "크리스마스 푸딩의 기원과 관련된 일부 정보만 다루고 있으며, 푸딩의 구성, 특징, 전통 등 문서의 다른 중요한 핵심 내용을 놓쳤습니다."
+      },
+      "entity_clarity": {
+        "score": 100.0,
+        "reason": "모든 엔티티가 명확한 고유명사로 추출되었습니다."
+      }
+    },
+    "new_score": {
+      "hallucination": {
+        "score": 100.0,
+        "reason": "원문에 명시된 정보만을 정확하게 추출했으며, 어떠한 허위 정보나 왜곡도 없습니다."
+      },
+      "comprehensiveness": {
+        "score": 70.0,
+        "reason": "크리스마스 푸딩의 제공 방식과 기원에 대한 핵심 정보를 세부 사항과 함께 잘 포괄하고 있으나, 재료나 숙성 과정 등 일부 중요한 정보는 누락되었습니다."
+      },
+      "schema_mapping": {
+        "score": 95.0,
+        "reason": "원문의 내용을 관계 스키마에 매우 적절하게 매핑했으며, 세부 정보를 'Details' 필드를 통해 효과적으로 표현했습니다."
+      },
+      "salience": {
+        "score": 90.0,
+        "reason": "크리스마스 푸딩의 핵심적인 특징인 제공 방식과 기원을 중심으로 정보를 추출하여 문서의 주요 내용을 잘 반영했습니다."
+      },
+      "entity_clarity": {
+        "score": 100.0,
+        "reason": "모든 엔티티가 명확한 고유명사로 추출되었습니다."
+      }
+    },
+    "overall_verdict": "New Dataset이 Original Dataset보다 훨씬 우수합니다. New Dataset은 원문의 정보를 정확하게 추출하고, 적절한 스키마 매핑과 함께 세부 정보를 효과적으로 포함하여 정보 포괄성과 핵심성 면에서 뛰어납니다. 반면 Original Dataset은 원문에 없는 정보를 포함하고 스키마 매핑이 부정확하며 정보 포괄성이 매우 낮습니다."
+  },
+  {
+    "original_score": {
+      "hallucination": {
+        "score": 95.0,
+        "reason": "원문에 없는 사실을 생성하거나 왜곡하지 않았습니다. 다만, 일부 관계는 스키마 매핑이 다소 부적절합니다."
+      },
+      "comprehensiveness": {
+        "score": 20.0,
+        "reason": "매우 기본적인 지리적 정보만 포함하고 있으며, 원문의 핵심적인 세부 정보(역사, 인물, 기능, 날짜 등)를 거의 놓쳤습니다."
+      },
+      "schema_mapping": {
+        "score": 60.0,
+        "reason": "일부 스키마 매핑은 적절하지만, 'P206'과 같이 부적절한 사용이 있으며, 원문의 다양한 관계를 표현하기 위한 스키마 활용이 매우 제한적입니다."
+      },
+      "salience": {
+        "score": 30.0,
+        "reason": "문서의 핵심 주제인 Bare Island의 역사, 기능, 관련 인물 등의 중요한 정보를 거의 추출하지 못하고, 지리적 위치 정보에만 치중하여 핵심성을 놓쳤습니다."
+      },
+      "entity_clarity": {
+        "score": 100.0,
+        "reason": "모든 엔티티가 고유명사로 명확하게 식별되고 통합되어 있으며, 대명사가 사용되지 않았습니다."
+      }
+    },
+    "new_score": {
+      "hallucination": {
+        "score": 98.0,
+        "reason": "원문에 없는 사실을 생성하거나 왜곡하지 않았습니다. 'operated' 스키마가 'built by'를 완전히 대체하기에는 미묘한 차이가 있지만, 허위 정보는 아닙니다."
+      },
+      "comprehensiveness": {
+        "score": 90.0,
+        "reason": "원문의 핵심적인 정보와 세부 사항(시간, 장소, 방법, 인물, 기능 등)을 매우 풍부하게 추출했습니다. 다만, 'coastal defence technology'의 중요성이나 'scuba divers' 정보 등 일부 디테일은 놓쳤습니다."
+      },
+      "schema_mapping": {
+        "score": 85.0,
+        "reason": "다양하고 적절한 스키마를 사용하여 원문의 관계를 잘 표현했습니다. 특히 'Details'를 활용하여 세부 정보를 포함한 점이 좋습니다. 다만, 'operated' 스키마가 'built by'를 표현하기에는 다소 부적절합니다."
+      },
+      "salience": {
+        "score": 95.0,
+        "reason": "문서의 핵심 주제인 Bare Island의 위치, 역사적 기능, 관련 인물, 문화유산 등 가장 중요한 정보를 완벽하게 추출하여 문서의 핵심을 잘 관통합니다."
+      },
+      "entity_clarity": {
+        "score": 100.0,
+        "reason": "모든 엔티티가 고유명사 또는 명확한 구로 식별되고 통합되어 있으며, 대명사가 사용되지 않았습니다."
+      }
+    },
+    "overall_verdict": "New Dataset (HypeRelDocRED)이 Original Dataset (Re-DocRED)보다 훨씬 우수합니다. New Dataset은 원문의 핵심 정보와 세부 사항을 훨씬 더 포괄적이고 정확하게 추출했으며, 스키마 매핑도 더 구체적이고 적절하게 활용했습니다. Original Dataset은 지리적 위치 정보에만 치중하여 문서의 중요한 내용을 대부분 놓쳤습니다."
+  },
+  {
+    "original_score": {
+      "hallucination": {
+        "score": 60.0,
+        "reason": "문서에 없는 'country' 관계를 여러 번 생성하여 심각한 환각을 보였습니다. 'Chinese' 엔티티의 사용도 모호합니다."
+      },
+      "comprehensiveness": {
+        "score": 20.0,
+        "reason": "문서의 핵심 주제인 방언과 그 분포에 대한 정보를 거의 추출하지 못하고, 주로 지리적 포함 관계에만 집중했습니다."
+      },
+      "schema_mapping": {
+        "score": 40.0,
+        "reason": "'located in' 및 'P150' 관계는 적절했으나, 도시/지역에 'country' 관계를 매핑한 것은 명백한 스키마 오류입니다."
+      },
+      "salience": {
+        "score": 10.0,
+        "reason": "문서의 핵심 내용인 방언에 대한 정보를 거의 담지 못하고, 부차적인 지리적 정보에만 치중하여 문서의 핵심을 파악하지 못했습니다."
+      },
+      "entity_clarity": {
+        "score": 70.0,
+        "reason": "대부분의 지리적 엔티티는 명확했으나, 'Chinese' 엔티티가 국가, 언어, 민족 중 무엇을 의미하는지 모호하게 사용되었습니다."
+      }
+    },
+    "new_score": {
+      "hallucination": {
+        "score": 90.0,
+        "reason": "'Zigong dialect'와 'Southwestern Mandarin'의 관계에서 스키마 오류가 있었으나, 원문에 없는 사실을 창작하거나 왜곡한 경우는 없었습니다."
+      },
+      "comprehensiveness": {
+        "score": 90.0,
+        "reason": "문서에 언급된 모든 방언과 그 분포 지역, 그리고 하카 방언의 배경 정보까지 상세하게 추출하여 정보 포괄성이 매우 높습니다."
+      },
+      "schema_mapping": {
+        "score": 70.0,
+        "reason": "대부분의 'located in' 관계는 적절했으나, 'Zigong dialect'가 'Southwestern Mandarin'에 'located in'된다고 표현한 것은 스키마 오류입니다. 이는 'branch of'와 같은 계층적 관계여야 합니다."
+      },
+      "salience": {
+        "score": 95.0,
+        "reason": "문서의 핵심 주제인 방언과 그 지리적 분포에 대한 정보를 완벽하게 추출하여 문서의 핵심을 정확히 관통했습니다."
+      },
+      "entity_clarity": {
+        "score": 100.0,
+        "reason": "모든 엔티티가 명확하고 구체적이며, 대명사나 모호한 표현 없이 고유명사로 잘 통합되었습니다."
+      }
+    },
+    "overall_verdict": "New Dataset (HypeRelDocRED)이 Original Dataset (Re-DocRED)보다 훨씬 우수합니다. Original Dataset은 심각한 환각과 낮은 정보 포괄성, 핵심성 문제를 보인 반면, New Dataset은 단 하나의 스키마 매핑 오류를 제외하고는 원문의 정보를 정확하고 포괄적으로 추출하여 문서의 핵심을 잘 반영했습니다."
+  },
+  {
+    "original_score": {
+      "hallucination": {
+        "score": 40.0,
+        "reason": "인디라 간디를 국가원수(P6)로, 자일 싱을 정부수반(P35)으로 잘못 매핑하고, Kesavananda Bharati v. State of Kerala를 행정 구역(P150)으로 잘못 분류하는 등 여러 심각한 사실 왜곡 및 오분류가 존재한다."
+      },
+      "comprehensiveness": {
+        "score": 25.0,
+        "reason": "생년월일, 수상 정보 외에 원문의 핵심적인 경력, 판결, 사임 배경 등 대부분의 중요한 세부 정보를 누락했다."
+      },
+      "schema_mapping": {
+        "score": 35.0,
+        "reason": "P6, P35, P150과 같이 엔티티의 본질적 의미를 왜곡하는 잘못된 스키마 매핑이 다수 발견된다."
+      },
+      "salience": {
+        "score": 25.0,
+        "reason": "한스 라지 칸나의 주요 업적이나 사법적 중요성 대신 일반적인 국가 관련 정보에 치중하여 원문의 핵심 주제를 제대로 반영하지 못했다."
+      },
+      "entity_clarity": {
+        "score": 98.0,
+        "reason": "모든 엔티티가 고유명사로 명확하게 식별되었으며, 대명사 사용 없이 일관성 있게 표현되었다."
+      }
+    },
+    "new_score": {
+      "hallucination": {
+        "score": 30.0,
+        "reason": "M. H. Beg와 Hans Raj Khanna의 Chief Justice 임명 관계, Zail Singh과 Hans Raj Khanna의 대통령 선거 관계에서 원문의 사실을 완전히 뒤집는 심각한 오류를 포함하고 있다."
+      },
+      "comprehensiveness": {
+        "score": 70.0,
+        "reason": "한스 라지 칸나의 경력, 주요 사건 참여 등 많은 핵심 정보를 상세한 시간/장소 정보와 함께 잘 추출했다. 하지만 Padma Vibhushan 수상, Kesavananda Bharati 사건, Supreme Court 사임 등 일부 중요한 정보는 누락되었다."
+      },
+      "schema_mapping": {
+        "score": 80.0,
+        "reason": "제공된 관계 스키마(예: employer, date of birth)는 원문 내용에 적절하게 매핑되었으며, WHEN, WHERE 등의 상세 정보 추가는 관계의 풍부함을 높이는 훌륭한 시도이다. 'replaced by' 관계의 오용은 스키마 매핑 자체의 문제라기보다는 사실 관계 추출 오류에 가깝다."
+      },
+      "salience": {
+        "score": 65.0,
+        "reason": "한스 라지 칸나의 주요 경력과 관련된 사건들을 상세한 맥락 정보와 함께 잘 추출했다. 그러나 그의 가장 중요한 업적인 Habeas Corpus 사건에서의 소수 의견과 기본 구조론에 대한 언급이 부족하여 원문의 핵심 메시지를 완전히 담아내지 못했다."
+      },
+      "entity_clarity": {
+        "score": 98.0,
+        "reason": "모든 엔티티가 고유명사로 명확하게 식별되었으며, 대명사 사용 없이 일관성 있게 표현되었다."
+      }
+    },
+    "overall_verdict": "New Dataset은 두 개의 치명적인 사실 오류(환각)를 포함하고 있음에도 불구하고, 원문의 내용을 훨씬 더 풍부하고 상세하게 추출하려는 시도와 WHEN, WHERE, HOW, WHY와 같은 맥락 정보를 추가한 점이 Original Dataset보다 월등히 뛰어나다. Original Dataset은 정보 포괄성이 매우 낮고 스키마 매핑 오류도 다수 존재하여 원문의 핵심 내용을 제대로 전달하지 못한다. 따라서 New Dataset의 치명적인 오류만 수정된다면 훨씬 더 유용하고 가치 있는 지식 그래프가 될 것이다."
+  },
+  {
+    "original_score": {
+      "hallucination": {
+        "score": 70.0,
+        "reason": "'American'과 'Mississippi'의 관계가 원문에 없으며, 'Bears'와 'Keys'와 같이 모호한 엔티티 사용이 있습니다."
+      },
+      "comprehensiveness": {
+        "score": 40.0,
+        "reason": "슈퍼볼 XX 우승 시기, 셔플 크루, 고등학교 시절 업적, 돈 제이콥스 태클 사건 등 중요한 세부 정보가 많이 누락되었습니다."
+      },
+      "schema_mapping": {
+        "score": 60.0,
+        "reason": "'American'과 'Mississippi'의 P150 매핑은 부적절하며, 'Bears'와 'Keys'와 같은 일반적인 엔티티 사용으로 관계의 정확성이 떨어집니다."
+      },
+      "salience": {
+        "score": 65.0,
+        "reason": "타이론 키스의 주요 경력 정보는 포함하나, 중요한 업적과 사건들이 누락되었습니다."
+      },
+      "entity_clarity": {
+        "score": 75.0,
+        "reason": "일부 엔티티(Keys, Bears)가 고유명사로 명확히 통합되지 않아 모호함이 있습니다."
+      }
+    },
+    "new_score": {
+      "hallucination": {
+        "score": 60.0,
+        "reason": "'The Super Bowl Shuffle'과 'Callaway High School Chargers'에 대한 'employer' 관계는 원문의 사실과 다르게 왜곡되었습니다."
+      },
+      "comprehensiveness": {
+        "score": 85.0,
+        "reason": "슈퍼볼 XX 우승 시기, 고등학교 위치 및 챔피언십 등 원문의 많은 세부 정보를 포함하고 있으나, 돈 제이콥스 태클 사건은 누락되었습니다."
+      },
+      "schema_mapping": {
+        "score": 65.0,
+        "reason": "프로팀에 대한 'employer'나 수상에 대한 'award received' 등은 적절하지만, 'The Super Bowl Shuffle'과 고등학교 팀에 대한 'employer' 관계는 잘못 매핑되었습니다."
+      },
+      "salience": {
+        "score": 80.0,
+        "reason": "타이론 키스의 생애와 주요 경력, 고등학교 및 프로 시절의 중요한 업적을 잘 포착했으나, 대학 시절의 결정적인 태클 사건은 빠져있습니다."
+      },
+      "entity_clarity": {
+        "score": 100.0,
+        "reason": "모든 엔티티가 고유명사로 명확하게 표현되어 모호함이 전혀 없습니다."
+      }
+    },
+    "overall_verdict": "새로운 데이터셋(HypeRelDocRED)은 원본 데이터셋보다 정보 포괄성과 엔티티 명확성 면에서 훨씬 우수합니다. 비록 관계 매핑에서 몇 가지 심각한 오류(예: 'employer'의 오용)가 있지만, 원문에서 더 많은 세부 정보를 추출하는 능력이 뛰어납니다. 원본 데이터셋은 정보 포괄성이 매우 낮고 일부 환각이 존재합니다."
+  },
+  {
+    "original_score": {
+      "hallucination": {
+        "score": 60.0,
+        "reason": "원문에 없는 일반적인 지리적 포함 관계를 과도하게 추출하고, 국적(P27)을 직접 명시되지 않은 채 추론하여 사용했습니다."
+      },
+      "comprehensiveness": {
+        "score": 30.0,
+        "reason": "핵심 멤버, 투어, 공연 정보, 결성 목적 등 문서의 주요 내용을 대부분 놓쳤습니다."
+      },
+      "schema_mapping": {
+        "score": 50.0,
+        "reason": "'located in'과 'country' 관계가 중복되고, 'P150'과 'P27' 사용이 문서의 핵심 내용과 다소 동떨어져 있습니다."
+      },
+      "salience": {
+        "score": 40.0,
+        "reason": "문서의 핵심 주제인 'Planet of the Drums'의 구성원, 활동, 역사보다는 일반적인 지리적 관계에 치중했습니다."
+      },
+      "entity_clarity": {
+        "score": 80.0,
+        "reason": "엔티티 자체는 명확하지만, DJ 이름과 본명을 연결하지 못했습니다."
+      }
+    },
+    "new_score": {
+      "hallucination": {
+        "score": 95.0,
+        "reason": "원문에 명시된 정보만을 정확하게 추출했으며, 왜곡이나 창작이 없습니다."
+      },
+      "comprehensiveness": {
+        "score": 85.0,
+        "reason": "'Planet of the Drums'의 결성 시기, 멤버, 멤버별 거주지, 주요 투어 및 공연 시기/장소 등 핵심 정보를 매우 상세하게 포괄합니다. 다만, 결성 목적이나 '가장 오래된 투어' 같은 일부 서술적 정보는 놓쳤습니다."
+      },
+      "schema_mapping": {
+        "score": 95.0,
+        "reason": "'founded in', 'affiliation', 'located in', 'performer' 등 문서 내용에 적합하고 구체적인 스키마를 사용했습니다. 특히 'Details: WHEN'을 통해 시간 정보를 효과적으로 표현했습니다."
+      },
+      "salience": {
+        "score": 95.0,
+        "reason": "'Planet of the Drums'와 관련된 핵심 인물, 사건, 시간, 장소 정보를 중심으로 추출하여 문서의 핵심 내용을 완벽하게 반영합니다."
+      },
+      "entity_clarity": {
+        "score": 95.0,
+        "reason": "모든 엔티티가 명확하게 식별되며, 대명사 없이 고유명사로 구성되어 있습니다. 'Orlando, Florida'와 같이 복합적인 지명도 하나의 엔티티로 잘 처리했습니다."
+      }
+    },
+    "overall_verdict": "New Dataset (HypeRelDocRED)이 Original Dataset (Re-DocRED)보다 훨씬 우수합니다. New Dataset은 원문의 핵심 정보를 정확하고 포괄적으로 추출하며, 적절한 스키마 매핑과 엔티티 명확성을 보여줍니다. 반면 Original Dataset은 원문에 없는 일반적인 지리적 관계를 과도하게 추출하고, 문서의 핵심 내용을 대부분 놓쳤습니다."
+  },
+  {
+    "original_score": {
+      "hallucination": {
+        "score": 35.0,
+        "reason": "원문에 없는 잘못된 관계(예: 캐릭터가 시리즈의 일부) 및 엔티티(예: American을 국가로 사용)가 다수 포함되어 있습니다."
+      },
+      "comprehensiveness": {
+        "score": 25.0,
+        "reason": "기본적인 정보만 추출하고, 작품의 핵심 줄거리, 등장인물, 주제, 영감 등 중요한 세부 정보를 많이 놓쳤습니다."
+      },
+      "schema_mapping": {
+        "score": 30.0,
+        "reason": "P1441(시리즈)을 캐릭터에 잘못 매핑하거나, 'American'을 국가로 사용하는 등 스키마 매핑 오류가 심각합니다."
+      },
+      "salience": {
+        "score": 50.0,
+        "reason": "주요 엔티티는 일부 추출했으나, 핵심 주제나 갈등을 놓치고 잘못된 관계를 포함하여 문서의 핵심을 온전히 반영하지 못했습니다."
+      },
+      "entity_clarity": {
+        "score": 40.0,
+        "reason": "'American'을 국가 엔티티로 잘못 사용하고, 캐릭터 엔티티의 관계가 불분명하여 명확성이 떨어집니다."
+      }
+    },
+    "new_score": {
+      "hallucination": {
+        "score": 100.0,
+        "reason": "추출된 모든 정보와 세부 사항이 원문에 정확히 일치하며, 어떠한 환각이나 왜곡도 없습니다."
+      },
+      "comprehensiveness": {
+        "score": 75.0,
+        "reason": "작품의 저자, 연도, 수상 정보, 배경 등 핵심 메타데이터와 세부 정보를 풍부하게 추출했지만, 등장인물이나 줄거리, 주제와 같은 서사적 요소는 포함하지 않았습니다."
+      },
+      "schema_mapping": {
+        "score": 95.0,
+        "reason": "'author', 'award received', 'located in' 등 적절한 스키마를 사용했으며, 'parent org'도 시리즈 관계를 잘 표현합니다. 'Details' 필드를 활용하여 추가 정보를 효과적으로 포함했습니다."
+      },
+      "salience": {
+        "score": 90.0,
+        "reason": "작품의 가장 중요한 메타데이터와 배경 정보를 정확하게 추출하여 문서의 핵심 내용을 잘 반영합니다."
+      },
+      "entity_clarity": {
+        "score": 100.0,
+        "reason": "모든 엔티티가 명확한 고유명사로 구성되어 있으며, 대명사나 모호한 표현이 없어 완벽하게 정제되었습니다."
+      }
+    },
+    "overall_verdict": "New Dataset (HypeRelDocRED)이 Original Dataset (Re-DocRED)보다 훨씬 우수합니다. New Dataset은 환각 없이 원문의 정보를 정확하게 추출하고, 스키마 매핑이 적절하며, 엔티티 명확성이 뛰어납니다. 특히 'Details' 필드를 통해 시간, 이유 등 세부 정보를 풍부하게 제공하는 점이 강점입니다. 반면 Original Dataset은 다수의 환각, 잘못된 스키마 매핑, 엔티티 명확성 부족 등 심각한 품질 문제를 보입니다."
+  },
+  {
+    "original_score": {
+      "hallucination": {
+        "score": 30.0,
+        "reason": "'American'을 국가로 잘못 매핑하거나, 'American'이 'California'를 포함한다는 등 원문에 없는 사실을 생성하거나 왜곡하는 경우가 많습니다."
+      },
+      "comprehensiveness": {
+        "score": 50.0,
+        "reason": "Gurr의 생년월일과 출생지는 포함했지만, 직업, 수상 경력, 특정 직책, 경력 시작 시점 등 중요한 세부 정보가 누락되었습니다."
+      },
+      "schema_mapping": {
+        "score": 20.0,
+        "reason": "'American'을 국가로 사용하는 P27, P150, 'country' 관계 등 스키마 매핑 오류가 심각합니다. P272(제작사) 관계도 적절하지 않은 경우가 많습니다."
+      },
+      "salience": {
+        "score": 40.0,
+        "reason": "Gurr의 주요 활동인 디즈니랜드 관련 정보는 일부 포함했으나, 'American' 관련 잘못된 관계들이 핵심 주제를 흐리고 문서의 핵심을 충분히 반영하지 못했습니다."
+      },
+      "entity_clarity": {
+        "score": 60.0,
+        "reason": "'Robert Henry \"Bob\" Gurr'와 같은 고유명사는 잘 사용했지만, 'American'을 모호하게 사용하여 엔티티의 명확성이 떨어집니다."
+      }
+    },
+    "new_score": {
+      "hallucination": {
+        "score": 100.0,
+        "reason": "원문에 제시된 정보만을 사용하여 어떠한 환각이나 정보 왜곡도 발생하지 않았습니다."
+      },
+      "comprehensiveness": {
+        "score": 85.0,
+        "reason": "Gurr의 생년월일, 출생지, 주요 고용주, 경력 시작 시점 등 핵심 정보를 잘 포착했습니다. 다만, 그의 직업, 수상 경력, 설계한 놀이기구 목록 등 일부 세부 정보는 누락되었습니다."
+      },
+      "schema_mapping": {
+        "score": 95.0,
+        "reason": "'date of birth', 'place of birth', 'employer' 등 관계가 원문의 내용과 매우 정확하게 매핑되었습니다. 'Details'를 활용하여 추가적인 맥락을 제공한 점이 훌륭합니다."
+      },
+      "salience": {
+        "score": 90.0,
+        "reason": "문서의 핵심 인물인 Bob Gurr와 그의 주요 경력 및 활동에 초점을 맞춰 중요한 정보를 효과적으로 추출했습니다."
+      },
+      "entity_clarity": {
+        "score": 95.0,
+        "reason": "'Bob Gurr'와 같이 간결하고 명확한 엔티티를 사용했으며, 대명사 없이 고유명사를 잘 통합하여 엔티티의 명확성이 매우 높습니다."
+      }
+    },
+    "overall_verdict": "New Dataset (HypeRelDocRED)이 Original Dataset (Re-DocRED)보다 훨씬 우수합니다. New Dataset은 환각 없이 원문 정보를 정확하게 추출하고, 스키마 매핑이 적절하며, 'Details'를 통해 정보의 풍부함과 맥락을 효과적으로 전달합니다. 반면 Original Dataset은 'American' 엔티티의 잘못된 사용과 부적절한 스키마 매핑으로 인해 심각한 오류를 포함하고 있습니다."
+  },
+  {
+    "original_score": {
+      "hallucination": {
+        "score": 90.0,
+        "reason": "원문에 직접적으로 명시되지 않은 '국적' 관계(P27)를 추론하여 사용했으나, 내용 자체는 사실에 부합하여 환각으로 보기 어렵습니다. 다만, 원문에서 'New Zealand drivers'라고만 언급되었을 뿐 '국적'을 직접적으로 명시하지는 않았습니다."
+      },
+      "comprehensiveness": {
+        "score": 40.0,
+        "reason": "원문의 핵심 정보인 드라이버들의 경력 경로, 다른 랠리 챔피언십과의 관계, NZRC의 특징(엔진, 구동 방식 등), Rally New Zealand가 WRC에 합류한 시점 등 중요한 세부 정보들을 대부분 누락했습니다. 주로 지리적 포함 관계에만 집중했습니다."
+      },
+      "schema_mapping": {
+        "score": 60.0,
+        "reason": "P27(국적) 관계는 원문의 'New Zealand drivers'를 기반으로 한 추론으로, '소속' 등의 관계가 더 적절했을 수 있습니다. 지역과 국가 간의 'country' 관계는 'located in'과 중복되거나 덜 구체적입니다. P150(행정 구역 포함)은 적절합니다."
+      },
+      "salience": {
+        "score": 35.0,
+        "reason": "NZRC의 주요 인물, 역사, 다른 챔피언십과의 연관성 등 핵심적인 정보를 놓치고, 뉴질랜드 내 지역들의 지리적 포함 관계에 과도하게 집중하여 문서의 핵심 주제를 제대로 반영하지 못했습니다."
+      },
+      "entity_clarity": {
+        "score": 100.0,
+        "reason": "모든 엔티티가 명확한 고유명사로 추출되었으며, 대명사나 모호한 표현은 없습니다."
+      }
+    },
+    "new_score": {
+      "hallucination": {
+        "score": 100.0,
+        "reason": "원문에 명시된 정보만을 정확하게 추출했으며, 어떠한 지식의 창작이나 왜곡도 발견되지 않았습니다."
+      },
+      "comprehensiveness": {
+        "score": 95.0,
+        "reason": "원문의 핵심 정보와 중요한 세부 사항(예: Hayden Paddon의 경력 경로, Rally New Zealand의 WRC 합류 시점, Wairarapa의 이벤트 수)을 매우 풍부하게 포함하고 있습니다. 일부 아주 미세한 디테일(예: 엔진 용량, 구동 방식에 따른 클래스)은 빠져있지만, 전반적으로 매우 포괄적입니다."
+      },
+      "schema_mapping": {
+        "score": 98.0,
+        "reason": "'affiliation'과 'located in' 등 관계 스키마가 원문의 맥락에 매우 적절하게 매핑되었습니다. 특히 'Details' 필드를 활용하여 시간(WHEN)이나 수량(HOW)과 같은 추가 정보를 효과적으로 표현한 점이 뛰어납니다."
+      },
+      "salience": {
+        "score": 98.0,
+        "reason": "문서의 핵심 주제인 New Zealand Rally Championship과 관련된 주요 인물, 역사, 그리고 다른 챔피언십 및 이벤트와의 관계를 중심으로 정보를 추출하여 문서의 핵심을 완벽하게 관통합니다."
+      },
+      "entity_clarity": {
+        "score": 100.0,
+        "reason": "모든 엔티티가 명확한 고유명사로 추출되었으며, 대명사나 모호한 표현은 없습니다."
+      }
+    },
+    "overall_verdict": "New Dataset (HypeRelDocRED)이 Original Dataset (Re-DocRED)보다 훨씬 우수합니다. New Dataset은 원문의 핵심 정보를 정확하고 포괄적으로 추출했으며, 스키마 매핑 또한 원문의 맥락에 매우 적절하고 세부 정보를 효과적으로 표현했습니다. 반면 Original Dataset은 지리적 정보에 치우쳐 문서의 핵심 내용을 상당 부분 놓쳤고, 스키마 매핑도 다소 아쉬운 부분이 있었습니다."
+  },
+  {
+    "original_score": {
+      "hallucination": {
+        "score": 80.0,
+        "reason": "'2006년에 설립되었다'는 정보는 원문에 없으며(완공), 브랜드 자체의 국가/위치 관계는 원문의 의미와 다소 차이가 있습니다."
+      },
+      "comprehensiveness": {
+        "score": 40.0,
+        "reason": "호텔의 층수, 객실 수, 상업 시설, 구체적인 수상 내역(시기, 내용) 및 예술 정원과의 연결 등 중요한 세부 정보가 많이 누락되었습니다."
+      },
+      "schema_mapping": {
+        "score": 65.0,
+        "reason": "'founded in' 스키마가 'completed in' 정보를 잘못 매핑했으며, 브랜드에 대한 'country' 및 'located in' 관계는 적절하지 않거나 모호합니다. 또한 중복된 관계가 많습니다."
+      },
+      "salience": {
+        "score": 60.0,
+        "reason": "호텔의 핵심적인 성과(순위)와 독특한 특징(예술 정원 연결)을 놓치고, 지리적 포함 관계에 대한 정보가 과도하게 추출되어 문서의 핵심을 충분히 반영하지 못했습니다."
+      },
+      "entity_clarity": {
+        "score": 100.0,
+        "reason": "모든 엔티티가 고유명사로 명확하게 식별되고 일관되게 사용되었습니다."
+      }
+    },
+    "new_score": {
+      "hallucination": {
+        "score": 85.0,
+        "reason": "'2006년에 설립되었다'는 정보는 원문과 일치하지 않으며(완공), 'Conrad Hotels' 브랜드가 특정 도시에 위치한다는 관계는 원문의 의미를 다소 왜곡합니다."
+      },
+      "comprehensiveness": {
+        "score": 80.0,
+        "reason": "원문의 핵심 정보인 호텔의 수상 내역과 예술 정원과의 연결을 세부 정보와 함께 잘 포괄했지만, 층수, 객실 수 등 일부 물리적 세부 정보는 여전히 누락되었습니다."
+      },
+      "schema_mapping": {
+        "score": 90.0,
+        "reason": "수상 내역에 대한 'service provided' 스키마와 'Details'를 활용한 세부 정보 매핑이 매우 정확하고 효과적입니다. 'proximate points'도 적절합니다. 다만 'founded in' 오류와 브랜드 위치 매핑은 개선의 여지가 있습니다."
+      },
+      "salience": {
+        "score": 95.0,
+        "reason": "문서의 핵심 주제인 'Conrad Indianapolis'의 위치, 브랜드, 완공 시기, 중요한 수상 내역, 그리고 예술 정원과의 연결 등 가장 중요한 정보를 매우 효과적으로 추출했습니다."
+      },
+      "entity_clarity": {
+        "score": 100.0,
+        "reason": "모든 엔티티가 고유명사로 명확하게 식별되고 일관되게 사용되었습니다."
+      }
+    },
+    "overall_verdict": "New Dataset은 Original Dataset과 공유하는 몇 가지 사소한 부정확성에도 불구하고, 호텔의 중요한 수상 내역과 예술 정원과의 연결 정보를 세부 사항과 함께 포괄적이고 핵심적으로 추출하여 훨씬 더 우수합니다. 스키마 매핑 또한 'Details'를 활용하여 정보의 풍부함을 높였습니다."
+  },
+  {
+    "original_score": {
+      "hallucination": {
+        "score": 40.0,
+        "reason": "'Kiato' (도시)가 2007년 7월 9일에 설립되었다는 잘못된 정보를 포함하고 있으며, 이는 역의 개업일과 혼동한 것입니다."
+      },
+      "comprehensiveness": {
+        "score": 20.0,
+        "reason": "역의 위치와 관련된 기본적인 정보만 추출하고, 역의 기능, 서비스, 운영 변경 등 핵심적인 세부 정보를 대부분 누락했습니다."
+      },
+      "schema_mapping": {
+        "score": 30.0,
+        "reason": "'country'와 'located in' 관계가 중복되고, 'P706', 'P150'과 같은 스키마가 문맥에 덜 적절하게 사용되었습니다. 'founded in' 스키마도 잘못된 엔티티에 매핑되었습니다."
+      },
+      "salience": {
+        "score": 25.0,
+        "reason": "문서의 핵심 주제인 'Kiato 철도역'의 운영 및 서비스 관련 정보를 거의 추출하지 못하고, 주로 지리적 위치 정보에만 집중했습니다."
+      },
+      "entity_clarity": {
+        "score": 35.0,
+        "reason": "'Kiato'를 도시와 역 모두에 모호하게 사용하여 엔티티가 명확하지 않으며, 동일한 관계에 대해 중복된 트리플을 생성했습니다."
+      }
+    },
+    "new_score": {
+      "hallucination": {
+        "score": 95.0,
+        "reason": "원문에 없는 정보를 생성하거나 왜곡하지 않았습니다. 모든 정보가 원문에 기반합니다."
+      },
+      "comprehensiveness": {
+        "score": 90.0,
+        "reason": "역의 개업일, 위치, 다양한 서비스, 서비스 중단 및 이유, 구역 폐쇄, 현재 버스 서비스 등 원문의 핵심적인 세부 정보를 풍부하게 추출했습니다. 'Details' 필드를 통해 추가적인 맥락을 잘 담아냈습니다."
+      },
+      "schema_mapping": {
+        "score": 90.0,
+        "reason": "'located in', 'country', 'proximate points', 'founded in', 'service provided' 등 문서의 내용을 잘 반영하는 적절하고 유연한 스키마를 사용했습니다. 특히 'service provided' 스키마는 다양한 서비스 유형과 세부 정보를 효과적으로 표현합니다."
+      },
+      "salience": {
+        "score": 95.0,
+        "reason": "문서의 핵심 주제인 'Kiato 철도역'과 그 운영 및 서비스 변화에 대한 정보를 중심으로 추출하여 문서의 핵심을 완벽하게 관통합니다."
+      },
+      "entity_clarity": {
+        "score": 95.0,
+        "reason": "'Kiato railway station'을 주 엔티티로 명확히 식별하고, 'Old Kiato station'을 별도의 엔티티로 구분하여 엔티티 모호성을 피했습니다. 대명사 없이 고유명사를 사용했습니다."
+      }
+    },
+    "overall_verdict": "New Dataset (HypeRelDocRED)이 Original Dataset (Re-DocRED)보다 모든 평가 기준에서 월등히 우수합니다. 특히 정보 포괄성, 스키마 매핑 정확도, 핵심성, 엔티티 명확성 측면에서 원문의 내용을 훨씬 더 정확하고 풍부하게 반영하며, 'Details' 필드를 활용하여 세부 맥락까지 효과적으로 표현했습니다. Original Dataset은 환각 정보와 엔티티 모호성, 정보 누락 등 여러 문제점을 보였습니다."
+  },
+  {
+    "original_score": {
+      "hallucination": {
+        "score": 30.0,
+        "reason": "'Australian'을 국가로 잘못 매핑하거나 P150 관계를 부적절하게 사용하여 원문에 없는 정보를 왜곡했습니다."
+      },
+      "comprehensiveness": {
+        "score": 15.0,
+        "reason": "퍼시픽 페어의 개장 연도, 개발사, 상점 수, 재개발 정보 등 핵심적인 세부 정보를 대부분 누락했습니다."
+      },
+      "schema_mapping": {
+        "score": 20.0,
+        "reason": "P150 관계를 잘못 사용하고 'Australian'을 국가로 매핑하는 등 스키마 매핑이 매우 부정확하고 부적절합니다."
+      },
+      "salience": {
+        "score": 25.0,
+        "reason": "문서의 핵심 주제인 퍼시픽 페어에 대한 중요한 정보는 놓치고, 지리적 위치 관계에만 과도하게 집중하여 핵심성이 떨어집니다."
+      },
+      "entity_clarity": {
+        "score": 50.0,
+        "reason": "'Australian'을 지리적 엔티티로 사용한 것은 명확성을 해치지만, 다른 엔티티는 비교적 잘 식별되었습니다."
+      }
+    },
+    "new_score": {
+      "hallucination": {
+        "score": 98.0,
+        "reason": "원문에 명시된 정보만을 추출했으며, 어떠한 허위 정보나 왜곡도 발견되지 않았습니다."
+      },
+      "comprehensiveness": {
+        "score": 95.0,
+        "reason": "퍼시픽 페어의 역사, 상점 구성, 재개발, 주변 환경 등 원문의 거의 모든 중요한 세부 정보를 풍부하게 포함하고 있습니다."
+      },
+      "schema_mapping": {
+        "score": 92.0,
+        "reason": "원문의 의미를 정확하게 반영하는 다양한 관계 스키마를 사용했으며, 'Details' 필드를 통해 추가적인 맥락을 효과적으로 제공합니다."
+      },
+      "salience": {
+        "score": 97.0,
+        "reason": "문서의 핵심 주제인 퍼시픽 페어를 중심으로 가장 중요하고 관련성 높은 정보를 완벽하게 추출했습니다."
+      },
+      "entity_clarity": {
+        "score": 90.0,
+        "reason": "대명사 없이 고유명사를 잘 통합했지만, 일부 엔티티 이름이 원문과 미세하게 다르게 축약된 부분이 있습니다."
+      }
+    },
+    "overall_verdict": "New Dataset (HypeRelDocRED)가 Original Dataset (Re-DocRED)보다 모든 면에서 월등히 우수합니다. HypeRelDocRED는 원문의 세부 정보를 포괄적으로 담고 있으며, 스키마 매핑이 정확하고 핵심 정보를 잘 추출했습니다. 반면 Re-DocRED는 정보 누락이 심하고, 관계 매핑이 부정확하며, 'Australian'과 같은 잘못된 엔티티를 생성하는 문제가 있습니다."
+  },
+  {
+    "original_score": {
+      "hallucination": {
+        "score": 90.0,
+        "reason": "원문에 없는 사실을 생성하지는 않았으나, P150 관계의 방향이 잘못 매핑되어 사실 관계를 왜곡하는 부분이 있습니다."
+      },
+      "comprehensiveness": {
+        "score": 50.0,
+        "reason": "인물의 주요 업적(메달 종류 및 연도), 사망 원인, 올림픽 선서 등 핵심적인 세부 정보가 많이 누락되었습니다. 지리적 정보에 비해 인물 관련 정보가 부족합니다."
+      },
+      "schema_mapping": {
+        "score": 60.0,
+        "reason": "P150 관계가 '미국이 매사추세츠를 포함한다'는 식으로 잘못 매핑되어 엔티티 간의 관계를 정확히 반영하지 못했습니다. P710과 P1344처럼 중복되는 관계도 존재합니다."
+      },
+      "salience": {
+        "score": 65.0,
+        "reason": "인물의 핵심 정보(생몰년, 소속, 교육)는 추출했으나, 문서의 상당 부분을 차지하는 지리적 엔티티와 국가 간의 관계에 대한 정보가 너무 많아 인물 중심의 핵심 내용이 희석되었습니다."
+      },
+      "entity_clarity": {
+        "score": 95.0,
+        "reason": "대명사 없이 고유명사를 사용하고 'Calnan'으로 일관되게 지칭하여 엔티티 명확성은 높은 편입니다. 다만, 'George Charles Calnan' 대신 'Calnan'만 사용한 점은 약간의 아쉬움이 있습니다."
+      }
+    },
+    "new_score": {
+      "hallucination": {
+        "score": 90.0,
+        "reason": "원문에 없는 내용을 생성하지 않았습니다. 다만, 'United States'에 대해 'employer' 관계를 사용한 것은 적절하지 않은 매핑입니다."
+      },
+      "comprehensiveness": {
+        "score": 95.0,
+        "reason": "인물의 생몰년, 사망 원인, 직업, 소속, 메달 획득 정보(종목, 연도), 출생지, 학력, 명예의 전당 입회 등 원문의 거의 모든 핵심 정보를 'Details' 기능을 활용하여 풍부하게 담아냈습니다."
+      },
+      "schema_mapping": {
+        "score": 90.0,
+        "reason": "대부분의 관계가 원문의 내용을 잘 반영하며 적절하게 매핑되었습니다. 특히 'Details'를 사용하여 시간, 장소, 방법 등 세부 정보를 효과적으로 표현한 점이 훌륭합니다. 다만, 'United States'에 대한 'employer' 관계는 개선이 필요합니다."
+      },
+      "salience": {
+        "score": 98.0,
+        "reason": "George Charles Calnan이라는 인물에 대한 핵심 정보와 그의 업적, 경력에 집중하여 추출했습니다. 불필요하거나 덜 중요한 지리적 관계를 배제하고 인물 중심의 정보를 효과적으로 구성했습니다."
+      },
+      "entity_clarity": {
+        "score": 100.0,
+        "reason": "대명사를 사용하지 않고 'George Charles Calnan'이라는 전체 이름을 일관되게 사용하여 엔티티의 명확성이 완벽합니다."
+      }
+    },
+    "overall_verdict": "New Dataset (HypeRelDocRED)이 Original Dataset (Re-DocRED)보다 훨씬 우수합니다. New Dataset은 'Details' 기능을 통해 원문의 세부 정보를 매우 포괄적이고 정확하게 담아냈으며, 인물 중심의 핵심 정보를 효과적으로 추출하여 높은 핵심성을 보였습니다. 또한 엔티티 명확성도 완벽합니다. Original Dataset은 지리적 정보에 치우쳐 인물 관련 핵심 정보가 부족하고, 스키마 매핑 오류 및 관계 중복이 많아 전반적인 품질이 낮습니다."
+  },
+  {
+    "original_score": {
+      "hallucination": {
+        "score": 50.0,
+        "reason": "'Göttingen'의 국가를 'Germans'로 잘못 매핑하는 명백한 환각이 두 번 발생했습니다."
+      },
+      "comprehensiveness": {
+        "score": 20.0,
+        "reason": "원문의 핵심적인 사건, 개념, 시간적/인과적 관계 등 중요한 정보와 디테일을 거의 추출하지 못했습니다."
+      },
+      "schema_mapping": {
+        "score": 40.0,
+        "reason": "P937, P27 등 일부 스키마 매핑은 적절했으나, 'Göttingen'과 'Germans'를 'country' 또는 'located in'으로 연결하는 것은 스키마 매핑 오류가 심각합니다."
+      },
+      "salience": {
+        "score": 30.0,
+        "reason": "문서의 핵심 주제인 그리스 신화 이해의 변화와 지적 흐름을 파악하지 못하고, 인물과 지리적 위치 등 지엽적인 정보 위주로 추출했습니다."
+      },
+      "entity_clarity": {
+        "score": 90.0,
+        "reason": "추출된 엔티티들은 대부분 고유명사이며 대명사가 배제되어 명확합니다. 다만 'Germans' 엔티티의 사용이 관계에서 오류를 유발합니다."
+      }
+    },
+    "new_score": {
+      "hallucination": {
+        "score": 100.0,
+        "reason": "원문에 없는 내용을 창작하거나 왜곡한 부분이 전혀 없으며, 모든 정보가 원문에 기반합니다."
+      },
+      "comprehensiveness": {
+        "score": 95.0,
+        "reason": "원문의 핵심적인 사건, 인물, 개념뿐만 아니라 시간, 장소, 방법, 이유 등 세부적인 디테일까지 풍부하게 포함하고 있습니다."
+      },
+      "schema_mapping": {
+        "score": 98.0,
+        "reason": "추출된 관계들이 원문의 의미를 매우 정확하게 반영하며, 'Details'를 통해 추가적인 맥락 정보를 효과적으로 매핑했습니다."
+      },
+      "salience": {
+        "score": 100.0,
+        "reason": "문서의 핵심 주제인 그리스 신화에 대한 현대적 이해의 기원과 그 발전에 기여한 인물들의 역할을 완벽하게 추출하여 문서의 핵심을 관통합니다."
+      },
+      "entity_clarity": {
+        "score": 100.0,
+        "reason": "모든 엔티티가 명확하고 구체적인 고유명사 또는 개념으로 표현되었으며, 대명사가 배제되어 완벽하게 정제되었습니다."
+      }
+    },
+    "overall_verdict": "New Dataset (HypeRelDocRED)이 Original Dataset (Re-DocRED)보다 모든 면에서 훨씬 우수합니다. New Dataset은 원문의 핵심 내용을 정확하고 포괄적으로 추출하며, 세부 정보(Details)까지 풍부하게 담아내 환각 없이 스키마 매핑도 매우 정확합니다. 반면 Original Dataset은 환각이 존재하고 정보 포괄성 및 핵심성, 스키마 매핑 정확도가 현저히 떨어집니다."
+  },
+  {
+    "original_score": {
+      "hallucination": {
+        "score": 60.0,
+        "reason": "원문에 없는 라이오넬 콜의 국적 정보(P27)와 머라이어 캐리의 프로듀서 역할(P162) 등 사실과 다른 정보가 포함되어 환각이 발생했습니다."
+      },
+      "comprehensiveness": {
+        "score": 40.0,
+        "reason": "라이오넬 콜의 다양한 직업, 곡의 차트 성과, 영화/TV 프로그램의 구체적인 제목, 가족 관계의 세부 정보 등 원문의 많은 중요한 디테일을 놓쳤습니다."
+      },
+      "schema_mapping": {
+        "score": 65.0,
+        "reason": "P-ID와 사용자 정의 관계가 혼재되어 일관성이 부족하며, 일부 P-ID는 원문에 없는 추론이나 잘못된 사실에 매핑되었습니다."
+      },
+      "salience": {
+        "score": 70.0,
+        "reason": "라이오넬 콜의 주요 활동과 관계를 일부 추출했지만, 그의 다양한 직업과 구체적인 작품 정보 등 핵심적인 내용이 누락되었습니다."
+      },
+      "entity_clarity": {
+        "score": 95.0,
+        "reason": "대명사 없이 고유명사를 일관되게 사용하여 엔티티가 명확하게 식별됩니다."
+      }
+    },
+    "new_score": {
+      "hallucination": {
+        "score": 98.0,
+        "reason": "원문에 명시된 정보만을 추출하였으며, 사실을 왜곡하거나 존재하지 않는 내용을 생성하지 않았습니다."
+      },
+      "comprehensiveness": {
+        "score": 75.0,
+        "reason": "라이오넬 콜의 직업, 협업, 가족 관계 등 핵심 정보를 상세하게 추출했으며, 'Details' 필드를 통해 추가적인 맥락을 제공하여 정보가 풍부합니다. 다만, 곡의 차트 성과나 영화/시리즈의 구체적인 제목 등 일부 디테일은 누락되었습니다."
+      },
+      "schema_mapping": {
+        "score": 90.0,
+        "reason": "원문의 내용을 잘 반영하는 서술적인 사용자 정의 관계를 사용했으며, 'Details' 필드를 통해 추가 정보를 효과적으로 구조화하여 매핑 정확도가 높습니다."
+      },
+      "salience": {
+        "score": 90.0,
+        "reason": "문서의 핵심 주제인 라이오넬 콜의 직업, 협업, 가족 관계 등 주요 정보를 중심으로 추출하여 문서의 핵심을 잘 반영합니다."
+      },
+      "entity_clarity": {
+        "score": 98.0,
+        "reason": "대명사 없이 고유명사를 일관되게 사용하여 엔티티가 매우 명확하게 식별됩니다."
+      }
+    },
+    "overall_verdict": "New Dataset (HypeRelDocRED)가 Original Dataset (Re-DocRED)보다 전반적으로 우수합니다. New Dataset은 환각이 거의 없으며, 'Details' 필드를 활용하여 정보 포괄성과 스키마 매핑 정확도를 크게 향상시켰습니다. 핵심 정보 추출 능력과 엔티티 명확성 또한 더 뛰어납니다. Original Dataset은 환각이 존재하고 정보 포괄성이 낮으며 스키마 매핑의 일관성이 부족합니다."
+  },
+  {
+    "original_score": {
+      "hallucination": {
+        "score": 90.0,
+        "reason": "'Dr. Pasupathy'의 개봉 연도를 'the 1990s'로 부정확하게 명시했고, P1412(언어) 관계는 원문에 직접 명시되지 않은 추론임."
+      },
+      "comprehensiveness": {
+        "score": 65.0,
+        "reason": "영화 제목, 감독, 작가, 연도 등 핵심 정보는 추출했으나, 감독의 국적, 영화의 장르, 특징, 협력 방식 등 세부적인 정보가 많이 누락됨."
+      },
+      "schema_mapping": {
+        "score": 85.0,
+        "reason": "'director', 'publication date' 등 적절한 관계를 사용했으나, P1412(언어) 관계는 인물에게 직접적인 언어 능력을 부여하는 것이므로 스키마 매핑이 다소 모호함."
+      },
+      "salience": {
+        "score": 80.0,
+        "reason": "Shaji Kailas와 그의 영화, 협력 작가에 대한 핵심 정보를 잘 추출했으나, 감독의 국적이나 영화의 주요 특징과 같은 중요한 정보 일부가 누락됨."
+      },
+      "entity_clarity": {
+        "score": 100.0,
+        "reason": "모든 엔티티가 고유명사로 명확하게 식별되고 일관되게 사용되었으며, 대명사가 배제됨."
+      }
+    },
+    "new_score": {
+      "hallucination": {
+        "score": 100.0,
+        "reason": "원문에 없는 정보를 창작하거나 왜곡하지 않고, 모든 정보가 원문에 기반하여 정확하게 추출됨."
+      },
+      "comprehensiveness": {
+        "score": 85.0,
+        "reason": "감독의 국적, 영화별 개봉 연도 및 협력 작가 정보 등 세부 사항을 'Details' 필드를 통해 풍부하게 포함했으나, 영화의 장르나 감독의 주요 특징 등 일부 정보는 여전히 누락됨."
+      },
+      "schema_mapping": {
+        "score": 95.0,
+        "reason": "'country', 'director', 'affiliation' 등 적절한 관계를 사용했으며, 'Details' 필드를 활용하여 시간, 협력 방식 등 세부 정보를 효과적으로 매핑하여 스키마의 표현력을 높임."
+      },
+      "salience": {
+        "score": 90.0,
+        "reason": "감독의 국적, 주요 작품 및 협력 관계 등 문서의 핵심 주제를 매우 잘 추출했으며, 'Details' 필드를 통해 중요한 맥락 정보를 효과적으로 포함함."
+      },
+      "entity_clarity": {
+        "score": 100.0,
+        "reason": "모든 엔티티가 고유명사로 명확하게 식별되고 일관되게 사용되었으며, 대명사가 배제됨."
+      }
+    },
+    "overall_verdict": "New Dataset (HypeRelDocRED)이 Original Dataset (Re-DocRED)보다 전반적으로 훨씬 우수합니다. 특히 환각의 정도가 0에 가깝고, 'Details' 필드를 활용하여 정보 포괄성과 스키마 매핑 정확도를 크게 향상시켰습니다. 핵심 정보 추출 능력도 더 뛰어납니다."
+  },
+  {
+    "original_score": {
+      "hallucination": {
+        "score": 70.0,
+        "reason": "아우슈비츠의 국가를 'German'으로 명시한 것은 원문의 'German concentration camp'를 잘못 해석한 환각이다."
+      },
+      "comprehensiveness": {
+        "score": 40.0,
+        "reason": "홀로코스트 생존자라는 핵심 정보, 게토 이송, 해방 시점, 미국 이주 과정의 세부 정보(난민선, 이유) 등이 누락되었다."
+      },
+      "schema_mapping": {
+        "score": 75.0,
+        "reason": "대부분의 스키마 매핑은 적절하나, 아우슈비츠 관련 정보의 객체 오류와 일부 중복된 관계가 존재한다."
+      },
+      "salience": {
+        "score": 70.0,
+        "reason": "인물의 주요 생애 정보를 추출했으나, 홀로코스트 생존자라는 핵심 정체성과 관련된 사건(게토, 해방)이 충분히 강조되지 않았다."
+      },
+      "entity_clarity": {
+        "score": 100.0,
+        "reason": "모든 엔티티가 명확하고 일관되게 사용되었으며, 대명사가 배제되었다."
+      }
+    },
+    "new_score": {
+      "hallucination": {
+        "score": 100.0,
+        "reason": "원문에 없는 정보가 전혀 없으며, 모든 사실이 정확하게 추출되었다."
+      },
+      "comprehensiveness": {
+        "score": 85.0,
+        "reason": "'Details' 필드를 활용하여 시간, 방법, 이유 등 풍부한 세부 정보를 포함하고 있으며, 원문의 주요 사건들을 잘 포괄한다. 다만, 가족 구성원 일부와 회고록 정보가 누락되었다."
+      },
+      "schema_mapping": {
+        "score": 95.0,
+        "reason": "'Details' 필드를 통해 관계에 대한 풍부한 맥락 정보를 효과적으로 매핑했으며, 'destination point'와 같은 추상적인 관계도 적절하게 사용되었다."
+      },
+      "salience": {
+        "score": 95.0,
+        "reason": "인물의 핵심 정체성과 홀로코스트 경험, 미국 이주, 학업 성취 등 가장 중요한 생애 사건들을 'Details'와 함께 매우 효과적으로 추출하여 문서의 핵심을 잘 전달한다."
+      },
+      "entity_clarity": {
+        "score": 100.0,
+        "reason": "모든 엔티티가 명확하고 일관되게 사용되었으며, 대명사가 배제되었다."
+      }
+    },
+    "overall_verdict": "새로운 데이터셋(HypeRelDocRED)이 원본 데이터셋(Re-DocRED)보다 훨씬 우수하다. 원본 데이터셋의 아우슈비츠 관련 환각을 피했을 뿐만 아니라, 'Details' 필드를 활용하여 원문의 시간, 방법, 이유 등 풍부한 맥락 정보를 효과적으로 포괄하고 있다. 이는 정보 포괄성, 스키마 매핑 정확도, 핵심성 측면에서 새로운 데이터셋이 압도적으로 뛰어남을 보여준다."
+  },
+  {
+    "original_score": {
+      "hallucination": {
+        "score": 100.0,
+        "reason": "원문에 없는 정보나 왜곡된 내용은 없음."
+      },
+      "comprehensiveness": {
+        "score": 70.0,
+        "reason": "감독, 배우, 작가, 작곡가, 개봉 연도 등 핵심 정보는 추출했으나, Saul Bass, 영화의 줄거리, 키네틱 타이포그래피, 국립영화등재의 구체적인 이유 등 중요한 세부 정보를 놓침."
+      },
+      "schema_mapping": {
+        "score": 65.0,
+        "reason": "P161, P58, P495, P86 등 일부 스키마 매핑은 적절하나, 'National Film Registry'의 'country'나 'located in' 관계에 'American'이라는 형용사를 엔티티로 사용한 것은 부적절함. 또한 P800 관계는 방향성이 다소 어색함."
+      },
+      "salience": {
+        "score": 80.0,
+        "reason": "영화의 주요 인물과 연도, 수상 정보 등 핵심적인 내용은 잘 추출했으나, 영화의 특징이나 수상의 구체적인 이유 등 중요한 세부 정보가 누락되어 핵심을 완벽히 관통하지 못함."
+      },
+      "entity_clarity": {
+        "score": 50.0,
+        "reason": "'Alfred Hitchcock'과 'Hitchcock'을 별개의 엔티티로 처리하여 중복이 발생하고, 'American'을 국가 엔티티로 사용한 것은 명확성이 떨어짐."
+      }
+    },
+    "new_score": {
+      "hallucination": {
+        "score": 100.0,
+        "reason": "원문에 없는 정보나 왜곡된 내용은 없음."
+      },
+      "comprehensiveness": {
+        "score": 95.0,
+        "reason": "감독, 배우, 작가, 작곡가, 개봉 연도, Saul Bass, 국립영화등재의 구체적인 이유 등 원문의 대부분의 중요한 세부 정보를 풍부하게 추출함. 'Details' 필드를 통해 추가적인 맥락을 제공하는 점이 우수함."
+      },
+      "schema_mapping": {
+        "score": 70.0,
+        "reason": "'director', 'performer', 'point in time' 등 대부분의 스키마 매핑은 적절하나, Bernard Herrmann(작곡가)을 'performer'로, Saul Bass(타이틀 시퀀스 디자이너)를 영화의 'director'로 매핑한 것은 부적절함. 'author'를 'screenwriter' 대신 사용한 것은 허용 가능하나 최적은 아님."
+      },
+      "salience": {
+        "score": 90.0,
+        "reason": "영화의 핵심 인물, 연도, 수상 정보뿐만 아니라 수상의 구체적인 이유와 같은 중요한 세부 정보까지 포함하여 문서의 핵심을 매우 잘 추출함. 'Details' 필드가 핵심 정보를 더욱 명확하게 함."
+      },
+      "entity_clarity": {
+        "score": 100.0,
+        "reason": "모든 엔티티가 명확하고 고유명사로 잘 통합되어 있으며, 대명사나 모호한 표현이 없음. 'Alfred Hitchcock'과 'Hitchcock' 같은 중복 엔티티 문제가 없음."
+      }
+    },
+    "overall_verdict": "새로운 데이터셋(New Dataset)이 원본 데이터셋(Original Dataset)보다 전반적으로 우수합니다. 특히 정보 포괄성과 엔티티 명확성 측면에서 월등히 뛰어나며, 원문의 세부 정보를 더 풍부하고 정확하게 담아냈습니다. 스키마 매핑에서 일부 오류가 있었지만, 'Details' 필드를 통해 정보의 맥락을 제공하려는 시도는 긍정적입니다. 원본 데이터셋은 엔티티 중복 및 부적절한 엔티티 사용(예: American)과 같은 명확성 문제가 심각했습니다."
+  },
+  {
+    "original_score": {
+      "hallucination": {
+        "score": 40.0,
+        "reason": "원문에 없는 사실 관계(예: Jimmy Iovine이 Eurythmics의 멤버, Stewart가 앨범 프로듀서)를 다수 생성하거나 왜곡했습니다. P527, P162, P361, P800 관계가 잘못 매핑된 경우가 많습니다."
+      },
+      "comprehensiveness": {
+        "score": 40.0,
+        "reason": "음악 비디오 감독, 차트 순위, 가사 내용, Blue Velvet 비교 등 원문의 중요한 세부 정보가 많이 누락되었습니다."
+      },
+      "schema_mapping": {
+        "score": 25.0,
+        "reason": "멤버에게 P527(has part)을 사용하거나, 앨범에 P162(producer)를 사용하는 등 스키마 매핑이 매우 부적절합니다. 'British'를 국가 엔티티로 사용하거나 가사 구절을 'preceded by'/'followed by'로 연결하는 방식도 부적절합니다."
+      },
+      "salience": {
+        "score": 50.0,
+        "reason": "핵심 엔티티와 일부 관계를 추출했지만, 가사 구절과 같이 덜 중요한 정보를 포함하고 있으며, 중요한 정보 중 일부는 잘못 매핑되어 핵심을 제대로 전달하지 못합니다."
+      },
+      "entity_clarity": {
+        "score": 55.0,
+        "reason": "'Stewart'와 'David A. Stewart'처럼 엔티티 이름이 일관되지 않으며, 'British'와 같은 형용사를 엔티티로 사용하는 문제가 있습니다."
+      }
+    },
+    "new_score": {
+      "hallucination": {
+        "score": 70.0,
+        "reason": "David A. Stewart와 Jimmy Iovine을 프로듀서가 아닌 감독으로 잘못 명시한 두 가지 명확한 환각이 있습니다. 그 외의 사실은 원문에 기반합니다."
+      },
+      "comprehensiveness": {
+        "score": 55.0,
+        "reason": "노래의 발매 정보(영국/미국 싱글 순서)와 뮤직비디오 감독 등 특정 세부 정보를 'Details' 필드를 통해 잘 포착했지만, 앨범 이름, 프로듀서, 차트 순위, Eurythmics의 국적, 가사, Blue Velvet 비교 등 중요한 정보가 누락되었습니다."
+      },
+      "schema_mapping": {
+        "score": 70.0,
+        "reason": "publication date, performer, author 관계는 적절하며, 'Details' 필드를 활용하여 세부 정보를 추가한 점은 매우 긍정적입니다. 그러나 Stewart와 Iovine을 'director'로 매핑한 것은 큰 오류입니다."
+      },
+      "salience": {
+        "score": 75.0,
+        "reason": "주요 엔티티인 노래 'Don't Ask Me Why'와 그 직접적인 속성에 집중하여 핵심적인 정보를 잘 추출했습니다. 다만, 앨범, 차트 성과 등 다른 중요한 정보는 누락되었습니다."
+      },
+      "entity_clarity": {
+        "score": 95.0,
+        "reason": "모든 엔티티 이름이 명확하고 일관되게 대문자 처리되었으며, 대명사가 배제되어 엔티티 명확성이 매우 높습니다."
+      }
+    },
+    "overall_verdict": "새로운 데이터셋(HypeRelDocRED)은 두 가지 명확한 환각 오류가 있음에도 불구하고, 엔티티 명확성, 스키마 매핑의 적절성(감독 오류 제외), 그리고 'Details' 필드를 활용한 정보 표현 방식에서 원본 데이터셋(Re-DocRED)보다 우수합니다. 원본 데이터셋은 더 많은 사실 관계 오류와 부적절한 스키마 매핑, 일관성 없는 엔티티 표현으로 인해 전반적인 신뢰도가 낮습니다. 새로운 데이터셋이 추출하는 정보의 범위는 좁지만, 추출된 정보의 품질은 더 높다고 평가할 수 있습니다."
+  },
+  {
+    "original_score": {
+      "hallucination": {
+        "score": 30.0,
+        "reason": "원본 문서에 없는 사실을 생성하거나 왜곡하는 경우가 많습니다. 특히 'Spanish', 'Mexican', 'German'과 같은 형용사를 국가 엔티티로 잘못 매핑하여 사실 관계를 왜곡했습니다. 마리나 히네스타를 스페인 내전의 '참가자'로 표현한 것도 원문과 다릅니다."
+      },
+      "comprehensiveness": {
+        "score": 40.0,
+        "reason": "핵심 정보는 일부 추출되었으나, '1940년 멕시코 도착', '1950년대 사진 촬영', '1,300장 이상의 사진', '자원봉사자', '가장 유명한 이미지' 등 원문의 중요한 디테일 정보가 많이 누락되었습니다."
+      },
+      "schema_mapping": {
+        "score": 15.0,
+        "reason": "스키마 매핑이 매우 부정확합니다. 도시(Cologne, Madrid, Barcelona, Mexico City)를 형용사(German, Spanish, Mexican)에 'country' 또는 'located in' 관계로 연결하는 등 엔티티 유형과 관계 정의가 심각하게 잘못되었습니다. P-ID 사용도 일관성이 떨어집니다."
+      },
+      "salience": {
+        "score": 60.0,
+        "reason": "후안 구스만이라는 핵심 인물과 관련된 주요 사건 및 인물들은 추출하려 했으나, 부정확한 스키마 매핑과 환각으로 인해 핵심 정보의 전달력이 떨어집니다."
+      },
+      "entity_clarity": {
+        "score": 20.0,
+        "reason": "'Spanish', 'Mexican'과 같은 형용사를 엔티티로 사용하여 명확성이 크게 떨어집니다. 'Juan Guzmán'과 'Hans Gutmann'을 통합하지 않고 'Gutmann'으로만 표현한 점도 아쉽습니다."
+      }
+    },
+    "new_score": {
+      "hallucination": {
+        "score": 95.0,
+        "reason": "원문에 없는 사실을 생성하거나 왜곡한 경우가 거의 없습니다. 'Agencia EFE'를 'employer'로 매핑한 부분이 원문의 'archive'와 약간의 해석 차이가 있을 수 있으나, 큰 왜곡은 아닙니다."
+      },
+      "comprehensiveness": {
+        "score": 95.0,
+        "reason": "'Details' 필드를 활용하여 'WHEN', 'HOW', 'WHAT', 'NUM', 'WHERE', 'WHY' 등 원문의 풍부한 디테일 정보를 매우 효과적으로 포괄했습니다. 누락된 정보는 'Juanito'와 같은 별칭이나 '정치적 견해 공유' 등 극히 일부에 불과합니다."
+      },
+      "schema_mapping": {
+        "score": 90.0,
+        "reason": "엔티티 유형(국가 vs. 형용사)을 정확하게 구분하고, 'occupation', 'affiliation', 'service provided' 등 원문에 적합한 구체적인 관계를 사용했습니다. 'Details' 필드를 통해 복잡한 맥락 정보를 유연하게 표현하여 스키마의 한계를 극복했습니다."
+      },
+      "salience": {
+        "score": 98.0,
+        "reason": "문서의 핵심 주제인 후안 구스만의 생애, 직업, 주요 활동 및 관계를 중심으로 정보를 매우 명확하고 중요도 높게 추출했습니다. 'Details' 정보가 핵심성을 더욱 강화합니다."
+      },
+      "entity_clarity": {
+        "score": 98.0,
+        "reason": "'Juan Guzmán'을 주 엔티티로 일관되게 사용하고, 국가 엔티티를 'Germany', 'Mexico', 'Spain'으로 명확하게 구분하여 엔티티의 모호성이 전혀 없습니다. 대명사도 배제되어 완벽하게 정제되었습니다."
+      }
+    },
+    "overall_verdict": "새로운 데이터셋은 원본 데이터셋에 비해 모든 평가 기준에서 월등히 우수합니다. 특히 스키마 매핑의 정확성과 정보 포괄성 면에서 큰 차이를 보입니다. 원본 데이터셋은 'Spanish', 'Mexican'과 같은 형용사를 국가 엔티티로 잘못 매핑하는 심각한 오류가 많았고, 정보의 디테일이 부족했습니다. 반면 새로운 데이터셋은 정확한 엔티티와 관계를 사용하고, 'Details' 필드를 통해 원문의 풍부한 맥락 정보를 효과적으로 담아내어 지식 그래프의 품질을 크게 향상시켰습니다."
+  },
+  {
+    "original_score": {
+      "hallucination": {
+        "score": 80.0,
+        "reason": "Judicial Committee of the Privy Council이 입법 기관(P194)으로 매핑되거나 캐나다에 위치한다고 명시된 부분은 원문에 없는 사실 왜곡입니다."
+      },
+      "comprehensiveness": {
+        "score": 40.0,
+        "reason": "사건의 핵심인 법적 쟁점, 법원의 판결, 헌법 조항의 세부 사항 등 중요한 정보들이 대부분 누락되어 있습니다. 주로 지리적, 관할권적 관계에만 집중합니다."
+      },
+      "schema_mapping": {
+        "score": 60.0,
+        "reason": "Judicial Committee of the Privy Council에 P194(입법 기관) 스키마를 매핑한 것은 명백한 오류입니다. 전반적으로 스키마가 너무 단순하여 문서의 복잡한 법적 관계를 표현하지 못합니다."
+      },
+      "salience": {
+        "score": 35.0,
+        "reason": "문서의 핵심 주제인 헌법 소송과 권한 분쟁에 대한 내용은 거의 추출되지 않고, 주변적인 지리적 위치나 기관의 소속 정보에만 치중하여 핵심을 놓쳤습니다."
+      },
+      "entity_clarity": {
+        "score": 90.0,
+        "reason": "대명사 없이 고유명사를 잘 사용했지만, 'Constitution Act'와 'Constitution Act, 1867'의 일관성이 부족하고 '8-mile'을 독립적인 엔티티로 추출한 점이 다소 어색합니다."
+      }
+    },
+    "new_score": {
+      "hallucination": {
+        "score": 95.0,
+        "reason": "사실 관계에 대한 직접적인 왜곡이나 환각은 없지만, 'service provided'나 'operated'와 같은 관계 스키마가 문서의 법률적 맥락에 다소 부적절하게 사용된 부분이 있습니다."
+      },
+      "comprehensiveness": {
+        "score": 90.0,
+        "reason": "사건의 진행 과정, 법적 쟁점, 각 법원의 판결 내용, 관련 법률 조항 등 원문의 핵심 정보를 매우 상세하게 추출했습니다. 다만, 일부 세부 헌법 조항 번호가 누락되었습니다."
+      },
+      "schema_mapping": {
+        "score": 65.0,
+        "reason": "'service provided'와 'operated'와 같은 일반적인 관계 스키마가 법률 문서의 특정 행위(심리, 판결, 승인 등)를 표현하기에 부적절하게 사용된 경우가 많습니다. 'Details' 필드를 통해 정보를 보완한 점은 긍정적입니다."
+      },
+      "salience": {
+        "score": 95.0,
+        "reason": "문서의 핵심인 'Dow v Black' 사건의 헌법적 쟁점, 연방과 주정부 간의 권한 분할, 그리고 법원의 최종 판결에 대한 정보를 매우 효과적으로 추출하여 문서의 핵심을 완벽하게 관통합니다."
+      },
+      "entity_clarity": {
+        "score": 95.0,
+        "reason": "엔티티를 명확하고 일관성 있게 식별했으며, 'Judicial Committee'나 'Supreme Court New Brunswick'와 같은 약어 사용도 문맥상 이해 가능합니다. 대명사 사용 없이 잘 정제되었습니다."
+      }
+    },
+    "overall_verdict": "New Dataset (HypeRelDocRED)이 Original Dataset (Re-DocRED)보다 훨씬 우수합니다. Original Dataset은 문서의 핵심인 법적 쟁점과 판결 내용을 거의 추출하지 못하고, 일부 환각 및 스키마 매핑 오류를 보였습니다. 반면 New Dataset은 비록 일부 관계 스키마의 적절성에서 아쉬운 점이 있었지만, 문서의 핵심 내용을 매우 포괄적이고 정확하게 추출하여 사건의 흐름과 법적 의미를 명확하게 전달합니다. 특히 'Details' 필드를 활용하여 풍부한 맥락 정보를 제공한 점이 인상적입니다."
+  },
+  {
+    "original_score": {
+      "hallucination": {
+        "score": 40.0,
+        "reason": "합작 투자를 소유 관계로 잘못 표현하고, 'SKY'와 'British Sky Broadcasting'을 별개의 상하 관계로 추출했으며, 'Broadband'를 'Sky Movies'의 소유자로 잘못 연결하는 등 원문에 없는 정보를 생성하거나 왜곡했습니다."
+      },
+      "comprehensiveness": {
+        "score": 30.0,
+        "reason": "합작 투자의 목적, 영화 배급 과정, 다양한 유통 채널 등 원문의 핵심적인 세부 정보를 대부분 누락하고, 단순한 위치 정보에 치중하여 정보 포괄성이 매우 낮습니다."
+      },
+      "schema_mapping": {
+        "score": 35.0,
+        "reason": "합작 투자를 소유/상위 조직 관계로 잘못 매핑하고, 'country'와 'located in' 관계를 중복 사용했으며, 'Broadband'를 소유자로 매핑하는 등 스키마 매핑이 부정확합니다."
+      },
+      "salience": {
+        "score": 30.0,
+        "reason": "문서의 핵심 주제인 합작 투자의 목적, 사업 모델, 배급 전략 등을 제대로 파악하지 못하고, 중요도가 떨어지거나 잘못된 정보에 집중하여 핵심성이 낮습니다."
+      },
+      "entity_clarity": {
+        "score": 50.0,
+        "reason": "'SKY'와 'British Sky Broadcasting'을 때때로 별개의 엔티티로 취급하여 혼란을 주며, 'Broadband'를 잘못된 엔티티로 추출하는 등 엔티티 명확성이 부족합니다."
+      }
+    },
+    "new_score": {
+      "hallucination": {
+        "score": 98.0,
+        "reason": "원문에 명시된 정보만을 기반으로 지식 그래프를 생성했으며, 'Details' 필드를 통해 원문의 맥락을 정확하게 추가하여 환각이 거의 없습니다."
+      },
+      "comprehensiveness": {
+        "score": 95.0,
+        "reason": "합작 투자의 성격, 역할, 다양한 배급 방식, 세부 서비스 등 원문의 거의 모든 중요한 정보를 'Details' 필드를 활용하여 풍부하고 상세하게 포함하고 있습니다."
+      },
+      "schema_mapping": {
+        "score": 97.0,
+        "reason": "'affiliation', 'service provided', 'industry' 등 적절한 스키마를 사용하여 관계를 정확하게 매핑했으며, 'Details' 필드를 통해 세부 정보를 효과적으로 표현하여 매핑 정확도가 매우 높습니다."
+      },
+      "salience": {
+        "score": 96.0,
+        "reason": "문서의 핵심 주제인 합작 투자의 구성, 목적, 운영 방식 및 배급 채널을 완벽하게 파악하고 추출하여 문서의 핵심을 정확히 관통합니다."
+      },
+      "entity_clarity": {
+        "score": 95.0,
+        "reason": "엔티티를 명확하고 일관되게 식별하고 사용했으며, 대명사나 잘못된 엔티티 추출 없이 고유명사를 정확하게 통합하여 엔티티 명확성이 뛰어납니다."
+      }
+    },
+    "overall_verdict": "New Dataset (HypeRelDocRED)이 Original Dataset (Re-DocRED)보다 훨씬 우수합니다. HypeRelDocRED는 원문의 정보를 정확하고 포괄적으로 추출하며, 적절한 스키마 매핑과 'Details' 필드를 통해 세부 맥락까지 효과적으로 표현합니다. 반면 Re-DocRED는 환각, 정보 누락, 부정확한 스키마 매핑 등 여러 문제점을 보입니다."
+  },
+  {
+    "original_score": {
+      "hallucination": {
+        "score": 70.0,
+        "reason": "[U.S.] --(P150)--> [Ohio] 관계는 원문과 다르게 매핑되어 환각이 발생했습니다. 또한, 모호한 엔티티 사용으로 인해 정보 해석에 오류가 발생할 여지가 있습니다."
+      },
+      "comprehensiveness": {
+        "score": 50.0,
+        "reason": "핵심적인 직업, 역할 등 많은 세부 정보를 놓쳤습니다. 문서의 주요 목적을 충분히 반영하지 못했습니다."
+      },
+      "schema_mapping": {
+        "score": 60.0,
+        "reason": "P150 관계 매핑 오류가 명확하며, 일부 관계는 중복되거나 덜 적절합니다."
+      },
+      "salience": {
+        "score": 40.0,
+        "reason": "문서의 핵심 주제인 'Carl Anderson'이라는 동명이인들의 구별되는 특징을 추출하는 데 실패했습니다."
+      },
+      "entity_clarity": {
+        "score": 20.0,
+        "reason": "가장 큰 문제입니다. 'Carl Anderson' 엔티티가 여러 인물을 지칭하여 명확성이 매우 떨어집니다."
+      }
+    },
+    "new_score": {
+      "hallucination": {
+        "score": 100.0,
+        "reason": "원문에 없는 정보를 생성하거나 왜곡하지 않고 모든 정보가 원문에 기반합니다."
+      },
+      "comprehensiveness": {
+        "score": 90.0,
+        "reason": "각 인물의 직업, 역할, 생몰년, 특정 위치 등 핵심적인 세부 정보를 매우 풍부하게 포함하고 있습니다. 'yung jarl' 별칭과 일부 'American' 수식어를 놓친 점이 아쉽습니다."
+      },
+      "schema_mapping": {
+        "score": 95.0,
+        "reason": "직업, 고용주, 위치 등 관계가 적절하게 매핑되었으며, WHEN/WHERE Details를 통해 추가 정보를 효과적으로 표현했습니다."
+      },
+      "salience": {
+        "score": 100.0,
+        "reason": "문서의 핵심 주제인 'Carl Anderson' 동명이인들을 명확히 구별하는 데 완벽하게 성공했습니다."
+      },
+      "entity_clarity": {
+        "score": 100.0,
+        "reason": "모든 'Carl Anderson' 엔티티가 괄호 안의 설명으로 명확하게 구별되어 완벽하게 정제되고 통합되었습니다."
+      }
+    },
+    "overall_verdict": "새로운 데이터셋(HypeRelDocRED)이 원본 문서의 핵심 목적인 동명이인 구별을 완벽하게 수행하며, 엔티티 명확성, 핵심성, 스키마 매핑, 정보 포괄성 모든 면에서 원본 데이터셋(Re-DocRED)보다 월등히 우수합니다. 원본 데이터셋은 엔티티 모호성, 환각, 정보 누락 등 여러 심각한 문제를 가지고 있습니다."
+  },
+  {
+    "original_score": {
+      "hallucination": {
+        "score": 40.0,
+        "reason": "Norman C. Chambers가 미 공군과 관련 있다는 정보는 원문에 없으며, P1001 관계도 적절하지 않습니다. 대부분의 관계가 'country' 또는 'located in'으로 추론되어 원문의 직접적인 내용과 거리가 있습니다."
+      },
+      "comprehensiveness": {
+        "score": 10.0,
+        "reason": "BENS의 주요 활동, 확장된 초점, 파트너십, 주요 인물 및 역할 등 원문의 핵심 정보 대부분을 누락했습니다."
+      },
+      "schema_mapping": {
+        "score": 30.0,
+        "reason": "'country'와 'located in' 관계가 과도하게 중복 사용되었고, Norman C. Chambers에 대한 P241 매핑은 잘못되었습니다. 스키마가 원문의 다양한 정보를 표현하기에 매우 제한적입니다."
+      },
+      "salience": {
+        "score": 15.0,
+        "reason": "문서의 핵심 주제인 BENS의 활동, 파트너십, 인물 정보 대신 대부분의 엔티티에 대해 부차적인 국가/위치 정보만을 추출하여 핵심을 놓쳤습니다."
+      },
+      "entity_clarity": {
+        "score": 70.0,
+        "reason": "'BENS’'와 'BENS'가 통합되지 않고 별개의 엔티티로 처리되었습니다. 그 외 엔티티는 비교적 명확하게 추출되었습니다."
+      }
+    },
+    "new_score": {
+      "hallucination": {
+        "score": 95.0,
+        "reason": "원문에 없는 정보를 생성하거나 왜곡한 부분이 발견되지 않았습니다. 모든 추출된 사실은 원문에 명확히 근거합니다."
+      },
+      "comprehensiveness": {
+        "score": 90.0,
+        "reason": "BENS의 초기 활동, 확장된 초점, 파트너십, 주요 인물 및 역할 등 원문의 핵심 정보를 매우 풍부하게 담고 있으며, 'Details'를 통해 추가적인 맥락 정보까지 제공합니다."
+      },
+      "schema_mapping": {
+        "score": 95.0,
+        "reason": "'service provided', 'affiliation', 'employer' 등 원문의 내용을 잘 반영하는 적절한 관계 스키마를 사용했습니다. 'Details' 필드를 통해 관계의 세부 맥락을 효과적으로 표현했습니다."
+      },
+      "salience": {
+        "score": 95.0,
+        "reason": "문서의 핵심 주제인 BENS의 주요 활동, 파트너십, 인물 정보를 중심으로 추출하여 문서의 핵심 내용을 완벽하게 관통합니다."
+      },
+      "entity_clarity": {
+        "score": 95.0,
+        "reason": "'BENS’'와 'BENS'를 'BENS'로 통합하여 엔티티를 명확하게 정제했습니다. 다른 엔티티들도 고유명사로 잘 식별되고 통합되었습니다."
+      }
+    },
+    "overall_verdict": "새로운 데이터셋(HypeRelDocRED)이 원본 문서의 핵심 정보를 훨씬 더 정확하고 포괄적으로 추출했습니다. 환각이 없고, 스키마 매핑이 적절하며, 'Details'를 통해 풍부한 맥락 정보를 제공하여 원본 데이터셋보다 월등히 우수합니다. 원본 데이터셋은 환각이 있고, 정보 포괄성이 매우 낮으며, 스키마 매핑이 부적절하고 핵심 정보를 놓쳤습니다."
+  },
+  {
+    "original_score": {
+      "hallucination": {
+        "score": 30.0,
+        "reason": "\"Japanese\" 엔티티를 국가나 위치로 잘못 매핑하여 여러 환각을 생성했습니다. Michiko Maeda의 모국어를 \"Japanese\"로 매핑한 것도 원문에 없는 정보입니다."
+      },
+      "comprehensiveness": {
+        "score": 40.0,
+        "reason": "인물 간의 기본적인 관계와 사망일 등 일부 정보만 추출되었고, 직업, 고용주, 사망 원인, 내연 관계, 가문 정보 등 중요한 세부 정보가 많이 누락되었습니다."
+      },
+      "schema_mapping": {
+        "score": 20.0,
+        "reason": "\"Japanese\" 엔티티를 국가나 위치로 잘못 매핑하는 심각한 스키마 오류가 많습니다. P172(모국어) 매핑도 부적절합니다."
+      },
+      "salience": {
+        "score": 45.0,
+        "reason": "핵심적인 인물 관계와 사망일 등 일부 정보는 포함되었으나, 잘못된 정보와 누락된 정보가 많아 문서의 핵심을 효과적으로 전달하지 못합니다."
+      },
+      "entity_clarity": {
+        "score": 50.0,
+        "reason": "\"Japanese\" 엔티티의 모호한 사용으로 인해 명확성이 떨어집니다. 국가명과 국적을 구분하지 못했습니다."
+      }
+    },
+    "new_score": {
+      "hallucination": {
+        "score": 70.0,
+        "reason": "Toshimichi Takatsukasa와 Naotake의 관계를 \"father\"로 잘못 매핑하여 Naotake가 Toshimichi Takatsukasa의 아버지인 것처럼 표현한 명백한 환각이 있습니다."
+      },
+      "comprehensiveness": {
+        "score": 85.0,
+        "reason": "직업, 고용주, 사망 원인 및 장소 등 원문의 많은 세부 정보를 효과적으로 추출했으며, \"Details\" 필드를 활용하여 정보의 풍부함을 높였습니다. 다만, 가문 배경이나 자살 추정 등 일부 정보는 누락되었습니다."
+      },
+      "schema_mapping": {
+        "score": 80.0,
+        "reason": "대부분의 스키마 매핑은 적절하며 \"Details\" 필드를 통해 추가 정보를 잘 표현했습니다. 그러나 Toshimichi Takatsukasa와 Naotake의 관계를 \"father\"로 잘못 매핑한 오류가 있습니다."
+      },
+      "salience": {
+        "score": 90.0,
+        "reason": "문서의 핵심 인물과 그들의 주요 사건(직업, 결혼, 사망)을 중심으로 정보를 잘 추출했으며, 세부 정보까지 포함하여 핵심성을 높였습니다."
+      },
+      "entity_clarity": {
+        "score": 100.0,
+        "reason": "모든 엔티티가 고유명사로 명확하게 식별되며, 대명사나 모호한 표현 없이 잘 정제되었습니다."
+      }
+    },
+    "overall_verdict": "New Dataset (HypeRelDocRED)이 Original Dataset (Re-DocRED)보다 전반적으로 훨씬 우수합니다. Original Dataset은 \"Japanese\" 엔티티를 국가나 위치로 잘못 매핑하는 심각하고 반복적인 환각 및 스키마 오류를 보여 정보의 신뢰성이 매우 낮습니다. 반면 New Dataset은 Naotake와의 관계에서 한 가지 명백한 환각이 있지만, 직업, 고용주, 사망 원인 및 장소 등 원문의 핵심 정보를 훨씬 더 포괄적이고 정확하게 추출했으며, \"Details\" 필드를 활용하여 정보의 풍부함을 높였습니다. 엔티티 명확성 측면에서도 New Dataset이 훨씬 뛰어납니다."
+  },
+  {
+    "original_score": {
+      "hallucination": {
+        "score": 30.0,
+        "reason": "원문에 없는 정보(Greatest Hits의 국가, Guns N' Roses의 위치)를 생성하거나, 관계를 잘못 해석(Use Your Illusion I/II가 Use Your Illusion의 부분이라는 관계)하여 환각이 많습니다."
+      },
+      "comprehensiveness": {
+        "score": 40.0,
+        "reason": "앨범의 상세 정보(컴필레이션 앨범, 특정 소매점에서만 판매된 이유, 곡의 편집 버전, 트랙 길이, 커버 아트의 세부 사항) 등 중요한 디테일이 많이 누락되었습니다."
+      },
+      "schema_mapping": {
+        "score": 50.0,
+        "reason": "일부 스키마(performer, P800)는 적절하나, P361(part of), P527(has part)과 같은 스키마는 원문의 'drawing from' 관계를 잘못 매핑했으며, 'preceded by', 'followed by'는 추론된 관계입니다."
+      },
+      "salience": {
+        "score": 60.0,
+        "reason": "주요 엔티티는 추출했지만, 문서의 핵심 서사(컴필레이션 앨범의 특이한 유통 경로, 곡의 편집 이유)를 충분히 반영하지 못하고 불필요한 국가 정보에 집중하는 경향이 있습니다."
+      },
+      "entity_clarity": {
+        "score": 65.0,
+        "reason": "'0. Use Your Illusion'과 같이 불분명하거나 중복된 엔티티가 존재하여 명확성이 떨어집니다."
+      }
+    },
+    "new_score": {
+      "hallucination": {
+        "score": 100.0,
+        "reason": "제시된 모든 정보가 원문 내용에 기반하며, 원문에 없는 사실을 생성하거나 왜곡하지 않았습니다."
+      },
+      "comprehensiveness": {
+        "score": 75.0,
+        "reason": "핵심 정보와 'Details' 필드를 통해 중요한 맥락(only released, primarily sold, designed cover art)을 잘 포착했으나, 앨범의 특성(컴필레이션), 특정 소매점의 판매 거부 이유, 곡의 편집 세부 사항 등 일부 정보가 누락되었습니다."
+      },
+      "schema_mapping": {
+        "score": 95.0,
+        "reason": "스키마 매핑이 매우 적절하며, 'Details' 필드를 활용하여 관계에 대한 추가적인 맥락과 정확성을 제공하는 점이 뛰어납니다."
+      },
+      "salience": {
+        "score": 90.0,
+        "reason": "문서의 핵심 주제인 'Use Your Illusion' 앨범과 관련된 주요 정보(제작자, 유통, 커버 아트)를 정확하게 추출하여 문서의 핵심을 잘 관통합니다."
+      },
+      "entity_clarity": {
+        "score": 100.0,
+        "reason": "모든 엔티티가 명확하고 일관되게 식별되었으며, 모호하거나 중복된 엔티티가 없습니다."
+      }
+    },
+    "overall_verdict": "New Dataset (HypeRelDocRED)이 Original Dataset (Re-DocRED)보다 모든 면에서 훨씬 우수합니다. New Dataset은 환각이 전혀 없고 엔티티 명확성이 완벽하며, 'Details' 필드를 통해 정보 포괄성과 스키마 매핑의 정확도를 크게 향상시켰습니다. 반면 Original Dataset은 많은 환각, 부정확한 스키마 매핑, 그리고 불분명한 엔티티 문제점을 가지고 있습니다."
+  },
+  {
+    "original_score": {
+      "hallucination": {
+        "score": 100.0,
+        "reason": "원문에 없는 지식 창작이나 왜곡은 없습니다."
+      },
+      "comprehensiveness": {
+        "score": 50.0,
+        "reason": "Supernoobs의 제작자, 초기 방영 채널 등 일부 정보는 추출되었으나, 시즌2 관련 정보, 제작사, 다른 방영 채널 등 중요한 세부 정보가 많이 누락되었습니다."
+      },
+      "schema_mapping": {
+        "score": 60.0,
+        "reason": "P449, P170, P495 등 일부 P-ID는 적절하나, 'country', 'publication date', 'located in' 등 표준 P-ID가 아닌 관계가 사용되어 스키마 매핑의 일관성과 정확성이 떨어집니다."
+      },
+      "salience": {
+        "score": 70.0,
+        "reason": "Supernoobs의 핵심 정보(제작자, 초기 방영)는 포함되었으나, 시즌2의 중요한 변경 사항이나 제작사 등 문서의 핵심 내용을 완전히 반영하지 못했습니다."
+      },
+      "entity_clarity": {
+        "score": 90.0,
+        "reason": "대명사는 없으며 엔티티는 명확하게 추출되었으나, 'Canadian'이 엔티티로 추출된 점은 'Canada'가 더 적절했을 수 있습니다."
+      }
+    },
+    "new_score": {
+      "hallucination": {
+        "score": 100.0,
+        "reason": "원문에 없는 지식 창작이나 왜곡은 전혀 없습니다."
+      },
+      "comprehensiveness": {
+        "score": 95.0,
+        "reason": "원문의 거의 모든 중요한 디테일(시간, 장소, 시즌 정보, 변경 이유 등)을 풍부하게 추출하여 관계의 속성으로 잘 표현했습니다. Scott Fellows의 다른 작품 정보만 누락되었습니다."
+      },
+      "schema_mapping": {
+        "score": 90.0,
+        "reason": "'operated', 'service provided', 'founded by' 등 관계가 원문의 맥락에 매우 적절하게 매핑되었으며, 세부 정보를 속성으로 포함하여 관계의 의미를 명확하게 전달합니다."
+      },
+      "salience": {
+        "score": 95.0,
+        "reason": "문서의 핵심 주제인 Supernoobs의 제작, 방영, 시즌2 변경 사항 등 중요한 정보를 매우 잘 추출했습니다. Scott Fellows의 다른 작품 정보가 빠진 것이 유일한 아쉬움입니다."
+      },
+      "entity_clarity": {
+        "score": 100.0,
+        "reason": "대명사가 배제되었고, 'Canadian' 대신 'Canada'로 엔티티가 명확하게 추출되는 등 모든 엔티티가 고유명사로 잘 정제/통합되었습니다."
+      }
+    },
+    "overall_verdict": "New Dataset (HypeRelDocRED)가 Original Dataset (Re-DocRED)보다 훨씬 우수합니다. HypeRelDocRED는 원문의 세부 정보를 매우 풍부하게 포함하고 있으며, 특히 시간, 장소, 시즌 정보 등 디테일을 관계의 속성으로 잘 표현했습니다. 스키마 매핑도 원문의 맥락에 더 적합하며, 엔티티 명확성도 뛰어납니다. Re-DocRED는 일부 핵심 정보를 놓쳤고, 스키마 매핑에서 표준 P-ID가 아닌 관계를 사용하거나 중복된 정보를 포함하는 등 아쉬운 점이 많습니다."
+  },
+  {
+    "original_score": {
+      "hallucination": {
+        "score": 60.0,
+        "reason": "Oruanui를 국가나 위치로 잘못 매핑하고, Tasman Sea를 국가로 매핑하는 등 엔티티 타입에 대한 환각이 존재합니다."
+      },
+      "comprehensiveness": {
+        "score": 20.0,
+        "reason": "분출의 시기, 규모, 영향, 특이점 등 원문의 핵심적인 세부 정보들을 거의 담지 못하고, 대부분의 관계가 위치 정보에만 집중되어 있습니다."
+      },
+      "schema_mapping": {
+        "score": 40.0,
+        "reason": "Oruanui와 Tasman Sea에 대한 스키마 매핑이 엔티티 타입과 맞지 않으며, 'country'와 'located in' 관계가 중복되고 너무 일반적입니다."
+      },
+      "salience": {
+        "score": 15.0,
+        "reason": "원문의 핵심 주제인 Oruanui 분출 자체의 특성이나 영향보다는 주변 지리적 위치 정보에만 치중하여 문서의 핵심을 제대로 반영하지 못했습니다."
+      },
+      "entity_clarity": {
+        "score": 70.0,
+        "reason": "'Oruanui'가 분출 사건임에도 불구하고 장소 엔티티처럼 사용되었고, 'Waikato'가 강인지 지역인지 명확하지 않은 부분이 있습니다."
+      }
+    },
+    "new_score": {
+      "hallucination": {
+        "score": 100.0,
+        "reason": "원문에 없는 정보를 생성하거나 왜곡한 부분이 전혀 없습니다."
+      },
+      "comprehensiveness": {
+        "score": 90.0,
+        "reason": "분출의 시기, 위치, 결과, 영향 등 핵심적인 세부 정보들을 풍부하게 담고 있으며, 'Details'를 통해 추가적인 맥락을 제공합니다. 다만, 일부 수치 정보는 누락되었습니다."
+      },
+      "schema_mapping": {
+        "score": 95.0,
+        "reason": "'point in time', 'destination point', 'followed by' 등 원문의 맥락에 맞는 구체적인 관계를 사용했으며, 'Details' 필드를 통해 스키마를 효과적으로 확장했습니다."
+      },
+      "salience": {
+        "score": 100.0,
+        "reason": "원문의 핵심 주제인 Oruanui 분출과 그로 인한 영향, 결과 등을 중심으로 정보를 추출하여 문서의 핵심을 완벽하게 관통합니다."
+      },
+      "entity_clarity": {
+        "score": 100.0,
+        "reason": "'Oruanui eruption'과 같이 명확하고 구체적인 엔티티를 사용했으며, 대명사 없이 모든 엔티티가 잘 정제되고 통합되었습니다."
+      }
+    },
+    "overall_verdict": "새로운 데이터셋(HypeRelDocRED)이 원본 문서의 핵심 내용을 훨씬 더 정확하고 포괄적으로 추출했습니다. 원본 데이터셋은 환각, 정보 포괄성, 스키마 매핑, 핵심성, 엔티티 명확성 모든 면에서 심각한 결함을 보였습니다. 특히 원본 데이터셋은 Oruanui 분출이라는 핵심 사건을 제대로 파악하지 못하고 단순한 지리적 위치 정보에만 치중한 반면, 새로운 데이터셋은 분출의 시기, 위치, 원인, 결과 등 중요한 맥락을 상세하게 담아냈습니다. 따라서 새로운 데이터셋이 훨씬 우수합니다."
+  },
+  {
+    "original_score": {
+      "hallucination": {
+        "score": 60.0,
+        "reason": "\"American\" 엔티티를 잘못된 관계(P150, P6, P1001)로 연결하여 원문에 없는 정보를 생성하거나 왜곡함."
+      },
+      "comprehensiveness": {
+        "score": 40.0,
+        "reason": "인물의 주요 직책(당 위원장, DNC 위원장)과 관련된 시간, 장소 등의 핵심적인 세부 정보가 누락됨. \"American\" 엔티티의 과도하고 부정확한 사용으로 정보의 질이 떨어짐."
+      },
+      "schema_mapping": {
+        "score": 50.0,
+        "reason": "일부 관계는 적절하나, \"American\" 엔티티와 관련된 P-ID(P150, P6, P1001) 매핑이 명백히 잘못되어 스키마를 오용함."
+      },
+      "salience": {
+        "score": 55.0,
+        "reason": "인물의 주요 역할과 그 맥락에 대한 핵심 정보가 부족하며, 부정확하거나 덜 중요한 \"American\" 관련 관계로 인해 핵심 주제에서 벗어남."
+      },
+      "entity_clarity": {
+        "score": 70.0,
+        "reason": "대부분의 엔티티는 명확하나, \"American\" 엔티티가 국적, 위치 등 다양한 의미로 혼란스럽게 사용되고 일부 관계에서 잘못 매핑되어 명확성을 저해함."
+      }
+    },
+    "new_score": {
+      "hallucination": {
+        "score": 100.0,
+        "reason": "원문에 없는 정보를 전혀 생성하지 않았으며, 모든 추출된 사실이 원문에 기반함."
+      },
+      "comprehensiveness": {
+        "score": 90.0,
+        "reason": "인물의 직책 및 소속에 대한 시간, 장소, 방법 등 매우 풍부하고 구체적인 세부 정보를 효과적으로 포착함. 국적 및 종교 정보는 누락되었으나, 핵심 정보의 깊이가 뛰어남."
+      },
+      "schema_mapping": {
+        "score": 95.0,
+        "reason": "occupation, affiliation 등 적절한 스키마를 사용했으며, (Details: HOW:..., WHERE:..., WHEN:...)와 같은 메커니즘을 통해 복잡한 문맥 정보를 정확하게 매핑함."
+      },
+      "salience": {
+        "score": 98.0,
+        "reason": "문서의 핵심 주제인 John Moran Bailey의 주요 경력, 역할, 관계를 매우 효과적으로 추출하고 상세 정보를 포함하여 문서의 핵심을 완벽하게 관통함."
+      },
+      "entity_clarity": {
+        "score": 100.0,
+        "reason": "모든 엔티티가 원문에서 명확하게 추출되었고, 대명사나 모호한 표현 없이 고유명사로 잘 통합되어 있음. \"Details\"를 통해 관계의 맥락이 더욱 명확해짐."
+      }
+    },
+    "overall_verdict": "New Dataset (HypeRelDocRED)이 Original Dataset (Re-DocRED)보다 월등히 우수합니다. HypeRelDocRED는 환각 없이 원문의 모든 핵심 정보를 상세한 맥락과 함께 정확하게 추출했으며, 스키마 매핑과 엔티티 명확성 또한 뛰어납니다. 반면 Re-DocRED는 여러 관계에서 환각을 보였고, 핵심 정보의 세부 사항을 놓쳤으며, \"American\" 엔티티의 사용이 혼란스러웠습니다."
+  },
+  {
+    "original_score": {
+      "hallucination": {
+        "score": 20.0,
+        "reason": "P607(cause of death) 관계를 닉슨과 키신저에 잘못 적용하는 등 심각한 사실 왜곡 및 관계 오류가 다수 발견됨."
+      },
+      "comprehensiveness": {
+        "score": 15.0,
+        "reason": "메모의 날짜, 인터뷰 날짜, 닉슨의 구체적인 발언 내용, 버터필드의 재임 기간 등 문서의 핵심 세부 정보가 거의 추출되지 않음."
+      },
+      "schema_mapping": {
+        "score": 25.0,
+        "reason": "P607과 같은 치명적인 스키마 매핑 오류가 있으며, P1001, P800 등 적절치 않거나 모호한 스키마 사용이 많음."
+      },
+      "salience": {
+        "score": 30.0,
+        "reason": "문서의 핵심 주제인 닉슨의 개인적 평가와 공개 발언의 모순을 전혀 담아내지 못하고, 주변 인물 및 국가 정보에 치중함."
+      },
+      "entity_clarity": {
+        "score": 70.0,
+        "reason": "'National Security Advisor'와 같은 역할명이 독립적인 엔티티로 처리되어 명확성이 떨어지는 부분이 있음."
+      }
+    },
+    "new_score": {
+      "hallucination": {
+        "score": 80.0,
+        "reason": "메모가 책으로 '발송'되었다는 의미의 'destination point' 관계는 원문의 '출판'되었다는 의미를 왜곡하여 환각으로 판단됨."
+      },
+      "comprehensiveness": {
+        "score": 85.0,
+        "reason": "'Details' 필드를 활용하여 시간, 장소 등 많은 세부 정보를 포함했으나, 닉슨의 구체적인 발언 내용과 메모의 주제는 누락됨."
+      },
+      "schema_mapping": {
+        "score": 85.0,
+        "reason": "대부분의 관계가 'author', 'occupation' 등 원문에 적합하고 서술적이나, 'destination point'를 책에 적용한 것은 부적절함."
+      },
+      "salience": {
+        "score": 75.0,
+        "reason": "메모의 주요 인물, 역할, 시간 흐름 등 핵심적인 정보를 잘 추출했으나, 닉슨의 사적인 평가와 공개 발언의 모순이라는 문서의 가장 중요한 메시지는 직접적으로 드러나지 않음."
+      },
+      "entity_clarity": {
+        "score": 100.0,
+        "reason": "모든 엔티티가 명확하고 고유명사로 잘 정제/통합되어 있음."
+      }
+    },
+    "overall_verdict": "New Dataset (HypeRelDocRED)이 Original Dataset (Re-DocRED)보다 월등히 우수합니다. Original Dataset은 심각한 환각과 정보 누락, 부적절한 스키마 매핑으로 인해 신뢰도가 매우 낮습니다. 반면 New Dataset은 'Details' 필드를 활용하여 정보 포괄성이 높고, 관계 스키마가 원문에 더 적합하며, 엔티티 명확성도 뛰어납니다. 다만, New Dataset도 일부 관계 매핑 오류와 문서의 핵심적인 내용적 메시지 추출에는 개선의 여지가 있습니다."
+  },
+  {
+    "original_score": {
+      "hallucination": {
+        "score": 30.0,
+        "reason": "원문에 없는 'Soviet' 관련 정보가 다수 포함되어 있으며, 'Generalissimo'와 같은 계급을 'located in' 관계로 매핑하는 등 사실 왜곡 및 환각이 심각합니다."
+      },
+      "comprehensiveness": {
+        "score": 20.0,
+        "reason": "건축 시기, 화재 발생 시점, 재건축 시점 등 핵심적인 시간 정보와 건축 목적, 세부 위치 등의 디테일이 거의 누락되어 있습니다."
+      },
+      "schema_mapping": {
+        "score": 15.0,
+        "reason": "P-ID 매핑이 부정확하거나 역방향으로 사용된 경우가 많고, 'country'나 'located in' 관계가 계급이나 박물관에 부적절하게 적용되었습니다."
+      },
+      "salience": {
+        "score": 25.0,
+        "reason": "문서의 핵심 주제인 'Field Marshals' Hall'에 대한 정보보다는 'Soviet', 'Joseph Stalin' 등 주변적인 정보에 치중하여 문서의 핵심을 제대로 파악하지 못했습니다."
+      },
+      "entity_clarity": {
+        "score": 60.0,
+        "reason": "엔티티 자체는 고유명사로 명확하지만, 'Imperial Russia'와 'Soviet' 시대를 혼용하여 엔티티 간의 역사적 맥락과 관계가 모호해지는 문제가 있습니다."
+      }
+    },
+    "new_score": {
+      "hallucination": {
+        "score": 100.0,
+        "reason": "모든 추출된 정보가 원문 내용에 기반하고 있으며, 어떠한 사실 왜곡이나 환각도 발견되지 않았습니다."
+      },
+      "comprehensiveness": {
+        "score": 85.0,
+        "reason": "주요 엔티티와 관계를 잘 추출했으며, 'Details' 필드를 통해 건축 시기, 위치, 재건축 시점 등 중요한 디테일을 풍부하게 포함하고 있습니다. 다만, 홀의 건축 목적이나 화재에 대한 상세 정보는 일부 누락되었습니다."
+      },
+      "schema_mapping": {
+        "score": 95.0,
+        "reason": "'located in', 'founded by', 'parent org' 등 관계 스키마가 매우 적절하게 매핑되었으며, 'Details' 필드를 활용하여 속성 정보를 효과적으로 표현했습니다."
+      },
+      "salience": {
+        "score": 98.0,
+        "reason": "문서의 핵심 주제인 'Field Marshals' Hall'을 중심으로 중요한 정보들을 정확하게 추출하여 문서의 핵심을 완벽하게 관통합니다."
+      },
+      "entity_clarity": {
+        "score": 100.0,
+        "reason": "모든 엔티티가 고유명사로 명확하게 식별되며, 대명사나 모호한 표현 없이 깔끔하게 정제되었습니다."
+      }
+    },
+    "overall_verdict": "New Dataset (HypeRelDocRED)이 Original Dataset (Re-DocRED)보다 월등히 우수합니다. New Dataset은 환각 없이 원문의 핵심 정보를 정확하고 풍부하게 추출하며, 스키마 매핑과 엔티티 명확성 또한 뛰어납니다. 반면 Original Dataset은 심각한 환각, 낮은 정보 포괄성, 부정확한 스키마 매핑으로 인해 품질이 매우 낮습니다."
+  },
+  {
+    "original_score": {
+      "hallucination": {
+        "score": 95.0,
+        "reason": "원문에 없는 사실을 생성하지는 않았으나, Othniel Charles Marsh의 국적(P27)은 원문에 명시되지 않은 추론이며, 일부 지리적 관계가 중복되어 추출되었습니다."
+      },
+      "comprehensiveness": {
+        "score": 20.0,
+        "reason": "문서의 핵심 주제인 Apatornis, 발견, 재분류에 대한 정보는 거의 추출되지 않고, 지리적 위치 관계에만 집중하여 정보 포괄성이 매우 낮습니다."
+      },
+      "schema_mapping": {
+        "score": 80.0,
+        "reason": "사용된 P-ID(P150, P361 등) 자체는 정의에 따라 비교적 정확하게 매핑되었으나, 'country'와 같은 일부 관계는 지리적 계층 구조에서 다소 모호하게 사용되었습니다."
+      },
+      "salience": {
+        "score": 10.0,
+        "reason": "문서의 주요 내용인 Apatornis의 발견과 재분류에 대한 정보는 거의 추출되지 않고, 부차적인 지리적 정보에만 집중하여 핵심성이 매우 낮습니다."
+      },
+      "entity_clarity": {
+        "score": 90.0,
+        "reason": "추출된 엔티티들은 모두 고유명사로 명확하며 대명사가 배제되어 있습니다."
+      }
+    },
+    "new_score": {
+      "hallucination": {
+        "score": 90.0,
+        "reason": "원문에 없는 사실을 생성하지는 않았으나, 'country' 관계가 대륙(North America)에 사용되거나, 'founded by'가 'discovered by' 대신 사용되는 등 관계의 정확도가 다소 떨어집니다."
+      },
+      "comprehensiveness": {
+        "score": 85.0,
+        "reason": "Apatornis의 종, 발견 시기, 장소, 발견자, 재분류 등 문서의 핵심 정보를 대부분 포함하고 있으며, 'Details' 필드를 통해 추가적인 맥락 정보도 잘 담고 있습니다."
+      },
+      "schema_mapping": {
+        "score": 50.0,
+        "reason": "'country' (대륙), 'founded by' (발견), 'service provided' (재분류) 등 일부 관계가 원문의 의미를 정확하게 반영하지 못하고 모호하거나 부적절하게 매핑되었습니다."
+      },
+      "salience": {
+        "score": 95.0,
+        "reason": "문서의 핵심 주제인 Apatornis의 특성, 발견 과정, 그리고 중요한 재분류 사건을 중심으로 정보를 추출하여 문서의 핵심을 완벽하게 관통합니다."
+      },
+      "entity_clarity": {
+        "score": 95.0,
+        "reason": "추출된 엔티티들은 모두 고유명사로 명확하며 대명사가 배제되어 있습니다."
+      }
+    },
+    "overall_verdict": "New Dataset (HypeRelDocRED)이 Original Dataset (Re-DocRED)보다 훨씬 우수합니다. Original Dataset은 문서의 핵심 주제를 거의 다루지 않고 지리적 정보에만 치중하여 정보 포괄성과 핵심성이 매우 낮습니다. 반면 New Dataset은 일부 스키마 매핑의 정확도가 떨어지지만, 문서의 핵심 내용을 충실하게 추출하고 중요한 세부 정보까지 'Details' 필드를 통해 제공하여 정보 포괄성과 핵심성 측면에서 월등히 뛰어납니다."
+  },
+  {
+    "original_score": {
+      "hallucination": {
+        "score": 40.0,
+        "reason": "Swabian을 국가로 매핑하거나 German을 국가 엔티티로 사용하는 등 여러 명백한 환각과 잘못된 관계 방향(P150)이 존재합니다."
+      },
+      "comprehensiveness": {
+        "score": 30.0,
+        "reason": "Hellmut G. Haasis의 직업, 주요 저서, 그리고 그가 전기를 쓴 인물들과의 관계 등 원문의 핵심 정보가 많이 누락되었으며, 전반적으로 정보가 부족합니다."
+      },
+      "schema_mapping": {
+        "score": 45.0,
+        "reason": "Germany --(P150)--> Swabia와 같이 관계 방향이 잘못되었거나, Swabian, German과 같은 엔티티에 country 관계를 잘못 매핑하는 등 스키마 매핑 오류가 많습니다."
+      },
+      "salience": {
+        "score": 35.0,
+        "reason": "Hellmut G. Haasis의 직업, 주요 저서, 그리고 그가 전기를 쓴 인물들과의 관계 등 문서의 핵심 주제를 충분히 추출하지 못하고, 덜 중요한 지리적 정보에 치우쳐 있습니다."
+      },
+      "entity_clarity": {
+        "score": 50.0,
+        "reason": "Swabian이나 German과 같은 엔티티가 잘못된 유형으로 추출되어 관계 매핑 오류를 유발하는 등 엔티티 정의에 명확성이 부족합니다. 주요 엔티티는 명확하나, 일부 엔티티의 오용이 문제입니다."
+      }
+    },
+    "new_score": {
+      "hallucination": {
+        "score": 100.0,
+        "reason": "원문에 없는 정보를 생성하거나 왜곡한 부분이 전혀 없으며, 모든 추출된 사실이 원문에 기반합니다."
+      },
+      "comprehensiveness": {
+        "score": 95.0,
+        "reason": "Hellmut G. Haasis의 생년월일, 직업, 저서, 수상 내역 등 원문의 핵심 정보를 매우 상세하고 풍부하게 포함하고 있습니다. 다만, 그가 전기를 쓴 인물들(Elser, Heydrich, Oppenheimer) 자체에 대한 세부 정보는 생략되었습니다."
+      },
+      "schema_mapping": {
+        "score": 98.0,
+        "reason": "엔티티 간의 관계를 나타내는 스키마(P-ID)가 매우 적절하고 정확하게 매핑되었습니다. 'Details'를 활용하여 추가 정보를 표현한 점도 훌륭합니다."
+      },
+      "salience": {
+        "score": 98.0,
+        "reason": "문서의 핵심 주제인 Hellmut G. Haasis의 주요 활동과 업적에 대한 정보를 중심으로 매우 효과적으로 추출했으며, 불필요한 정보 없이 핵심을 잘 파악했습니다."
+      },
+      "entity_clarity": {
+        "score": 100.0,
+        "reason": "모든 엔티티가 명확하게 식별되고 일관된 명칭으로 사용되었으며, 대명사나 모호한 표현이 전혀 없습니다."
+      }
+    },
+    "overall_verdict": "New Dataset (HypeRelDocRED)이 Original Dataset (Re-DocRED)보다 모든 평가 기준에서 월등히 우수합니다. New Dataset은 환각 없이 원문의 핵심 정보를 포괄적이고 정확한 스키마 매핑으로 추출했으며, 엔티티 명확성도 뛰어납니다. 반면 Original Dataset은 여러 환각과 정보 누락, 스키마 매핑 오류가 많아 품질이 현저히 떨어집니다."
+  },
+  {
+    "original_score": {
+      "hallucination": {
+        "score": 80.0,
+        "reason": "원문에 없는 사실은 없으나, 'West German'을 국가로 매핑하거나 'East German'과 'East Germans'를 혼용하는 등 엔티티 타입 오류 및 중복된 정보 추출이 존재합니다."
+      },
+      "comprehensiveness": {
+        "score": 50.0,
+        "reason": "크리스티나 슈무크의 메달 정보(종류, 연도, 이벤트)와 올림픽 실격 사유 등 핵심적인 세부 정보가 많이 누락되었습니다."
+      },
+      "schema_mapping": {
+        "score": 60.0,
+        "reason": "일부 관계는 적절하나, P27(국적)을 국가명(West Germany)에 사용하거나, P1344와 P710을 혼용하는 등 스키마 매핑의 일관성과 정확성이 떨어집니다."
+      },
+      "salience": {
+        "score": 65.0,
+        "reason": "주요 인물과 대회는 추출했으나, 문서의 핵심 내용인 크리스티나 슈무크의 메달 획득 및 올림픽 실격 관련 스토리가 충분히 강조되지 않았습니다."
+      },
+      "entity_clarity": {
+        "score": 70.0,
+        "reason": "대명사는 없으나, 'East German'과 'East Germans'의 혼용, 'West German'을 국가 엔티티로 오용하는 등 엔티티의 명확성과 일관성이 부족합니다."
+      }
+    },
+    "new_score": {
+      "hallucination": {
+        "score": 100.0,
+        "reason": "원문에 있는 정보만을 정확하게 추출했으며, 어떠한 허위 정보나 왜곡도 없습니다."
+      },
+      "comprehensiveness": {
+        "score": 98.0,
+        "reason": "크리스티나 슈무크의 직업, 생년월일, 모든 메달 정보(종류, 획득 연도, 대회, 세부 종목, 올림픽 메달 획득 사유) 등 원문의 거의 모든 핵심 세부 정보를 풍부하게 담고 있습니다."
+      },
+      "schema_mapping": {
+        "score": 95.0,
+        "reason": "'occupation', 'date of birth', 'award received', 'located in' 등 적절한 스키마를 사용했으며, 'Details' 필드를 활용하여 시간, 장소, 방법, 이유 등 풍부한 속성 정보를 효과적으로 추가했습니다."
+      },
+      "salience": {
+        "score": 100.0,
+        "reason": "문서의 핵심 주제인 크리스티나 슈무크의 루지 선수 경력과 메달 획득이라는 주요 성과를 완벽하게 추출하고 강조했습니다."
+      },
+      "entity_clarity": {
+        "score": 100.0,
+        "reason": "모든 엔티티가 명확하고 일관되게 식별되었으며, 대명사나 모호한 표현 없이 고유명사가 정확하게 사용되었습니다."
+      }
+    },
+    "overall_verdict": "새로운 데이터셋(HypeRelDocRED)이 원본 데이터셋(Re-DocRED)보다 월등히 우수합니다. 새로운 데이터셋은 원문의 모든 핵심 정보를 정확하고 풍부하게 추출했으며, 특히 'Details' 필드를 활용하여 세부 정보를 효과적으로 표현했습니다. 반면 원본 데이터셋은 정보 포괄성이 낮고, 스키마 매핑 및 엔티티 명확성에서 여러 오류와 비일관성을 보였습니다."
+  },
+  {
+    "original_score": {
+      "hallucination": {
+        "score": 40.0,
+        "reason": "원문에 없는 'Frexit'을 국가로 취급하거나 'French'를 국가 엔티티로 잘못 사용하는 등 다수의 허위 정보와 왜곡된 관계가 포함되어 있습니다."
+      },
+      "comprehensiveness": {
+        "score": 30.0,
+        "reason": "인물의 직업, 정당의 주요 정책, 선거 결과 등 원문의 중요한 세부 정보들이 많이 누락되어 있습니다."
+      },
+      "schema_mapping": {
+        "score": 35.0,
+        "reason": "P150, P37 등 부적절한 P-ID 매핑이 많고, 'country', 'located in'과 같은 관계가 'Frexit'이나 'French'와 같은 부적절한 엔티티에 적용되어 정확도가 낮습니다."
+      },
+      "salience": {
+        "score": 40.0,
+        "reason": "인물의 핵심 직업, 정당의 주요 이념, 대선 출마 결과 등 중요한 정보들이 누락되었고, 불필요하거나 잘못된 정보들이 포함되어 핵심을 파악하기 어렵습니다."
+      },
+      "entity_clarity": {
+        "score": 30.0,
+        "reason": "'French'가 국가, 언어, 국적 등 모호하게 사용되어 엔티티의 명확성이 매우 떨어지며, 'Frexit'과 같은 개념이 물리적 엔티티처럼 사용되어 혼란을 야기합니다."
+      }
+    },
+    "new_score": {
+      "hallucination": {
+        "score": 100.0,
+        "reason": "모든 정보가 원문에서 직접 추출되었으며, 어떠한 허위 정보나 왜곡도 발견되지 않았습니다."
+      },
+      "comprehensiveness": {
+        "score": 70.0,
+        "reason": "인물의 주요 경력, 소속 정당, 대선 출마 등 핵심 정보는 잘 포함되었으나, 정당의 구체적인 정책이나 선거 결과의 세부 사항 등 일부 중요한 디테일이 누락되었습니다."
+      },
+      "schema_mapping": {
+        "score": 95.0,
+        "reason": "제공된 스키마가 원문의 의미를 정확하게 반영하며, 특히 'WHEN:2017'과 같이 시간 정보를 포함하는 방식이 매우 적절하고 정확합니다."
+      },
+      "salience": {
+        "score": 90.0,
+        "reason": "문서의 핵심 주제인 프랑수아 아셀리노의 주요 경력과 정치 활동을 중심으로 정보를 잘 추출하여 문서의 핵심을 효과적으로 전달합니다."
+      },
+      "entity_clarity": {
+        "score": 100.0,
+        "reason": "모든 엔티티가 명확하고 고유명사로 잘 통합되어 있으며, 대명사나 모호한 표현 없이 정확하게 사용되었습니다."
+      }
+    },
+    "overall_verdict": "새로운 데이터셋(HypeRelDocRED)이 원본 데이터셋(Re-DocRED)보다 월등히 우수합니다. 새로운 데이터셋은 환각이 전혀 없고 엔티티 명확성 및 스키마 매핑 정확도가 매우 높습니다. 반면 원본 데이터셋은 심각한 환각, 엔티티 모호성, 부정확한 스키마 매핑 문제로 인해 신뢰하기 어렵습니다. 정보 포괄성 측면에서는 새로운 데이터셋도 일부 개선의 여지가 있지만, 전반적인 품질은 훨씬 뛰어납니다."
+  },
+  {
+    "original_score": {
+      "hallucination": {
+        "score": 90.0,
+        "reason": "원문에 직접 명시되지 않은 인물들의 국적 정보가 포함되었으나, 맥락상 합리적인 추론으로 판단됩니다."
+      },
+      "comprehensiveness": {
+        "score": 30.0,
+        "reason": "잡지의 내용, 가격, 발행 부수, 폐간 사유 등 원문의 중요한 세부 정보들이 대거 누락되었습니다."
+      },
+      "schema_mapping": {
+        "score": 65.0,
+        "reason": "사용된 관계 스키마 자체는 대체로 적절하나, 'Journal For Everybody'와 'Zhurnal Dlya Vsekh'를 동일한 엔티티로 처리하지 않아 중복이 발생하고, '기여자'와 같은 핵심 관계가 누락되었습니다."
+      },
+      "salience": {
+        "score": 50.0,
+        "reason": "잡지의 기본 정보(창간, 폐간, 위치)는 추출했으나, 잡지의 특징, 인기 요인, 폐간의 구체적인 배경 등 핵심적인 서사적 정보가 부족합니다."
+      },
+      "entity_clarity": {
+        "score": 40.0,
+        "reason": "'Zhurnal Dlya Vsekh'와 'Journal For Everybody'가 동일한 대상을 지칭함에도 불구하고 별개의 엔티티로 취급되어 명확성이 크게 떨어집니다."
+      }
+    },
+    "new_score": {
+      "hallucination": {
+        "score": 95.0,
+        "reason": "원문에 명시된 정보를 기반으로 정확하게 추출했으며, 'WHEN:from 1898'과 같은 추론도 맥락상 매우 합리적입니다."
+      },
+      "comprehensiveness": {
+        "score": 85.0,
+        "reason": "'Details' 필드를 활용하여 창간 장소, 고용인의 역할, 폐간 사유 등 원문의 풍부한 세부 정보를 효과적으로 담아냈습니다. 다만, 잡지의 내용, 가격, 발행 부수 등 일부 정보는 여전히 누락되었습니다."
+      },
+      "schema_mapping": {
+        "score": 95.0,
+        "reason": "'employer', 'author', 'regulated by', 'replaced by' 등 원문의 맥락에 매우 적합한 관계 스키마를 사용했으며, 'Details' 필드를 통해 시간, 장소, 방법, 이유 등 추가적인 정보를 정교하게 매핑했습니다."
+      },
+      "salience": {
+        "score": 90.0,
+        "reason": "잡지의 핵심 인물, 기여자, 주요 사건(창간, 폐간, 이름 변경) 및 그 배경을 'Details' 필드와 함께 효과적으로 추출하여 문서의 핵심 내용을 잘 반영합니다."
+      },
+      "entity_clarity": {
+        "score": 90.0,
+        "reason": "'Zhurnal Dlya Vsekh' 엔티티를 일관되게 사용하고, 1928년 창간된 동명의 잡지를 별도로 명확히 구분하여 엔티티 명확성이 매우 높습니다."
+      }
+    },
+    "overall_verdict": "New Dataset (HypeRelDocRED)이 Original Dataset (Re-DocRED)보다 월등히 우수합니다. HypeRelDocRED는 'Details' 필드를 통해 원문의 풍부한 세부 정보를 정확하고 포괄적으로 담아냈으며, 스키마 매핑의 정확성과 엔티티 명확성 또한 뛰어납니다. 반면 Re-DocRED는 정보 포괄성이 매우 낮고, 엔티티 중복 문제로 인해 명확성이 떨어집니다."
+  },
+  {
+    "original_score": {
+      "hallucination": {
+        "score": 80.0,
+        "reason": "하나의 명백한 관계 왜곡(P607: cause of death)이 존재하여 원문에 없는 정보를 생성했습니다. Paillamachu는 봉기의 원인이 아니라 지도자였습니다."
+      },
+      "comprehensiveness": {
+        "score": 30.0,
+        "reason": "문서의 핵심 인물인 Pelantaro의 역할, 행적, 관련 인물 등 주요 정보가 거의 누락되었으며, 세부 사항도 매우 부족합니다."
+      },
+      "schema_mapping": {
+        "score": 60.0,
+        "reason": "Paillamachu와 Mapuche uprising 간의 P607(cause of death) 매핑은 명백한 오류이며, 전반적으로 스키마 활용이 제한적이고 일부는 부정확합니다."
+      },
+      "salience": {
+        "score": 40.0,
+        "reason": "문서의 핵심 인물인 Pelantaro를 놓치고, 주요 사건의 맥락과 인물 간의 관계를 충분히 포착하지 못하여 문서의 핵심을 관통하지 못했습니다."
+      },
+      "entity_clarity": {
+        "score": 90.0,
+        "reason": "동일 인물인 'Martín García Óñez de Loyola'와 'Martín Óñez de Loyola'를 통합하지 못해 엔티티 명확성이 약간 떨어집니다."
+      }
+    },
+    "new_score": {
+      "hallucination": {
+        "score": 85.0,
+        "reason": "두 개의 위치 관계('located in Bio-bio River')와 한 개의 소속 관계('affiliation' Mapuche)에서 원문의 의미를 다소 왜곡하거나 잘못 해석한 부분이 있습니다."
+      },
+      "comprehensiveness": {
+        "score": 85.0,
+        "reason": "문서의 주요 인물과 사건에 대한 대부분의 핵심 정보를 상세하게 추출했으며, 'Details'를 통해 풍부한 맥락을 제공합니다. 다만, Pelantaro의 트로피 사용 등 일부 흥미로운 디테일은 누락되었습니다."
+      },
+      "schema_mapping": {
+        "score": 75.0,
+        "reason": "다양하고 적절한 스키마를 활용했으나, 'affiliation'과 'located in' 관계에서 원문의 의미를 잘못 매핑한 오류가 존재합니다."
+      },
+      "salience": {
+        "score": 95.0,
+        "reason": "문서의 핵심 주제인 Pelantaro와 그의 주요 행적을 완벽하게 포착하고, 관련 인물 및 사건을 중심으로 정보를 추출하여 문서의 핵심을 잘 관통합니다."
+      },
+      "entity_clarity": {
+        "score": 100.0,
+        "reason": "모든 엔티티가 명확하고 고유하게 식별되며, 대명사 사용 없이 완벽하게 정제 및 통합되었습니다."
+      }
+    },
+    "overall_verdict": "새로운 데이터셋(HypeRelDocRED)이 원본 데이터셋(Re-DocRED)보다 훨씬 우수합니다. 새로운 데이터셋은 문서의 핵심 인물인 Pelantaro를 중심으로 그의 역할, 관계, 주요 사건을 매우 상세하고 풍부하게 추출했으며, 'Details' 필드를 활용하여 맥락 정보를 제공함으로써 정보 포괄성과 핵심성을 크게 향상시켰습니다. 비록 몇몇 관계 매핑에서 경미한 오류가 있었지만, 원본 데이터셋의 명백한 환각과 핵심 정보 누락에 비하면 훨씬 나은 품질을 보여줍니다. 엔티티 명확성 또한 새로운 데이터셋이 완벽합니다."
+  },
+  {
+    "original_score": {
+      "hallucination": {
+        "score": 85.0,
+        "reason": "케니 체스니의 국적(P27)이 미국이라는 정보는 원문에 직접적으로 명시되어 있지 않고, 앨범 판매 및 인증 국가를 통해 추론된 정보입니다."
+      },
+      "comprehensiveness": {
+        "score": 40.0,
+        "reason": "앨범의 판매량, 인증 정보, 케니 체스니의 직업, 앨범의 특징(첫 크리스마스 앨범, 오리지널/전통곡 포함), 커버곡의 원곡자 'Eddy Raven', 'Silent Night' 및 'Grigsby Twins' 등 중요한 세부 정보가 누락되었습니다."
+      },
+      "schema_mapping": {
+        "score": 60.0,
+        "reason": "P27(국적) 스키마의 적용이 모호하며, P800(주요 작품) 스키마가 'performer' 스키마와 중복되거나 원곡자/커버곡 연주자 등 더 세분화된 관계를 표현하지 못하고 너무 광범위하게 사용되었습니다."
+      },
+      "salience": {
+        "score": 70.0,
+        "reason": "앨범과 주요 연주자 정보는 잘 추출했지만, 앨범의 성공 지표(골드 인증, 판매량)나 'Silent Night' 및 'Grigsby Twins'와 같은 앨범 내 특정 곡의 중요한 세부 정보는 누락되었습니다."
+      },
+      "entity_clarity": {
+        "score": 75.0,
+        "reason": "'Chesney'를 'Kenny Chesney'로, 'Oak Ridge Boys'를 'The Oak Ridge Boys'로 완전히 정제하지 못했으며, 'Grigsby Twins' 엔티티를 추출하지 못했습니다."
+      }
+    },
+    "new_score": {
+      "hallucination": {
+        "score": 100.0,
+        "reason": "모든 추출된 정보가 원문 내용에 정확히 부합하며, 원문에 없는 내용을 창작하거나 왜곡한 부분이 없습니다."
+      },
+      "comprehensiveness": {
+        "score": 75.0,
+        "reason": "앨범의 골드 인증 및 각 곡의 연주자/원곡자에 대한 세부 정보(Details)를 잘 포착했지만, 앨범 판매량, 앨범의 전반적인 구성(오리지널/전통곡, 커버곡 수) 등 일부 중요한 정보가 누락되었습니다."
+      },
+      "schema_mapping": {
+        "score": 95.0,
+        "reason": "'performer', 'publication date', 'award received' 등 적절한 스키마를 사용했으며, 'Details' 필드를 통해 'WHERE', 'HOW'와 같은 추가적인 맥락 정보를 정확하게 매핑하여 관계의 정밀도를 높였습니다."
+      },
+      "salience": {
+        "score": 90.0,
+        "reason": "앨범, 주요 아티스트, 발매일, 골드 인증 등 핵심 정보를 잘 추출했으며, 커버곡의 원곡자(Eddy Raven)와 'Silent Night'의 특별 연주자(Grigsby Twins) 등 중요한 세부 사항도 놓치지 않았습니다."
+      },
+      "entity_clarity": {
+        "score": 100.0,
+        "reason": "'Kenny Chesney', 'The Oak Ridge Boys' 등 엔티티의 고유명사를 완벽하게 통합하고 정제했으며, 'Grigsby Twins'와 같은 특정 엔티티도 명확하게 추출했습니다."
+      }
+    },
+    "overall_verdict": "새로운 데이터셋(HypeRelDocRED)이 원본 데이터셋(Re-DocRED)보다 전반적으로 훨씬 우수합니다. 새로운 데이터셋은 원문에 없는 정보를 생성하지 않아 환각 점수가 높고, 'Details' 필드를 활용하여 스키마 매핑의 정확성과 정보 포괄성을 크게 향상시켰습니다. 또한 엔티티를 고유명사로 명확하게 정제하고 통합하는 데 더 뛰어난 성능을 보였습니다. 원본 데이터셋은 스키마 매핑의 모호함과 정보 누락, 엔티티 정제 부족 등의 단점이 명확합니다."
+  },
+  {
+    "original_score": {
+      "hallucination": {
+        "score": 100.0,
+        "reason": "원문에 없는 내용을 생성하거나 왜곡하지 않았습니다."
+      },
+      "comprehensiveness": {
+        "score": 10.0,
+        "reason": "원문에서 다루는 핵심 정보와 세부 사항을 거의 추출하지 못했습니다. 두 가지 사실만 추출하여 정보 포괄성이 매우 낮습니다."
+      },
+      "schema_mapping": {
+        "score": 90.0,
+        "reason": "'is part of' 및 'has part' 관계는 헌법과 수정안 사이의 관계를 정확하게 매핑했습니다. 추출된 정보의 양이 적지만 매핑 자체는 정확합니다."
+      },
+      "salience": {
+        "score": 20.0,
+        "reason": "원문의 핵심 주제인 상원의원 사임 및 공석 충원 방식보다는 헌법과 수정안의 관계라는 부차적인 정보를 추출했습니다."
+      },
+      "entity_clarity": {
+        "score": 100.0,
+        "reason": "엔티티가 명확하고 고유명사로 잘 식별되었습니다."
+      }
+    },
+    "new_score": {
+      "hallucination": {
+        "score": 100.0,
+        "reason": "원문에 없는 내용을 생성하거나 왜곡하지 않았습니다. 모든 정보는 원문에 기반합니다."
+      },
+      "comprehensiveness": {
+        "score": 90.0,
+        "reason": "윌리엄 패터슨, 윌리엄 그레이슨, 존 워커 등 주요 인물들의 사임/임명 관련 세부 정보(날짜, 이유, 장소, 방법)를 풍부하게 추출했습니다. 상원 설립 연도와 규제 조항까지 포함하여 원문의 핵심 내용을 잘 담아냈습니다. 다만, 사임 동기나 사임 횟수 통계 등 일부 일반적인 정보는 누락되었습니다."
+      },
+      "schema_mapping": {
+        "score": 90.0,
+        "reason": "'employer', 'occupation', 'founded in', 'regulated by' 등 대부분의 관계가 원문의 맥락에 적절하게 매핑되었습니다. 'service provided'는 'appointed'를 표현하기에 다소 일반적이지만 허용 가능한 수준입니다."
+      },
+      "salience": {
+        "score": 95.0,
+        "reason": "상원의원 사임의 역사적 사례와 헌법적 근거 등 원문의 핵심 주제를 중심으로 정보를 추출했습니다. 문서의 주요 흐름과 내용을 잘 반영합니다."
+      },
+      "entity_clarity": {
+        "score": 100.0,
+        "reason": "엔티티가 명확하고 고유명사로 잘 식별되었으며, 대명사 사용 없이 통합되었습니다."
+      }
+    },
+    "overall_verdict": "New Dataset (HypeRelDocRED)이 Original Dataset (Re-DocRED)보다 훨씬 우수합니다. New Dataset은 원문의 핵심 주제와 관련된 풍부하고 상세한 정보를 정확한 스키마 매핑과 함께 추출하여 정보 포괄성과 핵심성에서 압도적인 성능을 보였습니다. 반면 Original Dataset은 원문의 극히 일부 정보만을 추출하여 지식 그래프로서의 가치가 매우 낮습니다."
+  },
+  {
+    "original_score": {
+      "hallucination": {
+        "score": 20.0,
+        "reason": "원문에 없는 정보(예: Meat Loaf가 'Making Love Out of Nothing at All'을 공연했다는 내용)를 생성하거나, 사실과 다른 관계를 다수 포함하고 있습니다. '0. Midnight at the Lost and Found'와 같은 잘못된 엔티티명도 문제입니다."
+      },
+      "comprehensiveness": {
+        "score": 45.0,
+        "reason": "주요 엔티티와 앨범/곡 정보는 추출했지만, 앨범 제작 배경(분쟁, 계약 의무), 앨범의 평가, 커버 아트 변경 등 원문의 중요한 맥락과 세부 정보를 많이 놓쳤습니다."
+      },
+      "schema_mapping": {
+        "score": 30.0,
+        "reason": "P527(has part), P361(part of) 등 부적절한 스키마 매핑이 많습니다. P800(notable work)도 Meat Loaf가 공연하지 않은 곡에 잘못 적용되었습니다. publication date도 원문과 다르게 해석된 부분이 있습니다."
+      },
+      "salience": {
+        "score": 40.0,
+        "reason": "주요 엔티티는 추출했지만, 앨범의 핵심적인 배경 스토리(Jim Steinman과의 분쟁, 곡의 이동 등)를 관계를 통해 명확히 드러내지 못했습니다. 불필요한 중복 트리플도 많습니다."
+      },
+      "entity_clarity": {
+        "score": 50.0,
+        "reason": "'0. Midnight at the Lost and Found'와 같이 엔티티명이 잘못 추출된 경우가 있으며, 동일한 트리플이 여러 번 반복되어 명확성과 간결성이 떨어집니다."
+      }
+    },
+    "new_score": {
+      "hallucination": {
+        "score": 95.0,
+        "reason": "원문의 내용을 충실히 반영하며, 허위 정보를 생성하거나 사실을 왜곡한 부분이 거의 없습니다. 'preceded by' 관계도 원문의 맥락에서 합리적인 추론입니다."
+      },
+      "comprehensiveness": {
+        "score": 90.0,
+        "reason": "주요 엔티티와 관계뿐만 아니라, 'Details' 필드를 활용하여 앨범의 출시 배경, 아티스트 간의 분쟁, 곡의 이동 등 원문의 중요한 맥락과 세부 정보를 매우 풍부하게 담아냈습니다."
+      },
+      "schema_mapping": {
+        "score": 90.0,
+        "reason": "publication date, author, performer 등 스키마가 원문의 내용에 맞게 적절하게 매핑되었습니다. 'employer'나 'affiliation'과 같은 관계도 문맥상 타당하게 사용되었습니다. 'Details' 필드는 스키마의 한계를 보완합니다."
+      },
+      "salience": {
+        "score": 95.0,
+        "reason": "문서의 핵심 주제인 'Midnight at the Lost and Found' 앨범과 관련된 Meat Loaf, Jim Steinman, Epic Records 간의 복잡한 관계와 스토리를 'Details'를 통해 효과적으로 전달하여 문서의 핵심을 완벽하게 관통합니다."
+      },
+      "entity_clarity": {
+        "score": 95.0,
+        "reason": "모든 엔티티가 명확하고 일관되게 사용되었으며, 대명사나 모호한 표현 없이 고유명사로 잘 통합되었습니다. 중복된 트리플이 없어 간결합니다."
+      }
+    },
+    "overall_verdict": "New Dataset (HypeRelDocRED)이 Original Dataset (Re-DocRED)보다 모든 면에서 훨씬 우수합니다. New Dataset은 원문의 정보를 정확하고 포괄적으로 추출하며, 적절한 스키마 매핑과 'Details' 필드를 통해 풍부한 맥락 정보를 제공하여 문서의 핵심을 완벽하게 전달합니다. 반면 Original Dataset은 다수의 환각, 부정확한 스키마 매핑, 정보 누락 및 중복으로 인해 품질이 매우 낮습니다."
+  },
+  {
+    "original_score": {
+      "hallucination": {
+        "score": 85.0,
+        "reason": "코아쿠마 아게하와 해피 너츠의 발행 국가가 원문에 명시되지 않았음에도 일본으로 추론하여 추가했습니다. 일부 관계가 중복됩니다."
+      },
+      "comprehensiveness": {
+        "score": 30.0,
+        "reason": "잡지의 원래 이름, 특별판 관계, 대상 독자, 내용, 판매처 등 핵심적인 많은 정보가 누락되었습니다."
+      },
+      "schema_mapping": {
+        "score": 90.0,
+        "reason": "사용된 스키마(P-ID)는 추출된 정보에 대해 대체로 적절합니다. 다만, 일부 관계가 중복되거나 더 구체적인 관계를 사용하지 못했습니다."
+      },
+      "salience": {
+        "score": 60.0,
+        "reason": "잡지의 기본적인 사실(발행사, 국가, 창간 연도)은 추출했지만, '갸루마마' 대상, 특별판 관계, 구체적인 내용, 판매처 등 잡지의 핵심적인 특징과 차별점은 놓쳤습니다."
+      },
+      "entity_clarity": {
+        "score": 100.0,
+        "reason": "모든 엔티티가 고유명사로 명확하게 추출되었으며, 대명사나 모호한 표현이 없습니다."
+      }
+    },
+    "new_score": {
+      "hallucination": {
+        "score": 90.0,
+        "reason": "'I Love Mama'가 'Mama Nuts × Ageha'를 '대체(replaces)'했다는 관계는 원문의 '원래 이름이 ~였다'는 내용에 비추어 볼 때 약간의 오해석이 있습니다. '이전 이름' 또는 '개명'에 더 가깝습니다."
+      },
+      "comprehensiveness": {
+        "score": 85.0,
+        "reason": "발행사, 위치, 이전 이름, 특별판 관계, 창간 연도, 판매처 등 많은 핵심 정보를 추출했으며, 'Details' 필드를 활용하여 추가적인 맥락을 잘 담아냈습니다. 다만, 주요 독자층(갸루마마)과 잡지의 구체적인 내용(가사, 육아, 패션 팁)은 누락되었습니다."
+      },
+      "schema_mapping": {
+        "score": 95.0,
+        "reason": "'service provided'와 같은 구체적인 관계를 사용하고 'Details' 필드를 통해 추가 정보를 제공하여 스키마 매핑이 매우 정확하고 풍부합니다. 'replaces' 관계만 약간의 아쉬움이 있습니다."
+      },
+      "salience": {
+        "score": 80.0,
+        "reason": "잡지의 발행사, 위치, 창간 연도뿐만 아니라 다른 잡지의 특별판으로 시작된 배경과 판매처 등 중요한 핵심 정보를 잘 추출했습니다. 'Details' 필드도 핵심 정보를 보강합니다. 다만, '갸루마마' 대상이라는 가장 독특한 특징과 구체적인 내용이 빠져 아쉽습니다."
+      },
+      "entity_clarity": {
+        "score": 100.0,
+        "reason": "모든 엔티티가 고유명사로 명확하게 추출되었으며, 대명사나 모호한 표현이 없습니다."
+      }
+    },
+    "overall_verdict": "New Dataset (HypeRelDocRED)이 Original Dataset (Re-DocRED)보다 훨씬 우수합니다. HypeRelDocRED는 원문의 더 많은 정보를 포괄적으로 추출하고, 'Details' 필드를 활용하여 관계에 대한 상세한 맥락을 제공함으로써 정보의 풍부함과 스키마 매핑의 정확도를 크게 향상시켰습니다. 반면 Re-DocRED는 정보가 매우 부족하고 일부 관계가 중복되는 단점이 있습니다."
+  },
+  {
+    "original_score": {
+      "hallucination": {
+        "score": 30.0,
+        "reason": "Wil Saer를 독립적인 인물로 간주하여 사망일과 국적을 부여하는 등 심각한 환각이 많고, 'Belgian'을 국가나 장소로 잘못 매핑한 오류가 많습니다."
+      },
+      "comprehensiveness": {
+        "score": 50.0,
+        "reason": "Schoemaker의 직업, 교육 내용, 오케스트라 지휘 및 SABAM 직위, Les Synthétistes 설립 이유 등 중요한 세부 정보가 많이 누락되었습니다."
+      },
+      "schema_mapping": {
+        "score": 40.0,
+        "reason": "'Belgian'을 국가 엔티티로 잘못 매핑하는 오류가 반복되며, Schoemaker와 Les Synthétistes의 관계(설립자 vs 멤버)도 부적절하게 매핑되었습니다."
+      },
+      "salience": {
+        "score": 60.0,
+        "reason": "핵심 인물과 주요 작품, 그룹에 대한 정보는 추출했으나, 잘못된 정보와 매핑 오류로 인해 핵심 내용 전달의 정확성이 떨어집니다."
+      },
+      "entity_clarity": {
+        "score": 35.0,
+        "reason": "'Wil Saer'를 Maurice Schoemaker의 가명이 아닌 별개의 인물로 처리하고, 'Belgian'을 국가 엔티티로 사용하는 등 엔티티의 명확성과 통합성이 매우 낮습니다."
+      }
+    },
+    "new_score": {
+      "hallucination": {
+        "score": 100.0,
+        "reason": "원문에 없는 내용을 창작하거나 왜곡한 부분이 전혀 없습니다."
+      },
+      "comprehensiveness": {
+        "score": 90.0,
+        "reason": "Schoemaker의 교육 내용, 오케스트라 지휘 시기, Les Synthétistes 설립 이유 등 원문의 세부 정보를 'Details' 필드를 통해 풍부하게 포함하고 있습니다. 다만, 가명 정보나 작곡한 음악의 종류 등 일부 정보는 누락되었습니다."
+      },
+      "schema_mapping": {
+        "score": 95.0,
+        "reason": "관계 매핑이 매우 적절하고 구체적이며, 'Details' 필드를 활용하여 관계의 맥락을 정확하게 표현했습니다."
+      },
+      "salience": {
+        "score": 98.0,
+        "reason": "문서의 핵심 주제인 Maurice Schoemaker의 생애와 업적, 관련 인물 및 단체에 대한 정보를 매우 효과적으로 추출하여 핵심성을 완벽하게 관통합니다."
+      },
+      "entity_clarity": {
+        "score": 95.0,
+        "reason": "엔티티가 명확하게 식별되고, 대명사 없이 고유명사 위주로 구성되어 있습니다. 'Belgian'과 같은 모호한 엔티티 사용을 피했습니다."
+      }
+    },
+    "overall_verdict": "New Dataset (HypeRelDocRED)이 Original Dataset (Re-DocRED)보다 모든 면에서 훨씬 우수합니다. New Dataset은 환각 없이 원문의 세부 정보를 정확하고 풍부하게 추출했으며, 스키마 매핑과 엔티티 명확성도 뛰어납니다. 반면 Original Dataset은 Wil Saer를 별개의 인물로 처리하거나 'Belgian'을 국가 엔티티로 잘못 매핑하는 등 심각한 환각과 오류가 많아 지식 그래프로서의 신뢰도가 매우 낮습니다."
+  },
+  {
+    "original_score": {
+      "hallucination": {
+        "score": 60.0,
+        "reason": "P150 관계의 오용과 'Democrat' 엔티티에 대한 잘못된 국가/위치 관계 설정 등 여러 환각 및 오류가 발견됨."
+      },
+      "comprehensiveness": {
+        "score": 40.0,
+        "reason": "인물의 직업, 재임 기간, 선거 결과 등 핵심적인 경력 정보가 많이 누락되었고, 지리적 포함 관계에 과도하게 집중함."
+      },
+      "schema_mapping": {
+        "score": 50.0,
+        "reason": "P150(포함) 관계가 P131(위치) 관계 대신 잘못 사용된 경우가 많고, 'Democrat' 엔티티의 관계 매핑이 부적절함."
+      },
+      "salience": {
+        "score": 50.0,
+        "reason": "문서의 핵심 주제인 인물의 다양한 직책과 정치 경력에 대한 정보 추출이 부족하고, 중요도가 낮은 지리적 관계에 치중함."
+      },
+      "entity_clarity": {
+        "score": 90.0,
+        "reason": "엔티티 식별 및 통합은 비교적 명확하나, 일부 엔티티 표현이 다소 길거나 정제될 여지가 있음."
+      }
+    },
+    "new_score": {
+      "hallucination": {
+        "score": 100.0,
+        "reason": "원문에 없는 정보를 생성하거나 왜곡한 부분이 전혀 없이 모든 정보가 원문에 기반함."
+      },
+      "comprehensiveness": {
+        "score": 90.0,
+        "reason": "인물의 생애, 교육, 다양한 직업 및 재임 기간 등 핵심 정보를 매우 상세하게 포괄적으로 추출했으나, 선거 경쟁자나 추가적인 낙선 정보 등 일부 세부 사항은 누락됨."
+      },
+      "schema_mapping": {
+        "score": 95.0,
+        "reason": "'occupation', 'employer', 'affiliation' 등 적절한 스키마를 사용했으며, 'Details'를 통해 시간, 장소, 방식 등 맥락 정보를 효과적으로 매핑하여 정보의 풍부함을 높임."
+      },
+      "salience": {
+        "score": 98.0,
+        "reason": "문서의 핵심 주제인 제임스 윌리엄 머피의 생애와 경력에 대한 정보를 매우 효과적으로 추출하여 문서의 핵심을 완벽하게 관통함."
+      },
+      "entity_clarity": {
+        "score": 95.0,
+        "reason": "엔티티가 명확하게 식별되고 일관되게 사용되었으며, 대명사 배제 및 고유명사 통합이 잘 이루어짐. 'State Normal School'을 현재 명칭으로 정규화한 것은 합리적인 처리로 보임."
+      }
+    },
+    "overall_verdict": "New Dataset (HypeRelDocRED)는 Original Dataset (Re-DocRED)에 비해 월등히 우수합니다. New Dataset은 원문의 정보를 정확하고 포괄적으로 추출하며, 'Details'와 같은 혁신적인 스키마 매핑 방식을 통해 정보의 맥락까지 풍부하게 담아냅니다. 반면 Original Dataset은 환각 및 스키마 매핑 오류가 많고, 핵심 정보의 포괄성이 현저히 떨어집니다."
+  },
+  {
+    "original_score": {
+      "hallucination": {
+        "score": 50.0,
+        "reason": "원문에 없는 사실 관계(미테랑이 프랑스 공산당 의장, UDF 창립일 등)를 생성하거나 왜곡한 부분이 다수 발견됨."
+      },
+      "comprehensiveness": {
+        "score": 60.0,
+        "reason": "주요 엔티티와 사건은 추출했으나, 정당 분열의 원인, 동맹 반대 이유, 공동 강령과 같은 핵심적인 맥락 정보가 누락됨."
+      },
+      "schema_mapping": {
+        "score": 55.0,
+        "reason": "일부 관계는 적절하나, 창립자에게 '의장' P-ID를 사용하거나, 미테랑에게 '국가원수' P-ID를 부적절하게 매핑하는 등 스키마 매핑의 정확도가 떨어짐."
+      },
+      "salience": {
+        "score": 65.0,
+        "reason": "핵심 주제를 다루고 있으나, 모든 엔티티에 대해 반복적으로 '국가' 또는 '위치' 관계를 추출하여 문서의 핵심 내용 전달력이 저하됨."
+      },
+      "entity_clarity": {
+        "score": 70.0,
+        "reason": "대명사는 없으나, 원문에서 동일한 엔티티의 약어와 전체 이름이 혼용될 때 이를 명확하게 통합하거나 별칭으로 처리하지 않음."
+      }
+    },
+    "new_score": {
+      "hallucination": {
+        "score": 85.0,
+        "reason": "원문의 사실을 왜곡하거나 존재하지 않는 정보를 생성하지는 않았으나, '원래 이름' 관계를 '대체됨'으로, '분열' 관계를 '상위 조직'으로 해석하는 등 일부 관계의 의미론적 오류가 있음."
+      },
+      "comprehensiveness": {
+        "score": 95.0,
+        "reason": "주요 엔티티, 사건뿐만 아니라 'HOW', 'WHEN', 'WHY'와 같은 세부 정보를 'Details' 필드를 통해 풍부하게 포함하여 정보 포괄성이 매우 높음."
+      },
+      "schema_mapping": {
+        "score": 90.0,
+        "reason": "관계 스키마가 원문의 의미를 더 정확하게 반영하며, 'Details' 필드를 활용하여 복잡한 문장의 맥락적 정보를 효과적으로 매핑하여 스키마 매핑 정확도가 매우 높음."
+      },
+      "salience": {
+        "score": 95.0,
+        "reason": "문서의 핵심 주제인 정당의 역사, 창립, 합병, 동맹 관계에 집중하여 가장 중요한 정보를 효과적으로 추출함."
+      },
+      "entity_clarity": {
+        "score": 80.0,
+        "reason": "대명사는 없으며 엔티티는 명확하게 식별되나, '원래 이름' 관계를 '대체됨'으로 표현하여 엔티티 간의 명확한 통합 또는 별칭 처리가 약간 아쉬움."
+      }
+    },
+    "overall_verdict": "New Dataset (HypeRelDocRED)은 Original Dataset (Re-DocRED)에 비해 환각이 적고, 'Details' 필드를 활용하여 원문의 세부 맥락 정보를 매우 풍부하게 담아내어 정보 포괄성과 스키마 매핑 정확도, 핵심성 면에서 월등히 우수합니다. Original Dataset의 관계 매핑 오류와 불필요한 정보 추출 문제를 New Dataset이 효과적으로 개선했습니다. 따라서 New Dataset이 전반적으로 더 나은 지식 그래프 데이터셋입니다."
+  },
+  {
+    "original_score": {
+      "hallucination": {
+        "score": 80.0,
+        "reason": "P800(notable work)을 캐릭터(Scott Favor, Michael Waters)에 사용한 것은 잘못된 정보 매핑이며, P170(creator)을 Michael Waters와 Gus Van Sant에 연결한 것은 다소 부적절합니다."
+      },
+      "comprehensiveness": {
+        "score": 20.0,
+        "reason": "주요 인물, 배우, 감독, 영화 제목만 추출했으며, 인물의 성격, 배경, 영화의 중요성 등 세부 정보가 거의 누락되었습니다."
+      },
+      "schema_mapping": {
+        "score": 50.0,
+        "reason": "P800(notable work)을 캐릭터에 잘못 매핑한 것이 큰 오류입니다. 'author'를 감독에게 사용한 것도 'director'가 있음에도 불구하고 부적절합니다."
+      },
+      "salience": {
+        "score": 60.0,
+        "reason": "주요 인물과 영화 정보를 추출했지만, 마이클 워터스와 스콧 페이버의 관계, 마이클 워터스의 성격적 특징, 영화의 문화적 중요성 등 핵심적인 내용이 부족합니다."
+      },
+      "entity_clarity": {
+        "score": 100.0,
+        "reason": "모든 엔티티가 고유명사로 명확하게 식별되며, 대명사가 배제되고 'Mike'가 'Michael Waters'로 통합되었습니다."
+      }
+    },
+    "new_score": {
+      "hallucination": {
+        "score": 60.0,
+        "reason": "'Michael Waters --(affiliation)--> Scott Favor'는 친구/연인 관계를 잘못 표현한 것이며, 'My Own Private Idaho --(service provided)--> Michael Waters'는 캐릭터와 영화의 관계를 매우 부적절하게 매핑하여 사실을 왜곡합니다."
+      },
+      "comprehensiveness": {
+        "score": 30.0,
+        "reason": "원본 데이터셋보다 Eric Alan Edwards와 New Queer Cinema를 포함하여 약간 더 많은 정보를 담고 있으나, 여전히 인물의 세부 특징이나 서사적 중요성 등 많은 정보가 누락되었습니다. 'Details' 필드의 활용은 좋았으나 제한적이었습니다."
+      },
+      "schema_mapping": {
+        "score": 40.0,
+        "reason": "'affiliation', 'employer', 'service provided' 등 여러 관계 스키마가 원문의 의미를 정확하게 반영하지 못하고 부적절하게 사용되었습니다. 특히 'service provided'는 심각한 오류입니다."
+      },
+      "salience": {
+        "score": 65.0,
+        "reason": "마이클 워터스와 스콧 페이버의 관계, 뉴 퀴어 시네마와의 연결 등 핵심적인 내용을 포착하려 시도했으나, 부적절한 스키마 매핑으로 인해 그 효과가 반감되었습니다."
+      },
+      "entity_clarity": {
+        "score": 100.0,
+        "reason": "모든 엔티티가 고유명사로 명확하게 식별되며, 대명사가 배제되고 'Mike'가 'Michael Waters'로 통합되었습니다."
+      }
+    },
+    "overall_verdict": "New Dataset은 'Details' 필드를 통해 정보 포괄성을 높이려는 시도는 좋았으나, 관계 스키마 매핑의 정확도가 현저히 떨어져 원문의 의미를 왜곡하는 경우가 많습니다. 반면 Original Dataset은 정보 포괄성은 낮지만, 추출된 정보에 대한 스키마 매핑 오류가 New Dataset보다는 적어 전반적인 신뢰도가 더 높습니다. 따라서 Original Dataset이 더 나은 품질을 보입니다."
+  },
+  {
+    "original_score": {
+      "hallucination": {
+        "score": 50.0,
+        "reason": "원문에 없는 Aaron Korsh의 국적 정보가 포함되었고, 캐릭터(Harvey Specter, Mike Ross)가 Aaron Korsh에 의해 '생성'되었다는 잘못된 관계가 추출되었습니다. Kevin Bray가 'Suits' 시리즈 전체를 감독했다는 과도한 일반화도 환각에 해당합니다."
+      },
+      "comprehensiveness": {
+        "score": 60.0,
+        "reason": "주요 엔티티와 관계는 잘 추출되었으나, 'Pearson Hardman', 'eidetic memory', 'pro bono case', 'sexual harassment', 시청자 수, 비평가 반응 등 원문의 중요한 세부 정보들이 많이 누락되었습니다. 'Fairly Legal'의 방영일도 'January'로 불완전합니다."
+      },
+      "schema_mapping": {
+        "score": 30.0,
+        "reason": "P495 (country of origin) 스키마가 'American' (형용사)이나 'USA' (네트워크)에 잘못 매핑되었고, P170 (creator) 스키마가 캐릭터에 잘못 적용되는 등 스키마 매핑 오류가 빈번하고 심각합니다. P449 (production company)가 'USA Network'에 사용된 것도 부적절합니다."
+      },
+      "salience": {
+        "score": 80.0,
+        "reason": "에피소드, 시리즈, 주요 인물, 제작진, 방영일 등 문서의 핵심 주제를 잘 포착하고 있습니다. 관련 시리즈인 'Fairly Legal'과 초기 설정인 'Wall Street'도 포함되어 핵심 정보 추출은 양호합니다."
+      },
+      "entity_clarity": {
+        "score": 90.0,
+        "reason": "대명사가 배제되고 대부분 고유명사로 엔티티가 명확하게 추출되었습니다. 'USA'가 네트워크를 지칭하는 것으로 문맥상 명확하여 혼동의 여지가 적습니다."
+      }
+    },
+    "new_score": {
+      "hallucination": {
+        "score": 65.0,
+        "reason": "Aaron Korsh가 'Suits'를 '설립했다(founded by)'는 관계는 사실과 다르며 관계가 역전되어 있습니다. 'Aaron Korsh'가 'Suits'에 '서비스를 제공했다'는 관계의 세부 정보가 원문의 내용과 완전히 일치하지 않는 부분도 있습니다."
+      },
+      "comprehensiveness": {
+        "score": 55.0,
+        "reason": "Original Dataset에 비해 추출된 총 사실의 양은 적습니다. 배우 이름, 시청자 수, 비평가 반응 등 많은 중요한 세부 정보가 누락되었습니다. 다만, 추출된 일부 관계에 'Details'를 추가하여 정보의 깊이는 더했습니다."
+      },
+      "schema_mapping": {
+        "score": 75.0,
+        "reason": "Aaron Korsh와 Suits 간의 'founded by' 관계는 심각한 스키마 매핑 오류입니다. 'service provided' 스키마도 'creator' 관계를 표현하기에 완벽하지는 않습니다. 그러나 다른 스키마 매핑은 적절하며, 'Details' 필드를 활용하여 관계의 맥락을 잘 표현했습니다."
+      },
+      "salience": {
+        "score": 90.0,
+        "reason": "문서의 핵심적인 사건, 인물 간의 관계, 그리고 그 관계의 배경(Details)을 효과적으로 추출하여 문서의 핵심 내용을 잘 전달합니다. 특히 'Details' 필드가 핵심 정보의 맥락을 강화하는 데 기여합니다."
+      },
+      "entity_clarity": {
+        "score": 100.0,
+        "reason": "모든 엔티티가 고유명사로 명확하게 추출되었으며, 대명사가 전혀 사용되지 않아 완벽하게 정제되었습니다."
+      }
+    },
+    "overall_verdict": "New Dataset이 Original Dataset보다 전반적으로 더 나은 품질을 보입니다. Original Dataset은 스키마 매핑 오류가 광범위하고 근본적인 반면, New Dataset은 하나의 주요 오류에도 불구하고 전반적인 스키마 매핑의 정확도가 높고, 'Details' 필드를 통해 추출된 정보의 맥락과 깊이를 효과적으로 제공합니다. 정보 포괄성 면에서는 Original이 더 많은 사실을 추출했지만, New의 'Details'는 추출된 정보의 가치를 높입니다. 엔티티 명확성 또한 New Dataset이 더 우수합니다."
+  },
+  {
+    "original_score": {
+      "hallucination": {
+        "score": 80.0,
+        "reason": "앤서니 뉴리가 영화 '윌리 웡카와 초콜릿 공장'의 감독(P161)으로 잘못 매핑되어 원문에 없는 정보를 생성했습니다."
+      },
+      "comprehensiveness": {
+        "score": 65.0,
+        "reason": "앤서니 뉴리의 직업(배우, 가수, 작곡가)과 아카데미상 후보 지명에 대한 구체적인 정보, 기네스북 언급 등 중요한 세부 정보가 누락되었습니다."
+      },
+      "schema_mapping": {
+        "score": 60.0,
+        "reason": "P27(국적)에 'English'를 사용하거나 P161(감독)을 잘못 매핑하는 등 스키마 매핑 오류가 있으며, P800(주요 작품)은 너무 포괄적입니다."
+      },
+      "salience": {
+        "score": 75.0,
+        "reason": "주요 인물과 그의 작품, 협력자, 수상 경력 등 핵심 정보는 추출했지만, 그의 직업과 같은 중요한 정보가 누락되어 문서의 핵심을 완전히 반영하지 못했습니다."
+      },
+      "entity_clarity": {
+        "score": 90.0,
+        "reason": "대부분의 엔티티가 고유명사로 명확하게 표현되었으나, 'English'가 국적 엔티티로 사용된 점은 다소 어색합니다."
+      }
+    },
+    "new_score": {
+      "hallucination": {
+        "score": 85.0,
+        "reason": "레슬리 브리커스가 '골드핑거' 노래의 작가로 명시되었으나, 원문에는 앤서니 뉴리와 존 배리만 언급되어 일부 환각이 발생했습니다."
+      },
+      "comprehensiveness": {
+        "score": 90.0,
+        "reason": "직업, 국적, 아카데미상 후보 지명 및 수상 시기 등 원문의 많은 세부 정보를 'Details' 필드를 활용하여 풍부하게 포함했습니다. 다만, Top 40 기록 등 일부 정보는 누락되었습니다."
+      },
+      "schema_mapping": {
+        "score": 95.0,
+        "reason": "'occupation', 'country', 'author', 'nominated for' 등 관계 스키마가 원문의 내용을 매우 정확하고 구체적으로 매핑했으며, 'Details' 필드를 통해 추가 정보를 효과적으로 표현했습니다."
+      },
+      "salience": {
+        "score": 95.0,
+        "reason": "앤서니 뉴리의 직업, 주요 작품, 수상 및 후보 지명 등 문서의 핵심 주제를 매우 잘 파악하고 추출했습니다."
+      },
+      "entity_clarity": {
+        "score": 100.0,
+        "reason": "'Goldfinger (song)'과 같이 엔티티를 명확하게 구분하고 고유명사로 통합하여 완벽하게 정제되었습니다."
+      }
+    },
+    "overall_verdict": "New Dataset (HypeRelDocRED)이 Original Dataset (Re-DocRED)보다 훨씬 우수합니다. New Dataset은 비록 한 가지 사소한 환각이 있었지만, 더 구체적인 스키마 매핑과 'Details' 필드를 활용하여 원문의 정보를 훨씬 더 포괄적이고 상세하게 담아냈습니다. 엔티티 명확성 또한 뛰어납니다. 반면 Original Dataset은 스키마 매핑 오류가 더 많고 정보 포괄성이 떨어졌습니다."
+  }
+]

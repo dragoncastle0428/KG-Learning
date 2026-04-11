@@ -137,7 +137,7 @@ def create_interactive_kg(data_path, output_html="knowledge_graph.html"):
 
 if __name__ == "__main__":
     # 데이터셋 경로 지정 (위에서 제공해주신 JSON 구조가 들어있는 파일)
-    DATA_PATH = "./Dataset/HypeRelDocRED/train/train_enriched_v2.jsonl"
+    DATA_PATH = "./Dataset/HypeRelDocRED/train/train_enriched_v3.jsonl"
     
     # 임시 테스트를 원하시면, 위에서 주신 JSON을 파일로 저장 후 돌려보세요!
     create_interactive_kg(DATA_PATH, output_html="airasia_zest_kg.html")

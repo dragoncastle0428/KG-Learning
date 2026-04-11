@@ -3,31 +3,88 @@ import json
 import time
 from dotenv import load_dotenv
 from google.genai import Client
-from google.genai import types  # 구조화된 출력을 위해 필요
+from google.genai import types
 from datasets import load_from_disk
 from pydantic import BaseModel, Field
 from typing import List
 
-# --- 1. 설정 및 클라이언트 초기화 ---
-load_dotenv()
-client = Client(api_key=os.getenv("GEMINI_API_KEY2"))
-
+# 1. Wikidata P-ID 매핑 딕셔너리 (전수 검증 완료 버전)
 RELATION_MAP = {
-    "P159": "headquarters location", "P17": "country",
-    "P576": "dissolved date", "P355": "subsidiary", "P749": "parent organization"
+    # 🏢 [조직/기업 관련 (ORG)]
+    "P571": "inception / founded in",         # 설립일/창립일
+    "P112": "founded by",                     # 창립자
+    "P159": "headquarters location",          # 본사/중심지 위치
+    "P127": "owned by",                       # 소유주 (모회사/지주회사)
+    "P749": "parent organization",            # 상위 조직
+    "P355": "subsidiary",                     # 자회사/하위 조직
+    "P155": "follows / preceded by",          # 이전 이름/전신 
+    "P156": "followed by",                    # 이후 이름/후신
+    "P1365": "replaces",                      # ~를 대체함/인수함
+    "P1366": "replaced by",                   # ~로 대체됨/인수합병됨
+    "P1416": "affiliation / strategic alliance", # 💡수정됨 (제휴/협력/관계사)
+    "P452": "industry",                       # 소속 산업군
+    "P7888": "merged into",
+    "P121": "operated",
+
+    # 👤 [인물 관련 (PER)]
+    "P569": "date of birth",                  # 출생일
+    "P570": "date of death",                  # 사망일
+    "P19": "place of birth",                  # 출생지
+    "P20": "place of death",                  # 사망지
+    "P106": "occupation",                     # 직업
+    "P108": "employer",                       # 고용주/소속 직장
+    "P69": "educated at",                     # 출신 학교/학력
+    "P26": "spouse",                          # 배우자
+    "P22": "father",                          # 아버지
+    "P25": "mother",                          # 어머니
+
+    # 🌍 [지리/장소 관련 (LOC)]
+    "P17": "country",                         # 소속 국가
+    "P131": "located in",                     # 위치한 행정 구역 (도시, 주 등)
+    "P36": "capital",                         # 수도
+    "P47": "shares border with",              # 인접 지역/국경을 맞댐
+    "P1992": "proximate points of interest", 
+
+    # 🎬 [사건/창작물/기타 (TIME, EVENT, WORK)]
+    "P585": "point in time",                  # 특정 사건이 일어난 시점
+    "P577": "publication date",               # 출판/발표일
+    "P50": "author",                          # 저자
+    "P57": "director",                        # 감독
+    "P175": "performer",                      # 연주자/출연자
+    "P166": "award received",                 # 수상 내역
+    "P1411": "nominated for",                 # 후보 지명
+    
+    "P1056": "service provided",              # 💡수정됨 (서비스/제품 제공)
+    "P1444": "destination point",             # 💡수정됨 (여정/항공편의 목적지)
+    "P3608": "regulated by"                   # 💡수정됨 (규제/관리 감독 기관)
 }
 
-# --- 2. 데이터 구조 정의 (Pydantic - 필드 완벽 추가) ---
+load_dotenv()
+API_KEYS = [os.getenv(f"GEMINI_API_KEY{i}") for i in range(1, 31) if os.getenv(f"GEMINI_API_KEY{i}")]
+
+current_key_idx = 0
+
+def get_current_client():
+    """현재 인덱스의 API 키로 클라이언트를 생성하여 반환합니다."""
+    global current_key_idx
+    return Client(api_key=API_KEYS[current_key_idx])
+
+# --- 1. 설정 및 클라이언트 초기화 ---
+
+#client = Client(api_key=os.getenv(API_KEYS[0]))
+
+# --- 2. 데이터 구조 정의 (LLM은 무조건 String만 뱉도록 강제) ---
 class Qualifier(BaseModel):
     qualifier: str = Field(description="e.g., WHEN, WHERE, WHY, HOW")
     qualifier_value: str = Field(description="Contextual detail (within 5 words)")
 
 class Label(BaseModel):
-    evidence: List[int] = Field(description="The sentence indices in the document that support this fact")
-    h: int = Field(description="The index of the Canonical Head Entity")
-    r: str = Field(description="The exact Wikidata P-ID or Extracted Action/Relation")
-    t: int = Field(description="The index of the Canonical Tail Entity OR Extracted Concept")
-    qualifiers: List[Qualifier] = Field(default_factory=list, description="List of qualifiers for this relation")
+    h: str = Field(description="The exact text of the Head Entity")
+    h_type: str = Field(description="Type of Head (e.g., ORG, LOC, PER, TIME, NUM)") # 추가됨
+    r: str = Field(description="The exact Wikidata P-ID")
+    t: str = Field(description="The exact text of the Tail Entity")
+    t_type: str = Field(description="Type of Tail (e.g., ORG, LOC, PER, TIME, NUM)") # 추가됨
+    qualifiers: List[Qualifier] = Field(default_factory=list, description="List of qualifiers")
 
 class DocumentEnrichmentResult(BaseModel):
     labels: List[Label]
@@ -36,206 +93,199 @@ class DocumentEnrichmentResult(BaseModel):
 def flatten_document(sents: list) -> str:
     return " ".join([" ".join(sent) for sent in sents])
 
-def get_entity_name(vertex_set: list, entity_idx: int) -> str:
-    return vertex_set[entity_idx][0]['name']
-
-# --- 4. 핵심 추출 함수 ---
-def enrich_document_batch(doc_text: str, facts_to_analyze: list):
-    if not facts_to_analyze: return None
-
-    facts_str = "\n".join([f"[evidence: {f['evidence']}] {f['h']} --({f['r']})--> {f['t']}" for f in facts_to_analyze])
+def find_exact_pos_and_sent_id(sents: list, target_text: str) -> dict:
+    """원문 sents 배열에서 특정 텍스트의 sent_id와 pos(토큰 좌표)를 정밀 추적합니다."""
+    target_tokens = [t.lower() for t in target_text.split()]
+    target_len = len(target_tokens)
     
+    for sent_idx, sentence_tokens in enumerate(sents):
+        sent_tokens_lower = [t.lower() for t in sentence_tokens]
+        for i in range(len(sent_tokens_lower) - target_len + 1):
+            if sent_tokens_lower[i : i + target_len] == target_tokens:
+                return {"sent_id": sent_idx, "pos": [i, i + target_len]}
+                
+    return {"sent_id": -1, "pos": [-1, -1]} # 매칭 실패 시
+
+def rebuild_docred_format(original_vertex_set: list, sents: list, llm_labels_text: list):
+    """LLM이 판별한 타입을 보존하면서 새로운 구조로 재조립합니다."""
+    new_vertex_set = []
+    new_labels = []
+
+    # 💡 수정 1: entity_name 뿐만 아니라 entity_type도 파라미터로 같이 받습니다.
+    def get_or_create_vertex(entity_name: str, entity_type: str) -> int:
+        entity_name_clean = entity_name.strip().lower()
+        
+        # 1. 이미 새로 만든 vertexSet에 있는지 확인 (중복 방지)
+        for i, entity_group in enumerate(new_vertex_set):
+            if entity_group[0]['name'].strip().lower() == entity_name_clean:
+                return i
+
+        # 2. 원본 검색 로직(CONCEPT 폴백) 완전히 삭제!
+        # sents에서 좌표(pos, sent_id)만 추적합니다.
+        location = find_exact_pos_and_sent_id(sents, entity_name)
+        
+        # 3. 새로운 노드 생성
+        new_node = [{
+            "name": entity_name.strip(),
+            "type": entity_type,  # 💡 수정 2: LLM이 판별한 타입(ORG, LOC 등)을 그대로 박아 넣습니다!
+            "sent_id": location["sent_id"],
+            "pos": location["pos"]
+        }]
+        
+        new_vertex_set.append(new_node)
+        return len(new_vertex_set) - 1
+
+    for lbl in llm_labels_text:
+        # 💡 수정 3: 노드를 만들 때 LLM이 생성한 h_type과 t_type을 함께 넘겨줍니다.
+        h_idx = get_or_create_vertex(lbl.h, lbl.h_type)
+        t_idx = get_or_create_vertex(lbl.t, lbl.t_type)
+        
+        h_sent = new_vertex_set[h_idx][0]["sent_id"]
+        t_sent = new_vertex_set[t_idx][0]["sent_id"]
+        evidence_set = {h_sent, t_sent}
+        evidence_set.discard(-1) 
+        
+        new_labels.append({
+            "h": h_idx,
+            "r": lbl.r,
+            "t": t_idx,
+            "evidence": sorted(list(evidence_set)),
+            "qualifiers": [q.model_dump() for q in lbl.qualifiers]
+        })
+
+    return new_vertex_set, new_labels
+
+# --- 4. LLM API 호출 함수 ---
+def enrich_document_batch(doc_text: str, doc_title: str):
+    global current_key_idx
+    relation_menu_str = "\n".join([f"       - {pid}: {desc}" for pid, desc in RELATION_MAP.items()])
+
     prompt = f"""
-    You are an Expert Data reconstructor for Knowledge Graphs. Your task is to analyze the provided document and the associated base facts, then output a refined set of relationships in a structured JSON format.
+    You are an Expert Data reconstructor for Knowledge Graphs. 
+    Analyze the document and extract core relationships.
+    
+    [CRITICAL INSTRUCTIONS]
+    1. COREFERENCE RESOLUTION (MANDATORY): You MUST NOT use pronouns or generic nouns for entities. You MUST resolve them to their specific proper noun.
+    2. CONCISE ENTITIES: Entities must be short and concise (1 to 4 words maximum). Remove unnecessary adjectives and determiners except for specific name of departments, organizations, or locations.
+    3. ENTITY EXTRACTION Priority: {doc_title} is the title of the document. Consider it as the central entity if possible.
+    4. Use conditional details (dates, locations, reasons) to 'qualifiers'. (qualifier: WHEN, WHERE, WHY, HOW / qualifier_value: concise contextual detail within 5 words)
+    5. 'r' MUST be a specific action including services or relation, not a vague one. Head and Tail MUST be exact entities from the text that can be explained.
+    6. 'r' MUST be a Wikidata P-ID which is listed in the menu below. If the relation is not explicitly stated as a P-ID in the text, you MUST infer the MOST appropriate P-ID that is listed.
+    7. ENTITY TYPING: For every extracted 'h' and 't', you MUST assign one of the following exact types in 'h_type' and 't_type':
+       - ORG (Organization / Company / Institution / Department / Government)
+       - LOC (Location / Facility)
+       - PER (Person)
+       - TIME (Date / Year / Duration)
+       - NUM (Number / Amount)
+    8. Entity Unification (Strict): If the same entity appears multiple times in the document with slight variations (e.g. changing word order), you MUST unify them into a single canonical form and use that consistently across all labels.)
+       Apply these general normalization rules:
+       - Pattern A (Acronyms): Map abbreviations to full names (e.g., "WHO" -> "World Health Organization").
+       - Pattern B (Word Order): Map swapped word orders to a standard name (e.g., "America Bank" -> "Bank of America").
+       - Pattern C (Partial Names): Map shortened names or generic references to the full proper noun (e.g., "the airline" -> "Specific Airline Airlines").
+    9. Do not extract entities that is describing property of another entity. Instance of, part of and other similar descriptive relations should be captured as qualifiers or not included at all.
+    10. AVOID ISOLATED ISLANDS: Every extracted relationship MUST connect to the central subjects of the text. Do not create disconnected node pairs that float independently.
 
-    [CRITICAL PIPELINE INSTRUCTIONS: FOLLOW IN EXACT ORDER]
-
-    **STEP 1: Global Entity Unification (The Most Important Step)**
-    - Scan the entire text. Identify the primary subjects/entities.
-    - If multiple names refer to the exact same entity (e.g., full names, acronyms, shortened names, pronouns like "it" or "the company"), you MUST mentally map ALL of them to a SINGLE, longest, most descriptive Canonical Name.
-    - You must apply this mapping to BOTH the Head and Tail of every relationship.
-
-    **STEP 2: Event and Concept Extraction**
-    - Map "What happened", not just static states.
-    - Consider all nouns as an entity, but only if they are involved in an importantaction or event.
-    - If the text describes a specific activity, service, legal action, or physical incident, that Action/Concept MUST become a distinct node (Tail) connected to the main Entity (Head).
-    - Ensure all extracted events connect back to the Canonical Entities, creating a cohesive "Hub and Spoke" topology rather than disconnected islands.
-
-    **STEP 3: Aggregation and Purging**
-    - If multiple facts state the exact same relationship between the exact same Canonical Head and Canonical Tail, group them into a single JSON object.
-    - Do NOT output dates, times, or raw numbers as standalone `refined_tail` nodes. Move them to the `qualifiers` array.
-    - If there is a date, time, or number in the vertexSet, remove it from the vertexSet and add it as a qualifier to the relevant relationship.
-    - If the dates, times, or numbers are critical to multiple relationships, they should be included as entities (not in qualifier).
-
-    [MANDATORY JSON STRUCTURE]
-    You MUST output a single JSON object containing exactly ONE key named "labels". 
-    DO NOT generate any other root-level keys. 
-    Qualifier values must be short and concise. (within 5 words)
-    The "labels" array must contain all facts and qualifiers (if exists) formatted exactly like this:
-    [
-      {{
-        "evidence": <Array of integers: The sentence indices in the document that support this fact>,
-        "h": <Integer: The index of the Canonical Name determined in STEP 1>,
-        "r": <String: The exact Wikidata P-ID>,
-        "t": <Integer: The index of the Canonical Name OR Extracted Concept>,
-        "qualifiers": [ 
-          {{
-            "qualifier": <String: e.g., WHEN, WHERE, WHY, HOW>,
-            "qualifier_value": <String: Contextual detail>
-          }}
-        ]
-      }}
-    ]
-   
+    P-ID Relation Menu:
+    {relation_menu_str}
 
     [Document]
     {doc_text}
-
-    [Base Facts to Restructure]
-    {facts_str}
-
-    Output the final JSON array strictly adhering to the pipeline.
     """
+    
+    max_retries = len(API_KEYS)
+    attempts = 0
 
-    try:
-        response = client.models.generate_content(
-            model='models/gemini-2.5-flash',
-            contents=prompt,
-            config=types.GenerateContentConfig(
-                response_mime_type='application/json',
-                response_schema=DocumentEnrichmentResult,
-                temperature=0.1,
-            ),
-        )
-        return response.parsed
-    except Exception as e:
-        print(f"  ⚠️ API 에러: {e}")
-        return None
+    while attempts < max_retries:
+        try:
+            # 현재 활성화된 키로 클라이언트 로드
+            client = get_current_client()
+            
+            response = client.models.generate_content(
+                model='models/gemini-2.5-flash',
+                contents=prompt,
+                config=types.GenerateContentConfig(
+                    response_mime_type='application/json',
+                    response_schema=DocumentEnrichmentResult,
+                    temperature=0,
+                ),
+            )
+            return response.parsed
+            
+        except Exception as e:
+            error_msg = str(e).lower()
+            
+            # 할당량 초과(429) 또는 권한 오류(403) 등 키 변경으로 해결 가능한 에러 감지
+            if "429" in error_msg or "quota" in error_msg or "403" in error_msg or "exhausted" in error_msg:
+                print(f"\n  ⚠️ [키 {current_key_idx + 1} 한도 초과] 다음 API 키로 전환합니다... ({e})")
+                
+                # 인덱스를 1 증가시키고, 배열 길이를 넘어가면 다시 0으로 순환
+                current_key_idx = (current_key_idx + 1) % len(API_KEYS)
+                attempts += 1
+                
+                # 전환 후 API 호출 제한을 피하기 위해 약간의 딜레이 추가
+                time.sleep(2)
+                continue
+            elif "503" in error_msg or "unavailable" in error_msg or "overloaded" in error_msg:
+                # 시도 횟수가 늘어날수록 5초, 9초, 17초.. 기하급수적으로 대기 시간 증가
+                backoff_time = attempts + 5 
+                print(f"\n  🚧 [503 서버 혼잡] 잠시 숨을 고릅니다... {backoff_time}초 대기 후 재시도. ({e})")
+                attempts += 1
+                time.sleep(backoff_time)
+                continue
+            else:
+                # 400 에러(잘못된 프롬프트 포맷) 등은 키를 바꿔도 똑같이 실패하므로 루프 종료
+                print(f"\n  ⚠️ [처리 불가능한 API 에러] 키 변경 없이 스킵합니다: {e}")
+                return None
 
-# --- 5. 분할(Split)별 처리 및 이어하기 로직 ---
+    print("\n  ❌ 모든 API 키의 할당량이 소진되었거나 사용 불가능합니다.")
+    return None
+
+# --- 5. 메인 처리 로직 ---
 def process_split(split_name: str, dataset_path: str, output_base_dir: str):
     dataset = load_from_disk(dataset_path)[split_name]
+    os.makedirs(os.path.join(output_base_dir, split_name), exist_ok=True)
+    output_file = os.path.join(output_base_dir, split_name, f"{split_name}_enriched_skipped.jsonl")
     
-    split_output_dir = os.path.join(output_base_dir, split_name)
-    os.makedirs(split_output_dir, exist_ok=True)
-    
-    output_file = os.path.join(split_output_dir, f"{split_name}_enriched_v2.jsonl")
-    
-    # 이어하기 체크: 기존 파일의 줄 수 확인
-    start_idx = 0
-    if os.path.exists(output_file):
-        with open(output_file, 'r', encoding='utf-8') as f:
-            start_idx = sum(1 for _ in f)
-        print(f"📦 [{split_name}] {start_idx}번 문서부터 작업을 재개합니다.")
-    else:
-        print(f"🚀 [{split_name}] 처음부터 처리를 시작합니다.")
+    # 💡 수정된 부분: 처리할 타겟 인덱스를 리스트로 명시합니다.
+    target_indices = [27, 28, 150]
+    print(f"🚀 [{split_name}] 누락된 문서 (인덱스: {target_indices})만 재시작합니다.")
 
-    for i in range(start_idx, start_idx + 1):
+    # start_idx 기반의 range 폼 대신, target_indices 배열을 직접 순회합니다.
+    for i in target_indices: 
+        if i >= len(dataset):
+            print(f"⚠️ [경고] 인덱스 {i}가 데이터셋 총 길이를 벗어났습니다. 스킵합니다.")
+            continue
+            
         sample = dataset[i]
         doc_text = flatten_document(sample['sents'])
         
-        facts_batch = []
-        for idx, lbl in enumerate(sample['labels']):
-            facts_batch.append({
-                "evidence": idx,
-                "h": get_entity_name(sample['vertexSet'], lbl['h']),
-                "r": RELATION_MAP.get(lbl['r'], lbl['r']),
-                "t": get_entity_name(sample['vertexSet'], lbl['t'])
-            })
-
-        print(f"[{split_name}] [{i+1}/{len(dataset)}] 처리 중...", end=" ", flush=True)
+        # 출력 메시지도 현재 인덱스를 직관적으로 보여주도록 수정
+        print(f"[{split_name}] [Target Index: {i}] 처리 중...", end=" ", flush=True)
         
-        # 성공할 때까지 혹은 에러 발생 시 대기 후 처리
-        batch_res = enrich_document_batch(doc_text, facts_batch)
+        # 1. LLM 추출 (텍스트만 뱉음)
+        batch_res = enrich_document_batch(doc_text, sample['title'])
         
         if batch_res:
-            # 💡 수정됨: hyper_labels 대신 기존 labels 구조를 대체(또는 병합)
-            # Pydantic 모델(DocumentEnrichmentResult) 안에 있는 labels 리스트를 dict로 변환
-            sample['labels'] = [lbl.model_dump() for lbl in batch_res.labels]
+            # 2. 파이썬 후처리 (텍스트 -> 좌표 매핑 및 vertexSet/labels 조립)
+            new_vset, new_lbls = rebuild_docred_format(sample['vertexSet'], sample['sents'], batch_res.labels)
             
-            # 한 줄씩 추가 저장
+            # 3. 데이터 덮어쓰기
+            sample['vertexSet'] = new_vset
+            sample['labels'] = new_lbls
+            
+            # 'a' 모드이므로 기존 파일 맨 밑에 안전하게 추가됨
             with open(output_file, 'a', encoding='utf-8') as f:
                 f.write(json.dumps(sample, ensure_ascii=False) + '\n')
             print("✅")
         else:
-            print("❌ (실패 - 스킵됨)")
+            print("❌ (API 실패 - 스킵됨)")
         
-        # 무료 API 안정성을 위해 4~5초 대기
         time.sleep(4.5)
 
-# --- 6. 메인 실행 루프 ---
+# --- 6. 실행 ---
 if __name__ == "__main__":
-    SOURCE_PATH = "./Dataset/Re-DocRED"  # 기존 데이터셋 경로
-    OUTPUT_PATH = "./Dataset/HypeRelDocRED"   # 결과 저장 경로
+    SOURCE_PATH = "./Dataset/Re-DocRED"
+    OUTPUT_PATH = "./Dataset/HypeRelDocRED"
     
     for split in ["train"]:
         process_split(split, SOURCE_PATH, OUTPUT_PATH)
-
-
-# # --- 테스트 실행 (방법 2: google-genai 최신 SDK 버전) ---
-# if __name__ == "__main__":
-#     # 1. 사용자님이 제공해주신 1개짜리 샘플 데이터
-#     test_dataset = [{
-#         'sents': [['Zest', 'Airways', ',', 'Inc.', 'operated', 'as', 'AirAsia', 'Zest', '(', 'formerly', 'Asian', 'Spirit', 'and', 'Zest', 'Air', ')', ',', 'was', 'a', 'low', '-', 'cost', 'airline', 'based', 'at', 'the', 'Ninoy', 'Aquino', 'International', 'Airport', 'in', 'Pasay', 'City', ',', 'Metro', 'Manila', 'in', 'the', 'Philippines', '.'], ['It', 'operated', 'scheduled', 'domestic', 'and', 'international', 'tourist', 'services', ',', 'mainly', 'feeder', 'services', 'linking', 'Manila', 'and', 'Cebu', 'with', '24', 'domestic', 'destinations', 'in', 'support', 'of', 'the', 'trunk', 'route', 'operations', 'of', 'other', 'airlines', '.'], ['In', '2013', ',', 'the', 'airline', 'became', 'an', 'affiliate', 'of', 'Philippines', 'AirAsia', 'operating', 'their', 'brand', 'separately', '.'], ['Its', 'main', 'base', 'was', 'Ninoy', 'Aquino', 'International', 'Airport', ',', 'Manila', '.'], ['The', 'airline', 'was', 'founded', 'as', 'Asian', 'Spirit', ',', 'the', 'first', 'airline', 'in', 'the', 'Philippines', 'to', 'be', 'run', 'as', 'a', 'cooperative', '.'], ['On', 'August', '16', ',', '2013', ',', 'the', 'Civil', 'Aviation', 'Authority', 'of', 'the', 'Philippines', '(', 'CAAP', ')', ',', 'the', 'regulating', 'body', 'of', 'the', 'Government', 'of', 'the', 'Republic', 'of', 'the', 'Philippines', 'for', 'civil', 'aviation', ',', 'suspended', 'Zest', 'Air', 'flights', 'until', 'further', 'notice', 'because', 'of', 'safety', 'issues', '.'], ['Less', 'than', 'a', 'year', 'after', 'AirAsia', 'and', 'Zest', 'Air', "'s", 'strategic', 'alliance', ',', 'the', 'airline', 'has', 'been', 'rebranded', 'as', 'AirAsia', 'Zest', '.'], ['The', 'airline', 'was', 'merged', 'into', 'AirAsia', 'Philippines', 'in', 'January', '2016', '.']],
-#         'vertexSet': [[{'name': 'Zest Airways, Inc.'}], [{'name': 'Asian Spirit and Zest Air'}], [{'name': 'AirAsia Zest'}], [{'name': 'AirAsia Zest'}], [{'name': 'Ninoy Aquino International Airport'}], [{'name': 'Pasay City'}], [{'name': 'Metro Manila'}], [{'name': 'Philippines'}], [{'name': 'Manila'}], [{'name': 'Cebu'}], [{'name': '24'}], [{'name': '2013'}], [{'name': 'Philippines AirAsia'}], [{'name': 'Asian Spirit'}], [{'name': 'Civil Aviation Authority of the Philippines'}], [{'name': 'Zest Air'}], [{'name': 'a year'}], [{'name': 'AirAsia'}], [{'name': 'AirAsia Philippines'}], [{'name': 'January 2016'}]],
-#         'title': 'AirAsia Zest',
-#         'labels': [{'h': 0, 'r': 'P159', 't': 4}, {'h': 15, 'r': 'P576', 't': 19}]
-#     }]
-    
-#     # 2. 결과 저장 경로 설정
-#     # (주의: Dataset 폴더가 미리 생성되어 있어야 합니다)
-#     OUT_PATH = "./Dataset/hyper_docred_v2_test.jsonl"
-    
-#     # 만약 기존에 테스트하던 파일이 있다면 삭제 (테스트 결과 중복 방지)
-#     if os.path.exists(OUT_PATH):
-#         os.remove(OUT_PATH)
-#         print(f"🧹 기존 테스트 파일({OUT_PATH})을 삭제했습니다.")
-
-#     print(f"🚀 테스트 샘플 1건 처리를 시작합니다...")
-    
-#     # 앞서 정의한 run_pipeline 함수 실행
-#     # (이미 로딩된 test_dataset을 인자로 전달할 수 있도록 함수가 설계되어야 합니다)
-#     # 만약 run_pipeline이 경로를 받는 구조라면 아래처럼 직접 호출하세요:
-    
-#     try:
-#         # run_pipeline 내부에 파일 쓰기 로직이 포함되어 있으므로 그대로 호출
-#         # (단, run_pipeline이 load_from_disk를 사용하는 경우 아래 리스트 직접 처리 루프로 대체)
-        
-#         for sample in test_dataset:
-#             doc_text = flatten_document(sample['sents'])
-            
-#             facts_batch = []
-#             for idx, lbl in enumerate(sample['labels']):
-#                 facts_batch.append({
-#                     "id": idx,
-#                     "head": get_entity_name(sample['vertexSet'], lbl['h']),
-#                     "relation": RELATION_MAP.get(lbl['r'], lbl['r']),
-#                     "tail": get_entity_name(sample['vertexSet'], lbl['t'])
-#                 })
-
-#             print(f"🔍 '{sample['title']}' 분석 중 (팩트 {len(facts_batch)}개)...")
-            
-#             # API 호출
-#             batch_res = enrich_document_batch(doc_text, facts_batch)
-            
-#             # 결과 병합
-#             enriched_labels = sample['labels'].copy()
-#             if batch_res:
-#                 for res in batch_res.results:
-#                     if res.fact_id < len(enriched_labels):
-#                         # Pydantic 객체를 딕셔너리로 변환하여 저장
-#                         enriched_labels[res.fact_id]['qualifiers'] = [q.model_dump() for q in res.qualifiers]
-#                         for q in res.qualifiers:
-#                             print(f"   ✨ 발견: [{q.qualifier_relation}] -> {q.qualifier_value_text}")
-            
-#             sample['labels'] = enriched_labels
-            
-#             # 파일 저장
-#             os.makedirs(os.path.dirname(OUT_PATH), exist_ok=True)
-#             with open(OUT_PATH, 'a', encoding='utf-8') as f:
-#                 f.write(json.dumps(sample, ensure_ascii=False) + '\n')
-            
-#             print(f"✅ 결과가 {OUT_PATH}에 저장되었습니다.")
-
-#     except Exception as e:
-#         print(f"❌ 테스트 중 에러 발생: {e}")
