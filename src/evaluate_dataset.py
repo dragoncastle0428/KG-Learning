@@ -136,7 +136,7 @@ def evaluate_document(doc_text: str, orig_graph_str: str, new_graph_str: str) ->
     4. 핵심성 (Salience): 핵심 주제 중심의 추출 여부 (100점: 문서의 핵심을 완벽히 관통함)
     5. 엔티티 명확성 (Entity Clarity): 대명사 배제 및 고유명사 통합 여부 (100점: 완벽히 정제/통합됨)
     
-    [원본 문서]
+    [Original Document]
     {doc_text}
     
     [Original Dataset (Re-DocRED)]

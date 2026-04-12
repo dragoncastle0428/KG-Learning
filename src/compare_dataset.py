@@ -11,7 +11,7 @@ plt.rcParams['axes.unicode_minus'] = False
 # --- 1. 환경 설정 및 RELATION_MAP ---
 ORIGINAL_DATASET_PATH = "./Dataset/Re-DocRED"
 NEW_DATASET_PATH = "./Dataset/HypeRelDocRED/train/train_enriched_v3.jsonl"
-COMPARE_LIMIT = 743 # 비교할 문서 개수 제한
+COMPARE_LIMIT = 82 # 비교할 문서 개수 제한
 
 RELATION_MAP = {
     # 🏢 [조직/기업 관련 (ORG)]
