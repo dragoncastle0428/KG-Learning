@@ -8,12 +8,13 @@ The core objective is to extract complex relational facts by first identifying *
 Traditional extraction often loses the nuanced context found in long-form documents. HyperDocRED addresses this by:Hyper-Relational Mapping: Every fact is stored as a Base Triple $(h, r, t)$ with associated Qualifiers $(qr, qv)$.GraphRAG-Ready: Designed specifically to reduce hallucinations and improve retrieval accuracy in complex RAG workflows.
 
 ## 📊 Evaluation Framework (The 5 Pillars)
-Metric	Description	Goal (100 pts)
-1. Hallucination	Measures knowledge fabrication or distortion.	100% grounded in the source text.
-2. Comprehensiveness	Richness of details like time, location, and conditions.	Capture every subtle qualifier available.
-3. Schema Mapping	Accuracy of mapping to predefined P-IDs (Relations).	Perfect alignment with the target ontology.
-4. Salience	Focus on the core themes of the document.	Extracting facts that penetrate the main subject.
-5. Entity Clarity	Pronoun resolution and Named Entity merging.	Fully refined/unified entities (No ambiguous "He/She").
+| Metric | Description | Goal (100 pts) |
+| :--- | :--- | :--- |
+| **1. Hallucination** | Measures knowledge fabrication or distortion from the source. | 100% 원문 기반 데이터 추출 |
+| **2. Comprehensiveness** | Richness of details including time, location, and conditions. | Capture every available contextual qualifier. |
+| **3. Schema** | Accuracy of mapping to predefined P-IDs (Relations). | Perfect alignment with the target ontology. |
+| **4. Salience** | Focus on extracting information central to the main theme. | Capture facts that penetrate the core subject. |
+| **5. Clarity** | Pronoun resolution and unification of Named Entities. | Zero ambiguity; fully refined and merged entities. |
 
 ## 🎯 Research Objectives
 1.  **Hyper-Relational Extraction:** Move beyond traditional binary KGs by strictly separating core factual triples from their contextual qualifiers, aligning perfectly with the HyperRED schema.
