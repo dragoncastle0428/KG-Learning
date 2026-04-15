@@ -4,7 +4,7 @@ import random
 import time
 import numpy as np
 import matplotlib.pyplot as plt
-import pandas as pd  # 엑셀 저장을 위해 추가
+import pandas as pd
 from datetime import datetime
 from dotenv import load_dotenv
 from datasets import load_from_disk
@@ -25,8 +25,8 @@ if not API_KEYS:
 current_key_idx = 0
 
 ORIGINAL_DATASET_PATH = "./Dataset/Re-DocRED"
-V2_DATASET_PATH = "./Dataset/HypeRelDocRED/train/train_enriched_v2.jsonl" # V2 경로
-V3_DATASET_PATH = "./Dataset/HypeRelDocRED/train/train_enriched_v3.jsonl" # V3 경로
+V2_DATASET_PATH = "./Dataset/HypeRelDocRED/train/train_enriched_v2.jsonl"
+V4_DATASET_PATH = "./Dataset/HypeRelDocRED/train/train_enriched_v4.jsonl" # V4 경로
 SAMPLE_SIZE = 50 
 
 RELATION_MAP = {
@@ -69,7 +69,6 @@ RELATION_MAP = {
 # --- 2. 스키마 정의 ---
 class ScoreDetail(BaseModel):
     score: float = Field(ge=0.0, le=100.0)
-    reason: str 
 
 class DatasetEval(BaseModel):
     hallucination: ScoreDetail
@@ -77,12 +76,13 @@ class DatasetEval(BaseModel):
     schema_mapping: ScoreDetail
     salience: ScoreDetail
     entity_clarity: ScoreDetail
+    dataset_reason: str = Field(description="이 데이터셋 버전의 지표별 점수를 이렇게 산정한 종합적인 이유 및 근거 (Korean)")
 
 class JudgeResult(BaseModel):
     original_score: DatasetEval
     v2_score: DatasetEval
-    v3_score: DatasetEval
-    overall_verdict: str = Field(description="3개 데이터셋의 차이점과 v3의 개선 핵심 요약 (Korean)")
+    v4_score: DatasetEval
+    overall_verdict: str = Field(description="3개 데이터셋의 발전 과정 및 V4의 가장 두드러진 특징과 한계점 핵심 요약 (Korean)")
 
 # --- 3. 헬퍼 함수 ---
 def get_current_client():
@@ -107,22 +107,22 @@ def format_graph_for_prompt(vertex_set, labels):
     return "\n".join(output)
 
 # --- 4. 시각화 (3개 그룹) ---
-def plot_evaluation_results(orig_avgs, v2_avgs, v3_avgs, metrics):
+def plot_evaluation_results(orig_avgs, v2_avgs, v4_avgs, metrics):
     display_labels = [m.replace('_', ' ').title() for m in metrics]
     x = np.arange(len(metrics))
-    width = 0.25 # 막대 너비 조절
+    width = 0.25 
 
     fig, ax = plt.subplots(figsize=(14, 8))
     
     bars1 = ax.bar(x - width, [orig_avgs[m] for m in metrics], width, label='Original (Re-DocRED)', color='#bdc3c7')
-    bars2 = ax.bar(x, [v2_avgs[m] for m in metrics], width, label='V2 (Enriched)', color='#3498db')
-    bars3 = ax.bar(x + width, [v3_avgs[m] for m in metrics], width, label='V3 (Latest)', color='#e67e22')
+    bars2 = ax.bar(x, [v2_avgs[m] for m in metrics], width, label='V2 (Intermediate)', color='#3498db')
+    bars3 = ax.bar(x + width, [v4_avgs[m] for m in metrics], width, label='V4 (Latest)', color='#e67e22')
 
     ax.set_ylabel('Average Score (0 - 100)')
-    ax.set_title(f'Comparative Quality Evaluation: Original vs V2 vs V3 (n={SAMPLE_SIZE})', fontsize=15)
+    ax.set_title(f'Comparative Quality Evaluation: Orig vs V2 vs V4 (n={SAMPLE_SIZE})', fontsize=15)
     ax.set_xticks(x)
     ax.set_xticklabels(display_labels)
-    ax.legend()
+    ax.legend(loc='upper left', bbox_to_anchor=(1, 1))
 
     def autolabel(bars):
         for bar in bars:
@@ -136,7 +136,7 @@ def plot_evaluation_results(orig_avgs, v2_avgs, v3_avgs, metrics):
     plt.show()
 
 # --- 5. 평가 엔진 ---
-def evaluate_document(doc_text, g_orig, g_v2, g_v3):
+def evaluate_document(doc_text, g_orig, g_v2, g_v4):
     global current_key_idx
     
     prompt = f"""
@@ -144,8 +144,8 @@ def evaluate_document(doc_text, g_orig, g_v2, g_v3):
     제공된 [Original Document]를 기준으로 세 가지 지식 그래프의 품질을 독립적으로 평가하십시오.
 
     ### [평가 원칙: 세밀한 변별력 확보]
-    - **연속적 점수 부여**: 5점이나 10점 단위로 끊어지는 점수보다는, 데이터의 완성도를 정교하게 반영한 소수점 단위 점수(예: 87.3, 92.6)를 권장합니다.
-    - **가중치 기반 정성 평가**: 가이드라인은 심각도를 판단하는 '기준'일 뿐이며, 오류의 맥락, 문서 내 중요도, 추출된 정보의 난이도를 종합적으로 고려하여 최종 점수를 산출하십시오.
+    - **연속적 점수 부여**: 5점이나 10점 단위로 끊어지는 점수보다는, 소수점 단위 점수(예: 87.3, 92.6)를 권장합니다.
+    - **가중치 기반 정성 평가**: 각 데이터셋 버전마다 점수를 이렇게 준 명확한 이유를 `dataset_reason` 필드에 서술하십시오.
 
     ### [평가 지표 및 판단 기준]
     1. **Hallucination (환각)**: 원문에 없는 정보나 왜곡된 관계 포함 여부.
@@ -162,48 +162,46 @@ def evaluate_document(doc_text, g_orig, g_v2, g_v3):
     [1. Original (Re-DocRED)]
     {g_orig}
 
-    [2. Version 2 (HypeRelDocRED v2)]
+    [2. Version 2 (HypeRelDocRED v2 - Intermediate)]
     {g_v2}
 
-    [3. Version 3 (HypeRelDocRED v3)]
-    {g_v3}
+    [3. Version 4 (HypeRelDocRED v4 - Latest)]
+    {g_v4}
 
     ---
     ### [출력 요구사항]
     - 반드시 제공된 JSON 스키마(`JudgeResult`)를 엄격히 따르십시오.
-    - `reason`은 한국어로 작성하며, 점수 산정의 결정적 근거를 기술하십시오.
+    - 각 데이터셋 객체의 `dataset_reason`에 해당 버전을 평가한 구체적인 근거를 한국어로 작성하십시오.
     """
 
-    max_retries = len(API_KEYS) * 2  # 모든 키를 두 번씩 돌 때까지 재시도
+    max_retries = len(API_KEYS) * 2
     retry_count = 0
 
     while retry_count < max_retries:
         try:
             client = get_current_client()
             response = client.models.generate_content(
-                model='gemini-2.5-flash', # 혹은 gemini-1.5-flash
+                model='gemini-2.5-flash',
                 contents=prompt,
                 config=types.GenerateContentConfig(
                     response_mime_type='application/json',
                     response_schema=JudgeResult,
-                    temperature=0.1, # 약간의 변별력을 위해 0.1 권장
+                    temperature=0.1,
                 ),
             )
             return response.parsed
 
         except Exception as e:
-            # 429 에러(Quota Exceeded) 발생 시
             if "429" in str(e) or "Resource has been exhausted" in str(e):
                 current_key_idx = (current_key_idx + 1) % len(API_KEYS)
                 print(f"\n[!] Rate Limit Reached. Switching to API Key {current_key_idx + 1}/{len(API_KEYS)}...")
                 
-                # 모든 키를 한 바퀴 다 썼다면 잠시 대기
                 if current_key_idx == 0:
                     print("[!] All keys exhausted. Cooling off for 30 seconds...")
                     time.sleep(30)
                 
                 retry_count += 1
-                continue # 다음 키로 즉시 재시도
+                continue 
             
             else:
                 print(f"\n[!] Unexpected Error: {e}")
@@ -213,53 +211,38 @@ def evaluate_document(doc_text, g_orig, g_v2, g_v3):
     print("\n[!] Failed to evaluate document after maximum retries.")
     return None
 
-def save_to_files(results, orig_avgs, v2_avgs, v3_avgs, metrics):
-    """평가 결과 데이터를 엑셀과 PDF(이미지 포함)로 저장합니다."""
+def save_to_files(results, orig_avgs, v2_avgs, v4_avgs, metrics):
+    """평가 결과 데이터를 엑셀로 저장합니다."""
     
-    # 1. 엑셀 파일 생성 (상세 내역)
     rows = []
     for i, res in enumerate(results):
         data = {"sample_index": i}
+        
         for m in metrics:
             data[f"orig_{m}"] = getattr(res.original_score, m).score
             data[f"v2_{m}"] = getattr(res.v2_score, m).score
-            data[f"v3_{m}"] = getattr(res.v3_score, m).score
+            data[f"v4_{m}"] = getattr(res.v4_score, m).score
+            
+        data["orig_reason"] = res.original_score.dataset_reason
+        data["v2_reason"] = res.v2_score.dataset_reason
+        data["v4_reason"] = res.v4_score.dataset_reason
         data["overall_verdict"] = res.overall_verdict
+        
         rows.append(data)
     
     df = pd.DataFrame(rows)
-    excel_filename = f"eval_results_{datetime.now().strftime('%Y%m%d_%H%M%S')}.xlsx"
+    excel_filename = f"eval_results_orig_v2_v4_{datetime.now().strftime('%Y%m%d_%H%M%S')}.xlsx"
     df.to_excel(excel_filename, index=False)
-    print(f"\n[+] 상세 데이터가 {excel_filename}으로 저장되었습니다.")
-
-    # 2. 시각화 결과 이미지 저장 및 출력
-    display_labels = [m.replace('_', ' ').title() for m in metrics]
-    x = np.arange(len(metrics))
-    width = 0.25
-
-    fig, ax = plt.subplots(figsize=(12, 7))
-    ax.bar(x - width, [orig_avgs[m] for m in metrics], width, label='Original', color='#bdc3c7')
-    ax.bar(x, [v2_avgs[m] for m in metrics], width, label='V2', color='#3498db')
-    ax.bar(x + width, [v3_avgs[m] for m in metrics], width, label='V3', color='#e67e22')
-
-    ax.set_ylabel('Average Score')
-    ax.set_title('Comparative Quality Evaluation Results')
-    ax.set_xticks(x)
-    ax.set_xticklabels(display_labels)
-    ax.legend()
-    
-    plot_filename = "eval_plot.png"
-    plt.savefig(plot_filename)
-    plt.show()
-    print(f"[+] 시각화 그래프가 {plot_filename}으로 저장되었습니다.")
+    print(f"\n[+] 상세 데이터(사유 포함)가 {excel_filename}으로 저장되었습니다.")
 
 # --- 6. 실행 ---
 if __name__ == "__main__":
     original_data = [doc for doc in load_from_disk(ORIGINAL_DATASET_PATH)["train"]]
     v2_data = load_jsonl(V2_DATASET_PATH)
-    v3_data = load_jsonl(V3_DATASET_PATH)
+    v4_data = load_jsonl(V4_DATASET_PATH)
     
-    min_len = min(len(original_data), len(v2_data), len(v3_data))
+    # 세 데이터셋 중 가장 적은 길이를 기준으로 샘플링
+    min_len = min(len(original_data), len(v2_data), len(v4_data))
     sample_indices = random.sample(range(min_len), SAMPLE_SIZE)
     
     results = []
@@ -269,10 +252,10 @@ if __name__ == "__main__":
         doc_text = " ".join([" ".join(sent) for sent in original_data[i]['sents']])
         g_orig = format_graph_for_prompt(original_data[i].get('vertexSet'), original_data[i].get('labels'))
         g_v2 = format_graph_for_prompt(v2_data[i].get('vertexSet'), v2_data[i].get('labels'))
-        g_v3 = format_graph_for_prompt(v3_data[i].get('vertexSet'), v3_data[i].get('labels'))
+        g_v4 = format_graph_for_prompt(v4_data[i].get('vertexSet'), v4_data[i].get('labels'))
         
         print(f"Evaluating Sample {i}...", end="\r")
-        res = evaluate_document(doc_text, g_orig, g_v2, g_v3)
+        res = evaluate_document(doc_text, g_orig, g_v2, g_v4)
         if res: results.append(res)
         time.sleep(2)
 
@@ -280,14 +263,14 @@ if __name__ == "__main__":
     if results:
         orig_avgs = {m: sum(getattr(r.original_score, m).score for r in results)/len(results) for m in metrics}
         v2_avgs = {m: sum(getattr(r.v2_score, m).score for r in results)/len(results) for m in metrics}
-        v3_avgs = {m: sum(getattr(r.v3_score, m).score for r in results)/len(results) for m in metrics}
+        v4_avgs = {m: sum(getattr(r.v4_score, m).score for r in results)/len(results) for m in metrics}
         
-        # 테이블 출력 및 시각화 호출
+        # 테이블 출력
         print("\n" + "="*80)
-        print(f"{'Metric':<20} | {'Original':<15} | {'V2':<15} | {'V3':<15}")
+        print(f"{'Metric':<20} | {'Original':<15} | {'V2':<15} | {'V4':<15}")
         print("-" * 80)
         for m in metrics:
-            print(f"{m:<20} | {orig_avgs[m]:<15.1f} | {v2_avgs[m]:<15.1f} | {v3_avgs[m]:<15.1f}")
+            print(f"{m:<20} | {orig_avgs[m]:<15.1f} | {v2_avgs[m]:<15.1f} | {v4_avgs[m]:<15.1f}")
         
-        plot_evaluation_results(orig_avgs, v2_avgs, v3_avgs, metrics)
-        save_to_files(results, orig_avgs, v2_avgs, v3_avgs, metrics)
+        plot_evaluation_results(orig_avgs, v2_avgs, v4_avgs, metrics)
+        save_to_files(results, orig_avgs, v2_avgs, v4_avgs, metrics)

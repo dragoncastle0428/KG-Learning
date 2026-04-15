@@ -22,72 +22,30 @@ RELATION_MAP = {
     "P585": "point in time", "P577": "publication date", "P50": "author", "P57": "director", 
     "P175": "performer", "P166": "award received", "P1411": "nominated for", 
     "P1056": "service provided", "P1444": "destination point", "P3608": "regulated by",
-    "P6": "head of government",
-    "P27": "country of citizenship",
-    "P30": "continent",
-    "P31": "instance of",
-    "P35": "head of state",
-    "P37": "official language",
-    "P39": "position held",
-    "P40": "child",
-    "P54": "member of sports team",
-    "P58": "screenwriter",
-    "P86": "composer",
-    "P102": "member of political party",
-    "P118": "league",
-    "P123": "publisher",
-    "P136": "genre",
-    "P137": "operator",
-    "P140": "religion",
-    "P150": "contains administrative territorial entity",
-    "P161": "cast member",
-    "P162": "producer",
-    "P170": "creator",
-    "P171": "parent taxon",
-    "P172": "ethnic group",
-    "P176": "manufacturer",
-    "P178": "developer",
-    "P179": "series",
-    "P194": "legislative body",
-    "P205": "basin country",
-    "P206": "located in or next to body of water",
-    "P241": "military branch",
-    "P264": "record label",
-    "P272": "production company",
-    "P276": "location",
-    "P279": "subclass of",
-    "P361": "part of",
-    "P364": "original language",
-    "P400": "platform",
-    "P403": "mouth of the watercourse",
-    "P449": "original network",
-    "P463": "member of",
-    "P488": "chair",
-    "P495": "country of origin",
-    "P527": "has part",
-    "P551": "residence",
-    "P576": "dissolved or abolished date",
-    "P580": "start time",
-    "P582": "end time",
-    "P607": "conflict",
-    "P674": "characters",
-    "P676": "lyrics by",
-    "P706": "located on terrain feature",
-    "P710": "participant",
-    "P737": "influenced by",
-    "P740": "location of formation",
-    "P800": "notable work",
-    "P807": "separated from",
-    "P840": "narrative location",
-    "P937": "work location",
-    "P1001": "legal jurisdiction",
-    "P1198": "unemployment rate",
-    "P1336": "territory claimed by",
-    "P1344": "participant in",
-    "P1376": "capital of",
-    "P1412": "languages spoken or written",
-    "P1441": "present in work",
-    "P3373": "sibling"
+    "P6": "head of government", "P27": "country of citizenship", "P30": "continent",
+    "P31": "instance of", "P35": "head of state", "P37": "official language",
+    "P39": "position held", "P40": "child", "P54": "member of sports team",
+    "P58": "screenwriter", "P86": "composer", "P102": "member of political party",
+    "P118": "league", "P123": "publisher", "P136": "genre", "P137": "operator",
+    "P140": "religion", "P150": "contains administrative territorial entity",
+    "P161": "cast member", "P162": "producer", "P170": "creator",
+    "P171": "parent taxon", "P172": "ethnic group", "P176": "manufacturer",
+    "P178": "developer", "P179": "series", "P194": "legislative body",
+    "P205": "basin country", "P206": "located in or next to body of water",
+    "P241": "military branch", "P264": "record label", "P272": "production company",
+    "P276": "location", "P279": "subclass of", "P361": "part of",
+    "P364": "original language", "P400": "platform", "P403": "mouth of the watercourse",
+    "P449": "original network", "P463": "member of", "P488": "chair",
+    "P495": "country of origin", "P527": "has part", "P551": "residence",
+    "P576": "dissolved or abolished date", "P580": "start time", "P582": "end time",
+    "P607": "conflict", "P674": "characters", "P676": "lyrics by",
+    "P706": "located on terrain feature", "P710": "participant",
+    "P737": "influenced by", "P740": "location of formation", "P800": "notable work",
+    "P807": "separated from", "P840": "narrative location", "P937": "work location",
+    "P1001": "legal jurisdiction", "P1198": "unemployment rate",
+    "P1336": "territory claimed by", "P1344": "participant in",
+    "P1376": "capital of", "P1412": "languages spoken or written",
+    "P1441": "present in work", "P3373": "sibling", "P190": "sister city"
 }
 
 load_dotenv()
@@ -284,23 +242,27 @@ def enrich_document_batch(doc_text: str, doc_title: str):
     - Do NOT force the {doc_title} as the head if it is not the actual subject of the specific action described.
 
     3. RELATION SPECIFICITY HIERARCHY:
-    - 'r' MUST be a specific action including services or relation, not a vague one. Head and Tail MUST be exact entities from the text that can be explained.
+    - 'r' MUST be a specific action including relation, not a vague one. Head and Tail MUST be exact entities from the text that can be explained.
+    - 'r' MUST be very essential information that is describing the core action or relation between the entities. If the relation is not essential, it should be captured as a qualifier or not included at all.
     - 'r' MUST be a Wikidata P-ID which is listed in the menu below. If the relation is not explicitly stated as a P-ID in the text, you MUST infer the MOST appropriate P-ID that is listed.
 
     4. HYPER-RELATIONAL ANCHORING:
-    - Every edge MUST attempt to capture [WHEN] (Time) and [WHY] (Reason/Cause) from the context.
-    - If a regulatory action or merger is mentioned, the qualifier is NOT optional.
+    - Every edge MUST attempt to capture 5W1H (Who, What, When, Where, Why, How) from the context as qualifiers. 
+    - Qualifiers MUST be concise (within 5 words) and directly relevant to the specific relationship which are not extracted as entities 'h' or 't'.
 
     5. ENTITY TYPING & NORMALIZATION:
     - Unified naming applies ONLY to identical entities (e.g., "WHO" and "World Health Organization"). 
+    - Length of 'h' and 't' MUST be within 5 words except when the entity is a proper noun or name. If the entity is described in a longer phrase, extract the core noun phrase that represents the entity or not extract at all if it is not essential.
     - Do NOT unify entities across a timeline where a rebranding or legal change occurred.
     - Do not extract entities that is describing property of another entity. Instance of, part of and other similar descriptive relations should be captured as qualifiers or not included at all.
+    - Do not extract entities that is an action of another entity. -ing, performing and other similar relations should be captured as the main relation 'r' or not included at all.
     - ENTITY TYPING: For every extracted 'h' and 't', you MUST assign one of the following exact types in 'h_type' and 't_type':
         - ORG (Organization / Company / Institution / Department / Government)
-        - LOC (Location / Facility)
+        - LOC (Location / Facility / City / Country / Geographic Entity)
         - PER (Person)
         - TIME (Date / Year / Duration)
         - NUM (Number / Amount)
+        - MISC (For entities that do not fit the above categories, but still should be extracted)
 
     P-ID Relation Menu:
     {relation_menu_str}
@@ -343,11 +305,9 @@ def enrich_document_batch(doc_text: str, doc_title: str):
                 time.sleep(2)
                 continue
             elif "503" in error_msg or "unavailable" in error_msg or "overloaded" in error_msg:
-                # 시도 횟수가 늘어날수록 5초, 9초, 17초.. 기하급수적으로 대기 시간 증가
-                backoff_time = attempts + 5 
-                print(f"\n  🚧 [503 서버 혼잡] 잠시 숨을 고릅니다... {backoff_time}초 대기 후 재시도. ({e})")
+                print(f"\n  🚧 [503 서버 혼잡] 잠시 숨을 고릅니다... 5초 대기 후 재시도. ({e})")
                 attempts += 1
-                time.sleep(backoff_time)
+                time.sleep(5)
                 continue
             else:
                 # 400 에러(잘못된 프롬프트 포맷) 등은 키를 바꿔도 똑같이 실패하므로 루프 종료
@@ -366,7 +326,7 @@ def process_split(split_name: str, dataset_path: str, output_base_dir: str):
     start_idx = sum(1 for _ in open(output_file, 'r', encoding='utf-8')) if os.path.exists(output_file) else 0
     print(f"🚀 [{split_name}] {start_idx}번 문서부터 시작합니다.")
 
-    for i in range(start_idx, start_idx+582): # 테스트 시 range(start_idx, start_idx + 1) 로 변경하세요
+    for i in range(start_idx, len(dataset)): # 테스트 시 range(start_idx, start_idx + 1) 로 변경하세요
         sample = dataset[i]
         doc_text = flatten_document(sample['sents'])
         

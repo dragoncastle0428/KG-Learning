@@ -4,16 +4,13 @@ import re
 from dotenv import load_dotenv
 from langchain_community.graphs import Neo4jGraph
 
-# 1. .env 파일의 내용을 환경 변수로 모두 불러옵니다.
+# 1. 환경 변수 로드 및 Neo4j 연결
 load_dotenv() 
-
-# 2. os.environ 설정을 생략해도, LangChain이 알아서 .env의 정보를 읽어 연결합니다!
-print("Neo4j에 연결을 시도합니다...")
+print("🔌 Neo4j에 연결을 시도합니다...")
 graph = Neo4jGraph()
-
 print("✅ Neo4j 연결 성공!")
 
-# 2. P-ID를 읽기 쉬운 관계명으로 변환하는 맵핑
+# 2. P-ID -> 관계명 맵핑 (기존과 동일)
 RELATION_MAP = {
     "P571": "founded in", "P112": "founded by", "P159": "headquarters", "P127": "owned by", 
     "P749": "parent org", "P355": "subsidiary", "P155": "preceded by", "P156": "followed by", 
@@ -52,70 +49,80 @@ RELATION_MAP = {
 }
 
 def format_rel_name(text):
-    """'founded in' -> 'FOUNDED_IN' 형태로 변환 (Cypher 관계명 표준)"""
     return re.sub(r'[^a-zA-Z0-9]', '_', text).upper()
 
-# 3. 데이터 로드 (Qualifier가 포함된 새로운 데이터셋 경로로 수정하세요)
+# 3. 데이터 로드
 DATASET_PATH = "./Dataset/HypeRelDocRED/train/train_enriched_v3.jsonl" 
-DOC_LIMIT = 582  # 제한할 문서 개수 설정
+DOC_LIMIT = 582
 
-print(f"데이터 파싱 시작... (처음 {DOC_LIMIT}개 문서만 처리합니다)")
+print(f"📖 데이터 파싱 시작... (처음 {DOC_LIMIT}개 문서 처리)")
 
 nodes_dict = {} 
 edges_list = []
 
 with open(DATASET_PATH, 'r', encoding='utf-8') as f:
     for doc_id, line in enumerate(f):
-        if doc_id >= DOC_LIMIT:
-            break
+        if doc_id >= DOC_LIMIT: break
             
         data = json.loads(line)
         local_idx_to_name = {}
         
-        # 노드 파싱
+        # [수정됨] 노드 파싱: 엔티티의 'type' 정보를 함께 추출
         for idx, v_group in enumerate(data.get('vertexSet', [])):
             if not v_group: continue
             entity = v_group[0]
             name = entity['name'].strip()
             local_idx_to_name[idx] = name
             
-            nodes_dict[name] = {"name": name, "type": entity.get('type', 'UNKNOWN')}
+            # JSON에 있는 type 정보 저장 (예: 'LOC', 'ORG', 'PER' 등)
+            e_type = entity.get('type', 'UNKNOWN').strip()
+            # 특수문자 제거 및 대문자 변환 (Cypher 라벨 표준화)
+            safe_type = re.sub(r'[^a-zA-Z0-9]', '', e_type).upper()
+            if not safe_type: safe_type = "UNKNOWN"
+            
+            nodes_dict[name] = {"name": name, "type": safe_type}
             
         # 엣지 파싱
         for label in data.get('labels', []):
             h_name = local_idx_to_name.get(label['h'])
             t_name = local_idx_to_name.get(label['t'])
-            
             if not h_name or not t_name: continue
                 
             raw_rel = RELATION_MAP.get(label['r'], label['r'])
             rel_type = format_rel_name(raw_rel)
             
-            # Qualifier 속성 복원 및 출처 문서 ID 저장
             properties = {"doc_id": doc_id}
             for q in label.get('qualifiers', []):
                 properties[q['qualifier']] = q['qualifier_value']
                 
             edges_list.append({
-                "head": h_name,
-                "tail": t_name,
-                "rel_type": rel_type,
-                "props": properties # props 속성 다시 활성화
+                "head": h_name, "tail": t_name, "rel_type": rel_type, "props": properties
             })
 
-print(f"파싱 완료: 총 {len(nodes_dict)}개의 노드와 {len(edges_list)}개의 엣지를 삽입합니다.")
+print(f"✅ 파싱 완료: 총 {len(nodes_dict)}개의 노드와 {len(edges_list)}개의 엣지가 준비되었습니다.")
 
-# 4. Neo4j에 노드 삽입
-node_query = """
-UNWIND $nodes AS n
-MERGE (e:Entity {name: n.name})
-SET e.type = n.type
-"""
-graph.query(node_query, params={"nodes": list(nodes_dict.values())})
+# 4. Neo4j에 노드 삽입 (동적 라벨 적용)
+print("🏗️ 노드(엔티티) 생성 중... (타입별 다중 라벨 적용)")
+# Cypher는 동적 라벨 파라미터화가 불가능하므로, Python에서 타입별로 그룹을 묶어 처리합니다.
+nodes_by_type = {}
+for node in nodes_dict.values():
+    n_type = node["type"]
+    if n_type not in nodes_by_type:
+        nodes_by_type[n_type] = []
+    nodes_by_type[n_type].append({"name": node["name"]})
 
-# 5. Neo4j에 엣지 삽입 (Qualifier 정보가 포함된 props 사용)
-print("관계(엣지) 연결 중... (시간이 조금 걸릴 수 있습니다)")
+for n_type, node_list in nodes_by_type.items():
+    # Entity 라벨과 구체적 타입(n_type) 라벨을 둘 다 부여합니다!
+    node_query = f"""
+    UNWIND $nodes AS n
+    MERGE (e:Entity:{n_type} {{name: n.name}})
+    """
+    graph.query(node_query, params={"nodes": node_list})
+
+# 5. Neo4j에 엣지 삽입
+print("🔗 관계(엣지) 연결 중... (Qualifier 포함)")
 for edge in edges_list:
+    # 엣지를 연결할 때는 공통 라벨인 Entity만으로 매칭해도 완벽하게 찾아냅니다.
     edge_query = f"""
     MATCH (h:Entity {{name: $head}})
     MATCH (t:Entity {{name: $tail}})
@@ -124,4 +131,4 @@ for edge in edges_list:
     """
     graph.query(edge_query, params={"head": edge["head"], "tail": edge["tail"], "props": edge["props"]})
 
-print("🎉 Neo4j에 582개 문서 기반 지식 그래프(Qualifier 포함) 구축 완료!")
+print("🎉 완벽합니다! 다중 라벨(Type)과 Qualifier가 적용된 지식 그래프가 성공적으로 구축되었습니다!")

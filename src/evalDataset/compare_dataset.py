@@ -10,53 +10,44 @@ plt.rcParams['axes.unicode_minus'] = False
 
 # --- 1. 환경 설정 및 RELATION_MAP ---
 ORIGINAL_DATASET_PATH = "./Dataset/Re-DocRED"
-NEW_DATASET_PATH = "./Dataset/HypeRelDocRED/train/train_enriched_v3.jsonl"
-COMPARE_LIMIT = 582 # 비교할 문서 개수 제한
+NEW_DATASET_PATH = "./Dataset/HypeRelDocRED/train/train_enriched_v4.jsonl"
+COMPARE_LIMIT = 500 # 비교할 문서 개수 제한
 
 RELATION_MAP = {
-    # 🏢 [조직/기업 관련 (ORG)]
-    "P571": "founded in", 
-    "P112": "founded by", 
-    "P159": "headquarters", 
-    "P127": "owned by", 
-    "P749": "parent org", 
-    "P355": "subsidiary", 
-    "P155": "preceded by", 
-    "P156": "followed by", 
-    "P1365": "replaces", 
-    "P1366": "replaced by", 
-    "P1416": "affiliation", 
-    "P452": "industry", 
-    "P7888": "merged into",
-    "P121": "operated",
-    # 👤 [인물 관련 (PER)]
-    "P569": "date of birth", 
-    "P570": "date of death", 
-    "P19": "place of birth", 
-    "P20": "place of death", 
-    "P106": "occupation", 
-    "P108": "employer", 
-    "P69": "educated at", 
-    "P26": "spouse", 
-    "P22": "father", 
-    "P25": "mother", 
-    # 🌍 [지리/장소 관련 (LOC)]
-    "P17": "country", 
-    "P131": "located in", 
-    "P36": "capital", 
-    "P47": "shares border", 
-    "P1992": "proximate points", 
-    # 🎬 [사건/창작물/기타 (TIME, EVENT, WORK)]
-    "P585": "point in time", 
-    "P577": "publication date", 
-    "P50": "author", 
-    "P57": "director", 
-    "P175": "performer", 
-    "P166": "award received", 
-    "P1411": "nominated for", 
-    "P1056": "service provided", 
-    "P1444": "destination point", 
-    "P3608": "regulated by" 
+    "P571": "founded in", "P112": "founded by", "P159": "headquarters", "P127": "owned by", 
+    "P749": "parent org", "P355": "subsidiary", "P155": "preceded by", "P156": "followed by", 
+    "P1365": "replaces", "P1366": "replaced by", "P1416": "affiliation", "P452": "industry", 
+    "P7888": "merged into", "P121": "operated", "P569": "date of birth", "P570": "date of death", 
+    "P19": "place of birth", "P20": "place of death", "P106": "occupation", "P108": "employer", 
+    "P69": "educated at", "P26": "spouse", "P22": "father", "P25": "mother", "P17": "country", 
+    "P131": "located in", "P36": "capital", "P47": "shares border", "P1992": "proximate points", 
+    "P585": "point in time", "P577": "publication date", "P50": "author", "P57": "director", 
+    "P175": "performer", "P166": "award received", "P1411": "nominated for", 
+    "P1056": "service provided", "P1444": "destination point", "P3608": "regulated by",
+    "P6": "head of government", "P27": "country of citizenship", "P30": "continent",
+    "P31": "instance of", "P35": "head of state", "P37": "official language",
+    "P39": "position held", "P40": "child", "P54": "member of sports team",
+    "P58": "screenwriter", "P86": "composer", "P102": "member of political party",
+    "P118": "league", "P123": "publisher", "P136": "genre", "P137": "operator",
+    "P140": "religion", "P150": "contains administrative territorial entity",
+    "P161": "cast member", "P162": "producer", "P170": "creator",
+    "P171": "parent taxon", "P172": "ethnic group", "P176": "manufacturer",
+    "P178": "developer", "P179": "series", "P194": "legislative body",
+    "P205": "basin country", "P206": "located in or next to body of water",
+    "P241": "military branch", "P264": "record label", "P272": "production company",
+    "P276": "location", "P279": "subclass of", "P361": "part of",
+    "P364": "original language", "P400": "platform", "P403": "mouth of the watercourse",
+    "P449": "original network", "P463": "member of", "P488": "chair",
+    "P495": "country of origin", "P527": "has part", "P551": "residence",
+    "P576": "dissolved or abolished date", "P580": "start time", "P582": "end time",
+    "P607": "conflict", "P674": "characters", "P676": "lyrics by",
+    "P706": "located on terrain feature", "P710": "participant",
+    "P737": "influenced by", "P740": "location of formation", "P800": "notable work",
+    "P807": "separated from", "P840": "narrative location", "P937": "work location",
+    "P1001": "legal jurisdiction", "P1198": "unemployment rate",
+    "P1336": "territory claimed by", "P1344": "participant in",
+    "P1376": "capital of", "P1412": "languages spoken or written",
+    "P1441": "present in work", "P3373": "sibling", "P190": "sister city"
 }
 
 def load_new_dataset(jsonl_path):
