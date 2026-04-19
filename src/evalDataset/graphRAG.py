@@ -45,26 +45,28 @@ chain_orig = GraphCypherQAChain.from_llm(
 # --- 🌟 추가된 부분: Hyper 전용 넓은 검색(Broad Subgraph) 프롬프트 ---
 HYPER_CYPHER_TEMPLATE = """
 You are an expert Neo4j Cypher translator.
-Your goal is to extract a rich subgraph that contains the answer to the user's question.
+Your goal is to extract a rich subgraph that contains the answer to the user's question, especially focusing on multi-hop paths and relationship qualifiers.
 
 Schema:
 {schema}
 
 [CRITICAL INSTRUCTIONS for Hyper Knowledge Graph]
-1. DO NOT try to guess or filter by specific relationship types.
-2. Instead, identify the core entities in the question, and use a broad `CONTAINS` match with `toLower()` to find them.
-3. Once the core entities are found, match ALL their connected relationships (up to 1 or 2 hops).
-4. You MUST use `properties(r)` to return ALL relationship properties. This is extremely important because properties contain the Qualifiers (WHAT, WHY, WHERE, WHEN, HOW) needed to answer complex questions.
+1. Identify the core entities in the question, and use a broad `CONTAINS` match with `toLower()` to find them.
+2. DO NOT limit the search to 1-hop. You MUST use variable-length paths like `-[*1..2]-` to capture multi-hop relationships.
+3. You MUST extract properties from ALL relationships in the path to capture Qualifiers (WHAT, WHY, WHERE, WHEN, HOW).
+4. Return the results as structured lists (nodes and relationships) so the QA model can read the properties easily.
 
 [Example Query Structure]
-Question: 데스 망간이 노르웨이에 돈을 제안한 이유는 무엇인가요?
+Question: Francesc Xavier Bultó Marquès가 설립한 회사는?
 Cypher:
-MATCH (n:Entity)-[r]-(m:Entity)
-WHERE toLower(n.name) CONTAINS 'mangan' OR toLower(n.name) CONTAINS 'norway'
-RETURN n.name, type(r), properties(r), m.name
-LIMIT 30
+MATCH path = (n:Entity)-[*1..2]-(m)
+WHERE toLower(n.name) CONTAINS 'francesc' OR toLower(n.name) CONTAINS 'bultó'
+RETURN 
+    [node in nodes(path) | node.name] AS path_nodes, 
+    [rel in relationships(path) | {{type: type(rel), props: properties(rel)}}] AS path_relationships
+LIMIT 20
 
-Return ONLY the valid Cypher query without any markdown formatting or explanations.
+Return ONLY the valid Cypher query without any markdown formatting or explanations in English.
 
 Question: {question}
 """
@@ -111,7 +113,7 @@ def generate_questions_for_doc(doc_text, graph_info):
     prompt = f"""
     당신은 RAG 시스템의 성능을 평가하기 위한 고급 질문 출제자입니다.
     아래 주어진 원문(Document)과 추출된 지식 그래프 정보(Graph Info, 특히 Qualifiers)를 바탕으로,
-    AI가 그래프를 잘 탐색하는지 테스트할 수 있는 질문 3개를 생성하세요.
+    AI가 그래프를 잘 탐색하는지 테스트할 수 있는 질문 3개를 영문으로 생성하세요.
 
     [요구조건]
     1. Simple: 두 엔티티 간의 1차원적인 관계를 묻는 질문 1개.
@@ -206,8 +208,9 @@ if __name__ == "__main__":
         # Hyper 테스트
         try:
             ans_hyper = chain_hyper.invoke({"query": query})["result"]
-        except Exception:
+        except Exception as e:
             ans_hyper = "오류 발생"
+            print(f" 🚨 [Hyper 디버그 에러]: {e}") # 👈 이 줄을 추가하여 실제 에러 확인
             
         print(f" └ Original: {ans_orig}")
         print(f" └ Hyper   : {ans_hyper}")
