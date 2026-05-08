@@ -11,7 +11,7 @@ plt.rcParams['axes.unicode_minus'] = False
 # --- 1. 환경 설정 및 RELATION_MAP ---
 ORIGINAL_DATASET_PATH = "./Dataset/Re-DocRED"
 NEW_DATASET_PATH = "./Dataset/HypeRelDocRED/train/train_enriched_v4.jsonl"
-COMPARE_LIMIT = 500 # 비교할 문서 개수 제한
+COMPARE_LIMIT = 1541 # 비교할 문서 개수 제한
 
 RELATION_MAP = {
     "P571": "founded in", "P112": "founded by", "P159": "headquarters", "P127": "owned by", 
@@ -129,7 +129,7 @@ def analyze_datasets():
     plot_averages(stats)
     
     # 그래프 2: 관계(Relation) 분포 비교 (출력 개수를 25개로 확장)
-    plot_relation_distribution(stats["Original"]["rel_counter"], stats["New"]["rel_counter"], top_n=25)
+    plot_relation_distribution(stats["Original"]["rel_counter"], stats["New"]["rel_counter"], top_n=30)
 
 
 def plot_averages(stats):
@@ -170,7 +170,7 @@ def plot_averages(stats):
     plt.show()
 
 
-def plot_relation_distribution(orig_counter, new_counter, top_n=25):
+def plot_relation_distribution(orig_counter, new_counter, top_n=30):
     """가장 많이 등장한 관계들의 분포를 비교합니다. 출력 개수를 늘려 더 넓게 봅니다."""
     all_pids = set(orig_counter.keys()).union(set(new_counter.keys()))
     sorted_pids = sorted(list(all_pids), key=lambda x: new_counter.get(x, 0), reverse=True)[:top_n]

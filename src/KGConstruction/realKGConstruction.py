@@ -53,7 +53,7 @@ def format_rel_name(text):
 
 # 3. 데이터 로드
 DATASET_PATH = "./results/redocred_original.jsonl" 
-DOC_LIMIT = 582
+DOC_LIMIT = 1541
 
 print(f"📖 데이터 파싱 시작... (처음 {DOC_LIMIT}개 문서 처리)")
 

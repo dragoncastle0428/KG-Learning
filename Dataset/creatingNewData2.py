@@ -9,6 +9,7 @@ from pydantic import BaseModel, Field
 from typing import List
 import re
 import difflib
+from typing import Literal
 
 # 1. Wikidata P-ID 매핑 딕셔너리 (전수 검증 완료 버전)
 RELATION_MAP = {
@@ -58,27 +59,23 @@ def get_current_client():
     global current_key_idx
     return Client(api_key=API_KEYS[current_key_idx])
 
-# --- 1. 설정 및 클라이언트 초기화 ---
+QualifierType = Literal["WHO", "WHAT", "WHEN", "WHERE", "WHY", "HOW"]
 
-#client = Client(api_key=os.getenv(API_KEYS[0]))
-
-# --- 2. 데이터 구조 정의 (LLM은 무조건 String만 뱉도록 강제) ---
 class Qualifier(BaseModel):
-    qualifier: str = Field(description="e.g., WHEN, WHERE, WHY, HOW")
+    qualifier: QualifierType = Field(description="5W1H dimension of this qualifier")
     qualifier_value: str = Field(description="Contextual detail (within 5 words)")
 
 class Label(BaseModel):
     h: str = Field(description="The exact text of the Head Entity")
-    h_type: str = Field(description="Type of Head (e.g., ORG, LOC, PER, TIME, NUM)") # 추가됨
+    h_type: str = Field(description="Type of Head (e.g., ORG, LOC, PER, TIME, NUM)")
     r: str = Field(description="The exact Wikidata P-ID")
     t: str = Field(description="The exact text of the Tail Entity")
-    t_type: str = Field(description="Type of Tail (e.g., ORG, LOC, PER, TIME, NUM)") # 추가됨
+    t_type: str = Field(description="Type of Tail (e.g., ORG, LOC, PER, TIME, NUM)")
     qualifiers: List[Qualifier] = Field(default_factory=list, description="List of qualifiers")
 
 class DocumentEnrichmentResult(BaseModel):
     labels: List[Label]
 
-# --- 3. 헬퍼 함수 ---
 def flatten_document(sents: list) -> str:
     return " ".join([" ".join(sent) for sent in sents])
 
@@ -159,25 +156,11 @@ def find_robust_pos_and_sent_id(sents: list, target_text: str) -> dict:
     # 3단계까지 모두 실패하면 포기
     return {"sent_id": -1, "pos": [-1, -1]}
 
-# def find_exact_pos_and_sent_id(sents: list, target_text: str) -> dict:
-#     """원문 sents 배열에서 특정 텍스트의 sent_id와 pos(토큰 좌표)를 정밀 추적합니다."""
-#     target_tokens = [t.lower() for t in target_text.split()]
-#     target_len = len(target_tokens)
-    
-#     for sent_idx, sentence_tokens in enumerate(sents):
-#         sent_tokens_lower = [t.lower() for t in sentence_tokens]
-#         for i in range(len(sent_tokens_lower) - target_len + 1):
-#             if sent_tokens_lower[i : i + target_len] == target_tokens:
-#                 return {"sent_id": sent_idx, "pos": [i, i + target_len]}
-                
-#     return {"sent_id": -1, "pos": [-1, -1]} # 매칭 실패 시
-
 def rebuild_docred_format(original_vertex_set: list, sents: list, llm_labels_text: list):
     """LLM이 판별한 타입을 보존하면서 새로운 구조로 재조립합니다."""
     new_vertex_set = []
     new_labels = []
 
-    # 💡 수정 1: entity_name 뿐만 아니라 entity_type도 파라미터로 같이 받습니다.
     def get_or_create_vertex(entity_name: str, entity_type: str) -> int:
         entity_name_clean = entity_name.strip().lower()
         
@@ -229,6 +212,7 @@ def enrich_document_batch(doc_text: str, doc_title: str):
     prompt = f"""
     You are an Expert Data reconstructor for Knowledge Graphs. 
     Analyze the document and extract core relationships.
+    Must extract important relationships first, then convert them into structured triples with qualifiers.
     
     [CRITICAL INSTRUCTIONS]
 
@@ -249,6 +233,7 @@ def enrich_document_batch(doc_text: str, doc_title: str):
     4. HYPER-RELATIONAL ANCHORING:
     - Every edge MUST attempt to capture 5W1H (Who, What, When, Where, Why, How) from the context as qualifiers. 
     - Qualifiers MUST be concise (within 5 words) and directly relevant to the specific relationship which are not extracted as entities 'h' or 't'.
+    - Qualifiers MUST be precise contextual details that enhance the understanding of the relationship, not vague or redundant information. (e.g. formerly is too vague)
 
     5. ENTITY TYPING & NORMALIZATION:
     - Unified naming applies ONLY to identical entities (e.g., "WHO" and "World Health Organization"). 

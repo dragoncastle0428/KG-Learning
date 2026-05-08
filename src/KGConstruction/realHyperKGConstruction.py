@@ -52,8 +52,8 @@ def format_rel_name(text):
     return re.sub(r'[^a-zA-Z0-9]', '_', text).upper()
 
 # 3. 데이터 로드
-DATASET_PATH = "./Dataset/HypeRelDocRED/train/train_enriched_v3.jsonl" 
-DOC_LIMIT = 582
+DATASET_PATH = "./Dataset/HypeRelDocRED/train/train_enriched_v4.jsonl" 
+DOC_LIMIT = 1541
 
 print(f"📖 데이터 파싱 시작... (처음 {DOC_LIMIT}개 문서 처리)")
 
