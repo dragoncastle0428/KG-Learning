@@ -1,0 +1,110 @@
+<!DOCTYPE html><html>
+<head><meta charset="utf-8"><title>KG 비교: List of High Commissioners of New Zealand to Fiji</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#111;color:white;font-family:sans-serif;display:flex;flex-direction:column;height:100vh;overflow:hidden}
+.header{padding:10px;text-align:center;flex-shrink:0;background:#0d0d0d}
+.header h1{font-size:17px;color:#eeeeee;margin-bottom:4px}
+.legend{font-size:13px}.legend span{margin:0 14px}
+.panels{display:flex;flex:1;min-height:0}
+.panel{flex:1;display:flex;flex-direction:column;border:1px solid #333;min-width:0}
+.panel-title{text-align:center;font-size:13px;padding:6px;background:#1a1a1a;flex-shrink:0;font-weight:bold}
+#graph_v4,#graph_v5{flex:1;min-height:0}
+</style></head>
+<body>
+<div class="header">
+  <h1>📊 KG 비교: List of High Commissioners of New Zealand to Fiji</h1>
+  <div class="legend">
+    <span style="color:#4a90d9">● 기존 엣지 (v4)</span>
+    <span style="color:#ff4444">● 새로 추가/수정된 엣지 (v5)</span>
+  </div>
+</div>
+<div class="panels">
+  <div class="panel">
+    <div class="panel-title" style="color:#7ab8f5">v4 (원본) — 14개 엣지 / 14개 버텍스</div>
+    <div id="graph_v4"></div>
+  </div>
+  <div class="panel">
+    <div class="panel-title" style="color:#7ddb8a">v5 (수정) — 9개 엣지 / 14개 버텍스 &nbsp;|&nbsp; 변경: 0개</div>
+    <div id="graph_v5"></div>
+  </div>
+</div>
+<script>(function(){
+  var c = document.getElementById('graph_v4');
+  var n = new vis.DataSet([{id:0,label:'High Commissioner from New Zealand to Fiji',title:'Type: PER\nName: High Commissioner from New Zealand to Fiji',color:{background:'#c0392b',border:'#ffffff',highlight:{background:'#c0392b',border:'#ffff00'}},font:{color:'#ffffff',size:15,bold:true},shape:'ellipse',margin:10},
+{id:1,label:'diplomatic representative',title:'Type: MISC\nName: diplomatic representative',color:{background:'#e67e22',border:'#ffffff',highlight:{background:'#e67e22',border:'#ffff00'}},font:{color:'#ffffff',size:15,bold:true},shape:'ellipse',margin:10},
+{id:2,label:'New Zealand',title:'Type: ORG\nName: New Zealand',color:{background:'#4a90d9',border:'#ffffff',highlight:{background:'#4a90d9',border:'#ffff00'}},font:{color:'#ffffff',size:15,bold:true},shape:'ellipse',margin:10},
+{id:3,label:'The High Commission',title:'Type: ORG\nName: The High Commission',color:{background:'#4a90d9',border:'#ffffff',highlight:{background:'#4a90d9',border:'#ffff00'}},font:{color:'#ffffff',size:15,bold:true},shape:'ellipse',margin:10},
+{id:4,label:'Suva',title:'Type: LOC\nName: Suva',color:{background:'#27ae60',border:'#ffffff',highlight:{background:'#27ae60',border:'#ffff00'}},font:{color:'#ffffff',size:15,bold:true},shape:'ellipse',margin:10},
+{id:5,label:'Fiji',title:'Type: LOC\nName: Fiji',color:{background:'#27ae60',border:'#ffffff',highlight:{background:'#27ae60',border:'#ffff00'}},font:{color:'#ffffff',size:15,bold:true},shape:'ellipse',margin:10},
+{id:6,label:'resident Head of Mission',title:'Type: MISC\nName: resident Head of Mission',color:{background:'#e67e22',border:'#ffffff',highlight:{background:'#e67e22',border:'#ffff00'}},font:{color:'#ffffff',size:15,bold:true},shape:'ellipse',margin:10},
+{id:7,label:'The Ambassador to Fiji',title:'Type: PER\nName: The Ambassador to Fiji',color:{background:'#c0392b',border:'#ffffff',highlight:{background:'#c0392b',border:'#ffff00'}},font:{color:'#ffffff',size:15,bold:true},shape:'ellipse',margin:10},
+{id:8,label:'Nauru',title:'Type: LOC\nName: Nauru',color:{background:'#27ae60',border:'#ffffff',highlight:{background:'#27ae60',border:'#ffff00'}},font:{color:'#ffffff',size:15,bold:true},shape:'ellipse',margin:10},
+{id:9,label:'Tuvalu',title:'Type: LOC\nName: Tuvalu',color:{background:'#27ae60',border:'#ffffff',highlight:{background:'#27ae60',border:'#ffff00'}},font:{color:'#ffffff',size:15,bold:true},shape:'ellipse',margin:10},
+{id:10,label:'Commonwealth of Nations',title:'Type: ORG\nName: Commonwealth of Nations',color:{background:'#4a90d9',border:'#ffffff',highlight:{background:'#4a90d9',border:'#ffff00'}},font:{color:'#ffffff',size:15,bold:true},shape:'ellipse',margin:10},
+{id:11,label:'Commonwealth',title:'Type: ORG\nName: Commonwealth',color:{background:'#4a90d9',border:'#ffffff',highlight:{background:'#4a90d9',border:'#ffff00'}},font:{color:'#ffffff',size:15,bold:true},shape:'ellipse',margin:10},
+{id:12,label:'an ambassador',title:'Type: PER\nName: an ambassador',color:{background:'#c0392b',border:'#ffffff',highlight:{background:'#c0392b',border:'#ffff00'}},font:{color:'#ffffff',size:15,bold:true},shape:'ellipse',margin:10},
+{id:13,label:'representative',title:'Type: MISC\nName: representative',color:{background:'#e67e22',border:'#ffffff',highlight:{background:'#e67e22',border:'#ffff00'}},font:{color:'#ffffff',size:15,bold:true},shape:'ellipse',margin:10}]);
+  var e = new vis.DataSet([{id:0,from:0,to:1,label:'position held',title:'Relation: position held (P39)\n[WHERE]: Republic of Fiji Islands',color:{color:'#4a90d9',highlight:'#4a90d9',hover:'#4a90d9'},font:{color:'white',size:12,strokeWidth:4,strokeColor:'#000000'},arrows:'to'},
+{id:1,from:0,to:2,label:'employer',title:'Relation: employer (P108)\n[WHERE]: in Fiji',color:{color:'#4a90d9',highlight:'#4a90d9',hover:'#4a90d9'},font:{color:'white',size:12,strokeWidth:4,strokeColor:'#000000'},arrows:'to'},
+{id:2,from:3,to:4,label:'location',title:'Relation: location (P276)',color:{color:'#4a90d9',highlight:'#4a90d9',hover:'#4a90d9'},font:{color:'white',size:12,strokeWidth:4,strokeColor:'#000000'},arrows:'to'},
+{id:3,from:4,to:5,label:'capital of',title:'Relation: capital of (P1376)',color:{color:'#4a90d9',highlight:'#4a90d9',hover:'#4a90d9'},font:{color:'white',size:12,strokeWidth:4,strokeColor:'#000000'},arrows:'to'},
+{id:4,from:2,to:6,label:'service provided',title:'Relation: service provided (P1056)\n[WHERE]: in Fiji\n[WHEN]: since 1970',color:{color:'#4a90d9',highlight:'#4a90d9',hover:'#4a90d9'},font:{color:'white',size:12,strokeWidth:4,strokeColor:'#000000'},arrows:'to'},
+{id:5,from:7,to:8,label:'affiliation',title:'Relation: affiliation (P1416)\n[HOW]: concurrently accredited',color:{color:'#4a90d9',highlight:'#4a90d9',hover:'#4a90d9'},font:{color:'white',size:12,strokeWidth:4,strokeColor:'#000000'},arrows:'to'},
+{id:6,from:7,to:9,label:'affiliation',title:'Relation: affiliation (P1416)\n[HOW]: concurrently accredited',color:{color:'#4a90d9',highlight:'#4a90d9',hover:'#4a90d9'},font:{color:'white',size:12,strokeWidth:4,strokeColor:'#000000'},arrows:'to'},
+{id:7,from:2,to:10,label:'member of',title:'Relation: member of (P463)',color:{color:'#4a90d9',highlight:'#4a90d9',hover:'#4a90d9'},font:{color:'white',size:12,strokeWidth:4,strokeColor:'#000000'},arrows:'to'},
+{id:8,from:5,to:10,label:'member of',title:'Relation: member of (P463)',color:{color:'#4a90d9',highlight:'#4a90d9',hover:'#4a90d9'},font:{color:'white',size:12,strokeWidth:4,strokeColor:'#000000'},arrows:'to'},
+{id:9,from:2,to:5,label:'affiliation',title:'Relation: affiliation (P1416)\n[HOW]: exchange High Commissioners',color:{color:'#4a90d9',highlight:'#4a90d9',hover:'#4a90d9'},font:{color:'white',size:12,strokeWidth:4,strokeColor:'#000000'},arrows:'to'},
+{id:10,from:5,to:11,label:'separated from',title:'Relation: separated from (P807)\n[WHEN]: after Coups of 1987',color:{color:'#4a90d9',highlight:'#4a90d9',hover:'#4a90d9'},font:{color:'white',size:12,strokeWidth:4,strokeColor:'#000000'},arrows:'to'},
+{id:11,from:5,to:11,label:'member of',title:'Relation: member of (P463)\n[WHEN]: after 1997 constitution',color:{color:'#4a90d9',highlight:'#4a90d9',hover:'#4a90d9'},font:{color:'white',size:12,strokeWidth:4,strokeColor:'#000000'},arrows:'to'},
+{id:12,from:12,to:2,label:'employer',title:'Relation: employer (P108)\n[WHERE]: in Fiji\n[WHEN]: from 1987 until 1997',color:{color:'#4a90d9',highlight:'#4a90d9',hover:'#4a90d9'},font:{color:'white',size:12,strokeWidth:4,strokeColor:'#000000'},arrows:'to'},
+{id:13,from:12,to:13,label:'position held',title:'Relation: position held (P39)\n[WHERE]: in Fiji\n[WHEN]: from 1987 until 1997',color:{color:'#4a90d9',highlight:'#4a90d9',hover:'#4a90d9'},font:{color:'white',size:12,strokeWidth:4,strokeColor:'#000000'},arrows:'to'}]);
+  new vis.Network(c, {nodes:n, edges:e}, {
+    physics:{
+      forceAtlas2Based:{gravitationalConstant:-80,centralGravity:0.01,springLength:120},
+      solver:'forceAtlas2Based',
+      stabilization:{iterations:200}
+    },
+    edges:{smooth:{type:'dynamic'}},
+    interaction:{hover:true,tooltipDelay:50}
+  });
+})();(function(){
+  var c = document.getElementById('graph_v5');
+  var n = new vis.DataSet([{id:0,label:'High Commissioner from New Zealand to Fiji',title:'Type: PER\nName: High Commissioner from New Zealand to Fiji',color:{background:'#c0392b',border:'#ffffff',highlight:{background:'#c0392b',border:'#ffff00'}},font:{color:'#ffffff',size:15,bold:true},shape:'ellipse',margin:10},
+{id:1,label:'diplomatic representative',title:'Type: MISC\nName: diplomatic representative',color:{background:'#e67e22',border:'#ffffff',highlight:{background:'#e67e22',border:'#ffff00'}},font:{color:'#ffffff',size:15,bold:true},shape:'ellipse',margin:10},
+{id:2,label:'New Zealand',title:'Type: ORG\nName: New Zealand',color:{background:'#4a90d9',border:'#ffffff',highlight:{background:'#4a90d9',border:'#ffff00'}},font:{color:'#ffffff',size:15,bold:true},shape:'ellipse',margin:10},
+{id:3,label:'The High Commission',title:'Type: ORG\nName: The High Commission',color:{background:'#4a90d9',border:'#ffffff',highlight:{background:'#4a90d9',border:'#ffff00'}},font:{color:'#ffffff',size:15,bold:true},shape:'ellipse',margin:10},
+{id:4,label:'Suva',title:'Type: LOC\nName: Suva',color:{background:'#27ae60',border:'#ffffff',highlight:{background:'#27ae60',border:'#ffff00'}},font:{color:'#ffffff',size:15,bold:true},shape:'ellipse',margin:10},
+{id:5,label:'Fiji',title:'Type: LOC\nName: Fiji',color:{background:'#27ae60',border:'#ffffff',highlight:{background:'#27ae60',border:'#ffff00'}},font:{color:'#ffffff',size:15,bold:true},shape:'ellipse',margin:10},
+{id:6,label:'resident Head of Mission',title:'Type: MISC\nName: resident Head of Mission',color:{background:'#e67e22',border:'#ffffff',highlight:{background:'#e67e22',border:'#ffff00'}},font:{color:'#ffffff',size:15,bold:true},shape:'ellipse',margin:10},
+{id:7,label:'The Ambassador to Fiji',title:'Type: PER\nName: The Ambassador to Fiji',color:{background:'#c0392b',border:'#ffffff',highlight:{background:'#c0392b',border:'#ffff00'}},font:{color:'#ffffff',size:15,bold:true},shape:'ellipse',margin:10},
+{id:8,label:'Nauru',title:'Type: LOC\nName: Nauru',color:{background:'#27ae60',border:'#ffffff',highlight:{background:'#27ae60',border:'#ffff00'}},font:{color:'#ffffff',size:15,bold:true},shape:'ellipse',margin:10},
+{id:9,label:'Tuvalu',title:'Type: LOC\nName: Tuvalu',color:{background:'#27ae60',border:'#ffffff',highlight:{background:'#27ae60',border:'#ffff00'}},font:{color:'#ffffff',size:15,bold:true},shape:'ellipse',margin:10},
+{id:10,label:'Commonwealth of Nations',title:'Type: ORG\nName: Commonwealth of Nations',color:{background:'#4a90d9',border:'#ffffff',highlight:{background:'#4a90d9',border:'#ffff00'}},font:{color:'#ffffff',size:15,bold:true},shape:'ellipse',margin:10},
+{id:11,label:'Commonwealth',title:'Type: ORG\nName: Commonwealth',color:{background:'#4a90d9',border:'#ffffff',highlight:{background:'#4a90d9',border:'#ffff00'}},font:{color:'#ffffff',size:15,bold:true},shape:'ellipse',margin:10},
+{id:12,label:'an ambassador',title:'Type: PER\nName: an ambassador',color:{background:'#c0392b',border:'#ffffff',highlight:{background:'#c0392b',border:'#ffff00'}},font:{color:'#ffffff',size:15,bold:true},shape:'ellipse',margin:10},
+{id:13,label:'representative',title:'Type: MISC\nName: representative',color:{background:'#e67e22',border:'#ffffff',highlight:{background:'#e67e22',border:'#ffff00'}},font:{color:'#ffffff',size:15,bold:true},shape:'ellipse',margin:10}]);
+  var e = new vis.DataSet([{id:0,from:0,to:1,label:'position held',title:'Relation: position held (P39)\n[WHERE]: Republic of Fiji Islands',color:{color:'#4a90d9',highlight:'#4a90d9',hover:'#4a90d9'},font:{color:'white',size:12,strokeWidth:4,strokeColor:'#000000'},arrows:'to'},
+{id:1,from:0,to:2,label:'employer',title:'Relation: employer (P108)\n[WHERE]: in Fiji',color:{color:'#4a90d9',highlight:'#4a90d9',hover:'#4a90d9'},font:{color:'white',size:12,strokeWidth:4,strokeColor:'#000000'},arrows:'to'},
+{id:2,from:3,to:4,label:'location',title:'Relation: location (P276)',color:{color:'#4a90d9',highlight:'#4a90d9',hover:'#4a90d9'},font:{color:'white',size:12,strokeWidth:4,strokeColor:'#000000'},arrows:'to'},
+{id:3,from:4,to:5,label:'capital of',title:'Relation: capital of (P1376)',color:{color:'#4a90d9',highlight:'#4a90d9',hover:'#4a90d9'},font:{color:'white',size:12,strokeWidth:4,strokeColor:'#000000'},arrows:'to'},
+{id:4,from:2,to:6,label:'service provided',title:'Relation: service provided (P1056)\n[WHERE]: in Fiji\n[WHEN]: since 1970',color:{color:'#4a90d9',highlight:'#4a90d9',hover:'#4a90d9'},font:{color:'white',size:12,strokeWidth:4,strokeColor:'#000000'},arrows:'to'},
+{id:5,from:7,to:8,label:'affiliation',title:'Relation: affiliation (P1416)\n[HOW]: concurrently accredited',color:{color:'#4a90d9',highlight:'#4a90d9',hover:'#4a90d9'},font:{color:'white',size:12,strokeWidth:4,strokeColor:'#000000'},arrows:'to'},
+{id:6,from:7,to:9,label:'affiliation',title:'Relation: affiliation (P1416)\n[HOW]: concurrently accredited',color:{color:'#4a90d9',highlight:'#4a90d9',hover:'#4a90d9'},font:{color:'white',size:12,strokeWidth:4,strokeColor:'#000000'},arrows:'to'},
+{id:7,from:2,to:10,label:'member of',title:'Relation: member of (P463)',color:{color:'#4a90d9',highlight:'#4a90d9',hover:'#4a90d9'},font:{color:'white',size:12,strokeWidth:4,strokeColor:'#000000'},arrows:'to'},
+{id:8,from:2,to:5,label:'affiliation',title:'Relation: affiliation (P1416)\n[HOW]: exchange High Commissioners',color:{color:'#4a90d9',highlight:'#4a90d9',hover:'#4a90d9'},font:{color:'white',size:12,strokeWidth:4,strokeColor:'#000000'},arrows:'to'}]);
+  new vis.Network(c, {nodes:n, edges:e}, {
+    physics:{
+      forceAtlas2Based:{gravitationalConstant:-80,centralGravity:0.01,springLength:120},
+      solver:'forceAtlas2Based',
+      stabilization:{iterations:200}
+    },
+    edges:{smooth:{type:'dynamic'}},
+    interaction:{hover:true,tooltipDelay:50}
+  });
+})();</script>
+</body></html>

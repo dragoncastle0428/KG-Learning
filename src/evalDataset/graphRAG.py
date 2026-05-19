@@ -5,125 +5,244 @@ import pandas as pd
 from datetime import datetime
 from dotenv import load_dotenv
 from pydantic import BaseModel, Field
+from typing import List, Optional
 
-# LangChain & Neo4j
 from langchain_community.graphs import Neo4jGraph
-from langchain.chains import GraphCypherQAChain
-from langchain_google_genai import ChatGoogleGenerativeAI
-from langchain.prompts import PromptTemplate  # 👈 추가된 임포트
-
-# Google GenAI (질문 생성 및 평가용)
 from google.genai import Client
 from google.genai import types
 
-# 1. 환경 변수 및 설정
 load_dotenv()
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 V4_DATASET_PATH = "./Dataset/HypeRelDocRED/train/train_enriched_v4.jsonl"
-SAMPLE_DOCS_COUNT = 3  # 질문을 추출할 문서 개수
+SAMPLE_DOCS_COUNT = 3
+MAX_SUBGRAPH_RESULTS = 30
 
 print("🔌 데이터베이스 연결 중...")
-graph_orig = Neo4jGraph(database="original") 
+graph_orig  = Neo4jGraph(database="original")
 graph_hyper = Neo4jGraph(database="hyper")
 print("✅ DB 연결 완료!")
 
-# 2. RAG 체인 설정 (Cypher 생성용)
-llm_rag = ChatGoogleGenerativeAI(
-    model="gemini-2.5-pro", 
-    temperature=0,
-    google_api_key=GEMINI_API_KEY
-)
+client = Client(api_key=GEMINI_API_KEY)
 
-# Original DB 체인은 기본 프롬프트 사용
-chain_orig = GraphCypherQAChain.from_llm(
-    llm_rag, 
-    graph=graph_orig, 
-    verbose=False, 
-    allow_dangerous_requests=True
-)
+# ─────────────────────────────────────────────
+# 1. Pydantic 스키마
+# ─────────────────────────────────────────────
+class ExtractedEntities(BaseModel):
+    entities: List[str] = Field(description="Key entity names extracted from the question")
 
-# --- 🌟 추가된 부분: Hyper 전용 넓은 검색(Broad Subgraph) 프롬프트 ---
-HYPER_CYPHER_TEMPLATE = """
-You are an expert Neo4j Cypher translator.
-Your goal is to extract a rich subgraph that contains the answer to the user's question, especially focusing on multi-hop paths and relationship qualifiers.
-
-Schema:
-{schema}
-
-[CRITICAL INSTRUCTIONS for Hyper Knowledge Graph]
-1. Identify the core entities in the question, and use a broad `CONTAINS` match with `toLower()` to find them.
-2. DO NOT limit the search to 1-hop. You MUST use variable-length paths like `-[*1..2]-` to capture multi-hop relationships.
-3. You MUST extract properties from ALL relationships in the path to capture Qualifiers (WHAT, WHY, WHERE, WHEN, HOW).
-4. Return the results as structured lists (nodes and relationships) so the QA model can read the properties easily.
-
-[Example Query Structure]
-Question: Francesc Xavier Bultó Marquès가 설립한 회사는?
-Cypher:
-MATCH path = (n:Entity)-[*1..2]-(m)
-WHERE toLower(n.name) CONTAINS 'francesc' OR toLower(n.name) CONTAINS 'bultó'
-RETURN 
-    [node in nodes(path) | node.name] AS path_nodes, 
-    [rel in relationships(path) | {{type: type(rel), props: properties(rel)}}] AS path_relationships
-LIMIT 20
-
-Return ONLY the valid Cypher query without any markdown formatting or explanations in English.
-
-Question: {question}
-"""
-
-hyper_prompt = PromptTemplate(
-    template=HYPER_CYPHER_TEMPLATE,
-    input_variables=["schema", "question"]
-)
-
-# Hyper DB 체인에 커스텀 프롬프트 주입 및 verbose 활성화
-chain_hyper = GraphCypherQAChain.from_llm(
-    llm_rag, 
-    graph=graph_hyper, 
-    verbose=True,  # 👈 어떤 쿼리를 생성하는지 콘솔에서 확인 가능
-    allow_dangerous_requests=True,
-    cypher_prompt=hyper_prompt
-)
-# -----------------------------------------------------------
-
-# 3. Pydantic 스키마 정의 (질문 생성용 & 평가용)
 class GeneratedQuestion(BaseModel):
-    question_type: str = Field(description="'Simple(단일 관계)', 'Multi-hop(연쇄 관계)', 'Qualifier(조건/이유/장소 등 부가정보 포함)' 중 하나")
-    question: str = Field(description="RAG 시스템에 던질 자연어 질문 (한국어)")
-    expected_focus: str = Field(description="이 질문을 통해 확인하고자 하는 핵심 정보 (예: BGC의 운송 목적지 및 이유)")
+    question_type: str = Field(description="'Simple', 'Multi-hop', or 'Qualifier'")
+    question: str = Field(description="Natural language question in English")
+    expected_focus: str = Field(description="Key information this question tests")
 
 class QuestionList(BaseModel):
-    questions: list[GeneratedQuestion]
+    questions: List[GeneratedQuestion]
 
 class RAGEvaluation(BaseModel):
     original_score: float = Field(ge=0.0, le=10.0)
     hyper_score: float = Field(ge=0.0, le=10.0)
-    winner: str = Field(description="'Original', 'Hyper', 또는 'Tie'")
-    reason: str = Field(description="점수 부여 및 승자 선정의 핵심 이유 (한국어)")
+    winner: str = Field(description="'Original', 'Hyper', or 'Tie'")
+    reason: str = Field(description="한국어로 점수 부여 및 승자 선정 이유")
 
-# 4. 헬퍼 함수
+# ─────────────────────────────────────────────
+# 2. 엔티티 추출
+# ─────────────────────────────────────────────
+def extract_entities(question: str) -> List[str]:
+    """질문에서 핵심 엔티티 이름을 추출합니다."""
+    response = client.models.generate_content(
+        model='gemini-2.5-flash',
+        contents=f"""Extract the key named entity names (people, organizations, places, works) 
+from this question. Return only the entity names, no descriptions.
+
+Question: {question}""",
+        config=types.GenerateContentConfig(
+            response_mime_type='application/json',
+            response_schema=ExtractedEntities,
+            temperature=0,
+        ),
+    )
+    return response.parsed.entities
+
+# ─────────────────────────────────────────────
+# 3. 서브그래프 조회 (고정 Cypher 패턴)
+# ─────────────────────────────────────────────
+def get_subgraph_orig(graph: Neo4jGraph, entities: List[str]) -> str:
+    """
+    Original DB: 기본 triple 구조
+    노드: (:Entity {name}), 관계: [:REL_TYPE]
+    """
+    if not entities:
+        return "No entities found."
+
+    where_clauses = " OR ".join(
+        [f"toLower(n.name) CONTAINS toLower('{e}')" for e in entities]
+    )
+
+    cypher = f"""
+MATCH (n)-[r]->(m)
+WHERE {where_clauses}
+RETURN n.name AS head, labels(n) AS head_labels,
+       type(r) AS relation,
+       m.name AS tail, labels(m) AS tail_labels
+LIMIT {MAX_SUBGRAPH_RESULTS}
+"""
+    try:
+        results = graph.query(cypher)
+        if not results:
+            # 1-hop 이웃이 없으면 노드 자체만 반환
+            cypher2 = f"""
+MATCH (n)
+WHERE {where_clauses}
+RETURN n.name AS name, labels(n) AS labels
+LIMIT 10
+"""
+            results = graph.query(cypher2)
+            if not results:
+                return "No relevant information found."
+            return "Entities found:\n" + "\n".join(
+                [f"- {r['name']} ({', '.join(r['labels'])})" for r in results]
+            )
+
+        lines = []
+        for r in results:
+            lines.append(
+                f"({r['head']}) --[{r['relation']}]--> ({r['tail']})"
+            )
+        return "\n".join(lines)
+    except Exception as e:
+        return f"Query error: {e}"
+
+
+def get_subgraph_hyper(graph: Neo4jGraph, entities: List[str]) -> str:
+    """
+    Hyper DB: qualifier 프로퍼티 포함
+    노드: (:Entity:TYPE {name}), 관계: [:REL_TYPE {WHO, WHAT, WHEN, WHERE, WHY, HOW, doc_id}]
+    """
+    if not entities:
+        return "No entities found."
+
+    where_clauses = " OR ".join(
+        [f"toLower(n.name) CONTAINS toLower('{e}')" for e in entities]
+    )
+
+    # 1-hop + qualifier 프로퍼티 포함
+    cypher = f"""
+MATCH (n)-[r]->(m)
+WHERE {where_clauses}
+RETURN n.name AS head,
+       [l IN labels(n) WHERE l <> 'Entity'] AS head_type,
+       type(r) AS relation,
+       m.name AS tail,
+       [l IN labels(m) WHERE l <> 'Entity'] AS tail_type,
+       r.WHO   AS who,
+       r.WHAT  AS what,
+       r.WHEN  AS when,
+       r.WHERE AS where,
+       r.WHY   AS why,
+       r.HOW   AS how
+LIMIT {MAX_SUBGRAPH_RESULTS}
+"""
+    try:
+        results = graph.query(cypher)
+
+        # 결과 없으면 2-hop 시도
+        if not results:
+            where_clauses2 = " OR ".join(
+                [f"toLower(n.name) CONTAINS toLower('{e}')" for e in entities]
+            )
+            cypher2 = f"""
+MATCH (n)-[r1]->(mid)-[r2]->(m)
+WHERE {where_clauses2}
+RETURN n.name AS head, type(r1) AS rel1,
+       mid.name AS mid, type(r2) AS rel2,
+       m.name AS tail,
+       r1.WHEN AS when1, r2.WHEN AS when2
+LIMIT 15
+"""
+            results = graph.query(cypher2)
+            if not results:
+                return "No relevant information found."
+
+            lines = [f"(Multi-hop results)"]
+            for r in results:
+                lines.append(
+                    f"({r['head']}) --[{r['rel1']}]--> ({r['mid']}) --[{r['rel2']}]--> ({r['tail']})"
+                    + (f"  | WHEN: {r['when1']}" if r.get('when1') else "")
+                )
+            return "\n".join(lines)
+
+        # qualifier 있는 결과 포맷팅
+        lines = []
+        for r in results:
+            head_type = r['head_type'][0] if r['head_type'] else '?'
+            tail_type = r['tail_type'][0] if r['tail_type'] else '?'
+            base = f"({r['head']}:{head_type}) --[{r['relation']}]--> ({r['tail']}:{tail_type})"
+
+            quals = []
+            for key in ['who', 'what', 'when', 'where', 'why', 'how']:
+                val = r.get(key)
+                if val:
+                    quals.append(f"{key.upper()}: {val}")
+
+            if quals:
+                base += f"  | {', '.join(quals)}"
+            lines.append(base)
+
+        return "\n".join(lines)
+
+    except Exception as e:
+        return f"Query error: {e}"
+
+
+# ─────────────────────────────────────────────
+# 4. GraphRAG 답변 생성
+# ─────────────────────────────────────────────
+def answer_with_graph(question: str, subgraph_context: str, db_name: str) -> str:
+    """서브그래프 컨텍스트를 기반으로 LLM이 답변을 생성합니다."""
+    prompt = f"""You are a Knowledge Graph QA system.
+Answer the question using ONLY the information provided in the graph context below.
+If the answer is not in the context, say "I don't have enough information."
+
+[Graph Context from {db_name}]
+{subgraph_context}
+
+[Question]
+{question}
+
+Answer concisely and directly."""
+
+    try:
+        response = client.models.generate_content(
+            model='gemini-2.5-flash',
+            contents=prompt,
+            config=types.GenerateContentConfig(temperature=0),
+        )
+        return response.text.strip()
+    except Exception as e:
+        return f"답변 생성 실패: {e}"
+
+
+# ─────────────────────────────────────────────
+# 5. 질문 생성
+# ─────────────────────────────────────────────
 def get_doc_and_graph(doc_data):
-    doc_text = " ".join([" ".join(sent) for sent in doc_data.get('sents', [])])
-    graph_info = json.dumps(doc_data.get('labels', []), ensure_ascii=False) 
+    doc_text   = " ".join([" ".join(sent) for sent in doc_data.get('sents', [])])
+    graph_info = json.dumps(doc_data.get('labels', []), ensure_ascii=False)
     return doc_text, graph_info
 
-# 5. 질문 자동 생성 엔진
 def generate_questions_for_doc(doc_text, graph_info):
-    client = Client(api_key=GEMINI_API_KEY)
-    prompt = f"""
-    당신은 RAG 시스템의 성능을 평가하기 위한 고급 질문 출제자입니다.
-    아래 주어진 원문(Document)과 추출된 지식 그래프 정보(Graph Info, 특히 Qualifiers)를 바탕으로,
-    AI가 그래프를 잘 탐색하는지 테스트할 수 있는 질문 3개를 영문으로 생성하세요.
+    prompt = f"""You are a question designer for evaluating GraphRAG systems.
+Generate 3 questions in English based on the document and its knowledge graph:
 
-    [요구조건]
-    1. Simple: 두 엔티티 간의 1차원적인 관계를 묻는 질문 1개.
-    2. Multi-hop: A -> B -> C 로 이어지는 연쇄적인 관계를 추론해야 하는 질문 1개.
-    3. Qualifier: '왜', '어디서', '어떻게', '무엇을' 등 엣지의 부가정보(Qualifier)를 알아야만 답할 수 있는 질문 1개.
+1. Simple: A direct 1-hop relationship question.
+2. Multi-hop: Requires traversing A→B→C chain.
+3. Qualifier: Requires reading a qualifier (WHO/WHAT/WHEN/WHERE/WHY/HOW) on an edge.
 
-    [데이터]
-    원문: {doc_text}
-    그래프 정보(참고용): {graph_info}
-    """
+Each question must have a clear, verifiable answer in the graph.
+
+Document: {doc_text}
+Graph Info (qualifiers included): {graph_info}
+"""
     try:
         response = client.models.generate_content(
             model='gemini-2.5-flash',
@@ -139,24 +258,22 @@ def generate_questions_for_doc(doc_text, graph_info):
         print(f"질문 생성 실패: {e}")
         return []
 
-# 6. RAG 평가 엔진
+
 def evaluate_rag_responses(question, expected_focus, ans_orig, ans_hyper):
-    client = Client(api_key=GEMINI_API_KEY)
-    prompt = f"""
-    당신은 AI QA 시스템의 성능을 평가하는 심사위원입니다.
+    prompt = f"""당신은 AI QA 시스템의 성능을 평가하는 심사위원입니다.
 
-    [질문]: {question}
-    [채점 핵심 기준]: {expected_focus}
+[질문]: {question}
+[채점 핵심 기준]: {expected_focus}
 
-    [Original DB RAG 답변]
-    {ans_orig}
+[Original DB 답변]
+{ans_orig}
 
-    [Hyper DB RAG 답변]
-    {ans_hyper}
+[Hyper DB 답변]
+{ans_hyper}
 
-    두 답변을 비교하여 '채점 핵심 기준'을 잘 충족했는지, 정보가 얼마나 풍부하고 정확한지 평가하세요.
-    만약 '모른다'고 대답했거나 엉뚱한 쿼리를 생성한 듯한 답변은 감점하세요.
-    """
+두 답변을 비교하여 채점 기준을 얼마나 잘 충족했는지 평가하세요.
+특히 Hyper DB가 qualifier 정보(시기, 이유, 방법 등)를 더 잘 활용했는지 확인하세요.
+"""
     try:
         response = client.models.generate_content(
             model='gemini-2.5-flash',
@@ -169,73 +286,75 @@ def evaluate_rag_responses(question, expected_focus, ans_orig, ans_hyper):
         )
         return response.parsed
     except Exception as e:
+        print(f"평가 실패: {e}")
         return None
 
-# --- 실행 파트 ---
+
+# ─────────────────────────────────────────────
+# 6. 실행
+# ─────────────────────────────────────────────
 if __name__ == "__main__":
-    # 데이터 로드
     with open(V4_DATASET_PATH, 'r', encoding='utf-8') as f:
         all_docs = [json.loads(line) for line in f]
-    
-    # 샘플 문서 무작위 추출
+
     sample_docs = random.sample(all_docs, min(SAMPLE_DOCS_COUNT, len(all_docs)))
-    
-    results = []
-    print("\n📝 1단계: 데이터셋 기반 맞춤형 평가 질문 생성 중...\n")
-    
+
+    print("\n📝 1단계: 평가 질문 생성 중...\n")
     test_questions = []
     for doc in sample_docs:
         doc_text, graph_info = get_doc_and_graph(doc)
-        generated_qs = generate_questions_for_doc(doc_text, graph_info)
-        test_questions.extend(generated_qs)
-        
-    print(f"총 {len(test_questions)}개의 고품질 질문이 생성되었습니다!")
+        qs = generate_questions_for_doc(doc_text, graph_info)
+        test_questions.extend(qs)
+
+    print(f"총 {len(test_questions)}개 질문 생성 완료")
     for q in test_questions:
-        print(f" - [{q.question_type}] {q.question}")
-        
+        print(f"  [{q.question_type}] {q.question}")
+
     print("\n🚀 2단계: GraphRAG 성능 비교 테스트 시작...\n")
-    
+    results = []
+
     for i, q_obj in enumerate(test_questions):
-        query = q_obj.question
-        print(f"\n[{i+1}/{len(test_questions)}] {query} (유형: {q_obj.question_type})")
-        
-        # Original 테스트
-        try:
-            ans_orig = chain_orig.invoke({"query": query})["result"]
-        except Exception:
-            ans_orig = "오류 발생"
-            
-        # Hyper 테스트
-        try:
-            ans_hyper = chain_hyper.invoke({"query": query})["result"]
-        except Exception as e:
-            ans_hyper = "오류 발생"
-            print(f" 🚨 [Hyper 디버그 에러]: {e}") # 👈 이 줄을 추가하여 실제 에러 확인
-            
-        print(f" └ Original: {ans_orig}")
-        print(f" └ Hyper   : {ans_hyper}")
-        
-        # LLM 평가
-        eval_result = evaluate_rag_responses(query, q_obj.expected_focus, ans_orig, ans_hyper)
+        question = q_obj.question
+        print(f"\n[{i+1}/{len(test_questions)}] {question}  (유형: {q_obj.question_type})")
+
+        # 엔티티 추출
+        entities = extract_entities(question)
+        print(f"  🔍 추출된 엔티티: {entities}")
+
+        # 서브그래프 조회
+        subgraph_orig  = get_subgraph_orig(graph_orig,   entities)
+        subgraph_hyper = get_subgraph_hyper(graph_hyper, entities)
+
+        # 답변 생성
+        ans_orig  = answer_with_graph(question, subgraph_orig,  "Original DB")
+        ans_hyper = answer_with_graph(question, subgraph_hyper, "Hyper DB")
+
+        print(f"  └ Original : {ans_orig}")
+        print(f"  └ Hyper    : {ans_hyper}")
+
+        # 평가
+        eval_result = evaluate_rag_responses(question, q_obj.expected_focus, ans_orig, ans_hyper)
         if eval_result:
-            print(f" 🏆 Winner: {eval_result.winner} (Orig {eval_result.original_score} vs Hyper {eval_result.hyper_score})")
-            print(f" 💡 Reason: {eval_result.reason}")
-            
+            print(f"  🏆 Winner: {eval_result.winner}  (Orig {eval_result.original_score} vs Hyper {eval_result.hyper_score})")
+            print(f"  💡 {eval_result.reason}")
+
             results.append({
-                "Question_Type": q_obj.question_type,
-                "Question": query,
-                "Expected_Focus": q_obj.expected_focus,
-                "Original_Answer": ans_orig,
-                "Hyper_Answer": ans_hyper,
-                "Original_Score": eval_result.original_score,
-                "Hyper_Score": eval_result.hyper_score,
-                "Winner": eval_result.winner,
-                "Reason": eval_result.reason
+                "Question_Type":    q_obj.question_type,
+                "Question":         question,
+                "Expected_Focus":   q_obj.expected_focus,
+                "Entities":         ", ".join(entities),
+                "Original_Context": subgraph_orig[:300],
+                "Hyper_Context":    subgraph_hyper[:300],
+                "Original_Answer":  ans_orig,
+                "Hyper_Answer":     ans_hyper,
+                "Original_Score":   eval_result.original_score,
+                "Hyper_Score":      eval_result.hyper_score,
+                "Winner":           eval_result.winner,
+                "Reason":           eval_result.reason,
             })
 
-    # 결과 저장
     if results:
         df = pd.DataFrame(results)
-        filename = f"graph_rag_dynamic_eval_{datetime.now().strftime('%Y%m%d_%H%M%S')}.xlsx"
+        filename = f"graphrag_eval_{datetime.now().strftime('%Y%m%d_%H%M%S')}.xlsx"
         df.to_excel(filename, index=False)
-        print(f"\n✅ 동적 비교 평가 완료! 결과가 '{filename}'에 저장되었습니다.")
+        print(f"\n✅ 완료! 결과 저장: {filename}")

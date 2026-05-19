@@ -306,7 +306,7 @@ def enrich_document_batch(doc_text: str, doc_title: str):
 def process_split(split_name: str, dataset_path: str, output_base_dir: str):
     dataset = load_from_disk(dataset_path)[split_name]
     os.makedirs(os.path.join(output_base_dir, split_name), exist_ok=True)
-    output_file = os.path.join(output_base_dir, split_name, f"{split_name}_enriched_v4.jsonl")
+    output_file = os.path.join(output_base_dir, split_name, f"{split_name}_enriched_v5.jsonl")
     
     start_idx = sum(1 for _ in open(output_file, 'r', encoding='utf-8')) if os.path.exists(output_file) else 0
     print(f"🚀 [{split_name}] {start_idx}번 문서부터 시작합니다.")
@@ -347,5 +347,5 @@ if __name__ == "__main__":
     SOURCE_PATH = "./Dataset/Re-DocRED"
     OUTPUT_PATH = "./Dataset/HypeRelDocRED"
     
-    for split in ["train"]:
+    for split in ["train", "validation"]:
         process_split(split, SOURCE_PATH, OUTPUT_PATH)

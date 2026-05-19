@@ -267,7 +267,7 @@ if __name__ == "__main__":
         
         # 테이블 출력
         print("\n" + "="*80)
-        print(f"{'Metric':<20} | {'Original':<15} | {'V2':<15} | {'V4':<15}")
+        print(f"{'Metric':<20} | {'Original':<15} | {'V2':<15} | {'V5':<15}")
         print("-" * 80)
         for m in metrics:
             print(f"{m:<20} | {orig_avgs[m]:<15.1f} | {v2_avgs[m]:<15.1f} | {v4_avgs[m]:<15.1f}")
