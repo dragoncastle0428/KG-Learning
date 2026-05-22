@@ -29,7 +29,7 @@ body{background:#111;color:white;font-family:sans-serif;display:flex;flex-direct
     <div id="graph_v4"></div>
   </div>
   <div class="panel">
-    <div class="panel-title" style="color:#7ddb8a">v5 (수정) — 9개 엣지 / 14개 버텍스 &nbsp;|&nbsp; 변경: 0개</div>
+    <div class="panel-title" style="color:#7ddb8a">v5 (수정) — 13개 엣지 / 14개 버텍스 &nbsp;|&nbsp; 변경: 3개</div>
     <div id="graph_v5"></div>
   </div>
 </div>
@@ -96,7 +96,11 @@ body{background:#111;color:white;font-family:sans-serif;display:flex;flex-direct
 {id:5,from:7,to:8,label:'affiliation',title:'Relation: affiliation (P1416)\n[HOW]: concurrently accredited',color:{color:'#4a90d9',highlight:'#4a90d9',hover:'#4a90d9'},font:{color:'white',size:12,strokeWidth:4,strokeColor:'#000000'},arrows:'to'},
 {id:6,from:7,to:9,label:'affiliation',title:'Relation: affiliation (P1416)\n[HOW]: concurrently accredited',color:{color:'#4a90d9',highlight:'#4a90d9',hover:'#4a90d9'},font:{color:'white',size:12,strokeWidth:4,strokeColor:'#000000'},arrows:'to'},
 {id:7,from:2,to:10,label:'member of',title:'Relation: member of (P463)',color:{color:'#4a90d9',highlight:'#4a90d9',hover:'#4a90d9'},font:{color:'white',size:12,strokeWidth:4,strokeColor:'#000000'},arrows:'to'},
-{id:8,from:2,to:5,label:'affiliation',title:'Relation: affiliation (P1416)\n[HOW]: exchange High Commissioners',color:{color:'#4a90d9',highlight:'#4a90d9',hover:'#4a90d9'},font:{color:'white',size:12,strokeWidth:4,strokeColor:'#000000'},arrows:'to'}]);
+{id:8,from:5,to:10,label:'member of',title:'Relation: member of (P463)\n[WHEN]: after 1997 constitution',color:{color:'#4a90d9',highlight:'#4a90d9',hover:'#4a90d9'},font:{color:'white',size:12,strokeWidth:4,strokeColor:'#000000'},arrows:'to'},
+{id:9,from:2,to:5,label:'affiliation',title:'Relation: affiliation (P1416)\n[HOW]: exchange High Commissioners',color:{color:'#4a90d9',highlight:'#4a90d9',hover:'#4a90d9'},font:{color:'white',size:12,strokeWidth:4,strokeColor:'#000000'},arrows:'to'},
+{id:10,from:5,to:10,label:'separated from',title:'🆕 Relation: separated from (P807)\n[WHEN]: after Coups of 1987',color:{color:'#ff4444',highlight:'#ff4444',hover:'#ff4444'},font:{color:'white',size:12,strokeWidth:4,strokeColor:'#000000'},arrows:'to'},
+{id:11,from:7,to:2,label:'employer',title:'🆕 Relation: employer (P108)\n[WHERE]: in Fiji\n[WHEN]: from 1987 until 1997',color:{color:'#ff4444',highlight:'#ff4444',hover:'#ff4444'},font:{color:'white',size:12,strokeWidth:4,strokeColor:'#000000'},arrows:'to'},
+{id:12,from:7,to:13,label:'position held',title:'🆕 Relation: position held (P39)\n[WHERE]: in Fiji\n[WHEN]: from 1987 until 1997',color:{color:'#ff4444',highlight:'#ff4444',hover:'#ff4444'},font:{color:'white',size:12,strokeWidth:4,strokeColor:'#000000'},arrows:'to'}]);
   new vis.Network(c, {nodes:n, edges:e}, {
     physics:{
       forceAtlas2Based:{gravitationalConstant:-80,centralGravity:0.01,springLength:120},

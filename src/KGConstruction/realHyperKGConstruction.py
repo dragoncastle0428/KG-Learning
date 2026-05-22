@@ -131,14 +131,23 @@ for n_type, node_list in nodes_by_type.items():
 print(f"✅ {len(nodes_dict)}개 노드 생성 완료")
 
 # 6. 엣지 삽입
-# MERGE 대신 CREATE 사용 — qualifier가 다른 동일 관계를 별개로 저장
-# 단, 완전히 동일한 (head, rel, tail, props) 중복은 MERGE로 방지
 print("🔗 관계(엣지) 연결 중...")
 
-# rel_type별로 그룹화해서 배치 처리
+# 완전히 동일한 엣지 중복 제거 (Python 레벨)
 from collections import defaultdict
-edges_by_rel = defaultdict(list)
+seen_edges = set()
+deduped_edges = []
 for edge in edges_list:
+    key = (edge["head"], edge["rel_type"], edge["tail"],
+           frozenset((k, v) for k, v in edge["props"].items() if v is not None))
+    if key not in seen_edges:
+        seen_edges.add(key)
+        deduped_edges.append(edge)
+print(f"  중복 제거: {len(edges_list)}개 → {len(deduped_edges)}개")
+
+# rel_type별로 그룹화해서 배치 처리
+edges_by_rel = defaultdict(list)
+for edge in deduped_edges:
     edges_by_rel[edge['rel_type']].append(edge)
 
 total_inserted = 0
@@ -149,17 +158,14 @@ for rel_type, rel_edges in edges_by_rel.items():
         batch = rel_edges[i:i+BATCH]
         # qualifier 포함한 전체 props로 MERGE → 완전히 동일한 엣지만 중복 방지
         # qualifier가 다르면 별개 관계로 생성됨
+        # CREATE로 삽입 — qualifier가 다른 엣지는 별개 관계로 저장
+        # 완전히 동일한 엣지 중복은 Python 레벨에서 사전 필터링
         query = f"""
         UNWIND $edges AS e
         MATCH (h:Entity {{name: e.head}})
         MATCH (t:Entity {{name: e.tail}})
-        MERGE (h)-[r:{rel_type} {{doc_id: e.props.doc_id, 
-               WHO:   coalesce(e.props.WHO,   null),
-               WHAT:  coalesce(e.props.WHAT,  null),
-               WHEN:  coalesce(e.props.WHEN,  null),
-               WHERE: coalesce(e.props.WHERE, null),
-               WHY:   coalesce(e.props.WHY,   null),
-               HOW:   coalesce(e.props.HOW,   null)}}]->(t)
+        CREATE (h)-[r:{rel_type}]->(t)
+        SET r = e.props
         """
         graph.query(query, params={"edges": [
             {"head": e["head"], "tail": e["tail"], "props": e["props"]}
@@ -168,9 +174,9 @@ for rel_type, rel_edges in edges_by_rel.items():
         total_inserted += len(batch)
 
     if total_inserted % 5000 == 0 and total_inserted > 0:
-        print(f"  ... {total_inserted}/{len(edges_list)}개 처리 중")
+        print(f"  ... {total_inserted}/{len(deduped_edges)}개 처리 중")
 
-print(f"✅ {len(edges_list)}개 엣지 생성 완료")
+print(f"✅ {len(deduped_edges)}개 엣지 생성 완료")
 
 # 7. 인덱스 생성 (검색 성능 향상)
 print("📇 인덱스 생성 중...")
@@ -182,4 +188,4 @@ except Exception as e:
 
 print("\n🎉 지식 그래프 구축 완료!")
 print(f"   노드: {len(nodes_dict)}개")
-print(f"   엣지: {len(edges_list)}개")
+print(f"   엣지: {len(deduped_edges)}개")

@@ -70,12 +70,14 @@ def get_subgraph_orig(graph: Neo4jGraph, entities: List[str]) -> str:
     """
     Original DB: 기본 triple 구조
     노드: (:Entity {name}), 관계: [:REL_TYPE]
+    별칭/코레퍼런스 문제 대응: 엔티티 토큰 확장 검색
     """
     if not entities:
         return "No entities found."
 
+    expanded = expand_entity_tokens(entities)
     where_clauses = " OR ".join(
-        [f"toLower(n.name) CONTAINS toLower('{e}')" for e in entities]
+        [f"toLower(n.name) CONTAINS toLower('{e}')" for e in expanded]
     )
 
     cypher = f"""
@@ -113,16 +115,40 @@ LIMIT 10
         return f"Query error: {e}"
 
 
+def expand_entity_tokens(entities: List[str]) -> List[str]:
+    """
+    엔티티 이름의 첫 단어, 마지막 단어, 성(姓) 등 부분 토큰도 검색 대상에 추가.
+    Carl Frederik Bricka → [Carl Frederik Bricka, Carl, Bricka]
+    """
+    expanded = list(entities)
+    for e in entities:
+        tokens = e.strip().split()
+        if len(tokens) > 1:
+            expanded.append(tokens[0])   # 첫 단어
+            expanded.append(tokens[-1])  # 마지막 단어 (보통 성)
+    # 중복 제거, 너무 짧은 토큰 제외 (2글자 이하)
+    seen = set()
+    result = []
+    for t in expanded:
+        t_lower = t.lower()
+        if t_lower not in seen and len(t) > 2:
+            seen.add(t_lower)
+            result.append(t)
+    return result
+
+
 def get_subgraph_hyper(graph: Neo4jGraph, entities: List[str]) -> str:
     """
     Hyper DB: qualifier 프로퍼티 포함
     노드: (:Entity:TYPE {name}), 관계: [:REL_TYPE {WHO, WHAT, WHEN, WHERE, WHY, HOW, doc_id}]
+    별칭/코레퍼런스 문제 대응: 엔티티 토큰 확장 검색
     """
     if not entities:
         return "No entities found."
 
+    expanded = expand_entity_tokens(entities)
     where_clauses = " OR ".join(
-        [f"toLower(n.name) CONTAINS toLower('{e}')" for e in entities]
+        [f"toLower(n.name) CONTAINS toLower('{e}')" for e in expanded]
     )
 
     # 1-hop + qualifier 프로퍼티 포함

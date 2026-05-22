@@ -1,6 +1,7 @@
 import os
 import json
 import time
+from concurrent.futures import ThreadPoolExecutor, TimeoutError as FuturesTimeoutError
 from dotenv import load_dotenv
 from google.genai import Client
 from google.genai import types
@@ -271,19 +272,34 @@ def correct_document(doc_text: str, doc_title: str, existing_triples_str: str):
 
     max_retries = len(API_KEYS)
     attempts = 0
+    API_TIMEOUT = 120  # seconds
 
     while attempts < max_retries:
         try:
             client = get_current_client()
-            response = client.models.generate_content(
-                model='models/gemini-2.5-flash',
-                contents=prompt,
-                config=types.GenerateContentConfig(
-                    response_mime_type='application/json',
-                    response_schema=CorrectionResult,
-                    temperature=0,
-                ),
-            )
+
+            def _call():
+                return client.models.generate_content(
+                    model='models/gemini-2.5-flash',
+                    contents=prompt,
+                    config=types.GenerateContentConfig(
+                        response_mime_type='application/json',
+                        response_schema=CorrectionResult,
+                        temperature=0,
+                        thinking_config=types.ThinkingConfig(thinking_budget=0),
+                    ),
+                )
+
+            with ThreadPoolExecutor(max_workers=1) as executor:
+                future = executor.submit(_call)
+                try:
+                    response = future.result(timeout=API_TIMEOUT)
+                except FuturesTimeoutError:
+                    print(f"\n  ⏱️ [타임아웃 {API_TIMEOUT}s] 다음 키로 전환...")
+                    current_key_idx = (current_key_idx + 1) % len(API_KEYS)
+                    attempts += 1
+                    continue
+
             return response.parsed
         except Exception as e:
             error_msg = str(e).lower()
