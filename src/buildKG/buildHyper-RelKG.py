@@ -237,8 +237,8 @@ if __name__ == "__main__":
     parser.add_argument("--mode", choices=["single", "compare"], default="compare")
     parser.add_argument("--file", default="./Dataset/HypeRelDocRED/train/train_enriched_v4.jsonl")
     parser.add_argument("--v4",   default="./Dataset/HypeRelDocRED/train/train_enriched_v4.jsonl")
-    parser.add_argument("--v5",   default="./Dataset/HypeRelDocRED/train/train_enriched_v5.jsonl")
-    parser.add_argument("--doc",  default="18", help="줄 번호(숫자) 또는 title 문자열")
+    parser.add_argument("--v5",   default="./Dataset/HypeRelDocRED/train/train_enriched_v5_clean.jsonl")
+    parser.add_argument("--doc",  default="0", help="줄 번호(숫자) 또는 title 문자열")
     parser.add_argument("--output", default="kg_compare.html")
     args = parser.parse_args()
     try:

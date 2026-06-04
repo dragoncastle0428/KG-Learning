@@ -101,6 +101,26 @@ def filter_qualifiers(qualifiers: list) -> list:
 
 # --- 메인 후처리 함수 ---
 
+def remove_isolated_nodes(vertex_set: list, labels: list) -> tuple[list, list]:
+    referenced = set()
+    for lbl in labels:
+        referenced.add(lbl["h"])
+        referenced.add(lbl["t"])
+
+    old_to_new = {}
+    new_vertex_set = []
+    for old_idx, vertex in enumerate(vertex_set):
+        if old_idx in referenced:
+            old_to_new[old_idx] = len(new_vertex_set)
+            new_vertex_set.append(vertex)
+
+    new_labels = [
+        {**lbl, "h": old_to_new[lbl["h"]], "t": old_to_new[lbl["t"]]}
+        for lbl in labels
+    ]
+    return new_vertex_set, new_labels
+
+
 def postprocess_document(sample: dict) -> dict:
     labels = sample["labels"]
 
@@ -113,8 +133,14 @@ def postprocess_document(sample: dict) -> dict:
         lbl["qualifiers"] = filter_qualifiers(lbl.get("qualifiers", []))
         filtered_labels.append(lbl)
 
+    # isolated 노드 제거 및 인덱스 재매핑
+    new_vertex_set, filtered_labels = remove_isolated_nodes(
+        sample.get("vertexSet", []), filtered_labels
+    )
+
     sample = dict(sample)
     sample["labels"] = filtered_labels
+    sample["vertexSet"] = new_vertex_set
     return sample
 
 # --- 통계 ---
@@ -131,6 +157,7 @@ def compute_stats(before: dict, after: dict) -> dict:
                         remapped += 1
     return {
         "edges_removed": len(before["labels"]) - len(after["labels"]),
+        "nodes_removed": len(before.get("vertexSet", [])) - len(after.get("vertexSet", [])),
         "qualifiers_removed": sum(len(l.get("qualifiers", [])) for l in before["labels"])
                             - sum(len(l.get("qualifiers", [])) for l in after["labels"]),
         "qualifiers_remapped": remapped,
@@ -139,12 +166,20 @@ def compute_stats(before: dict, after: dict) -> dict:
 # --- 실행 ---
 
 def run_postprocess(input_file: str, output_file: str):
-    with open(input_file, "r", encoding="utf-8") as f:
-        documents = [json.loads(line) for line in f]
+    with open(input_file, "r", encoding="utf-8-sig") as f:
+        documents = []
+        for i, line in enumerate(f, 1):
+            if not line.strip():
+                continue
+            try:
+                documents.append(json.loads(line))
+            except json.JSONDecodeError as e:
+                print(f"⚠️  줄 {i} 스킵 (파싱 오류): {e} | 내용: {line.strip()[:80]}")
 
     os.makedirs(os.path.dirname(output_file), exist_ok=True)
 
     total_edges_removed = 0
+    total_nodes_removed = 0
     total_qualifiers_removed = 0
     total_qualifiers_remapped = 0
 
@@ -154,6 +189,7 @@ def run_postprocess(input_file: str, output_file: str):
             stats = compute_stats(sample, processed)
 
             total_edges_removed += stats["edges_removed"]
+            total_nodes_removed += stats["nodes_removed"]
             total_qualifiers_removed += stats["qualifiers_removed"]
             total_qualifiers_remapped += stats["qualifiers_remapped"]
 
@@ -163,13 +199,14 @@ def run_postprocess(input_file: str, output_file: str):
                 print(f"[{i+1}/{len(documents)}] 처리 중...")
 
     print(f"\n✅ 후처리 완료: {len(documents)}개 문서")
-    print(f"   엣지 제거:      {total_edges_removed}개")
-    print(f"   Qualifier 제거: {total_qualifiers_removed}개")
+    print(f"   엣지 제거:        {total_edges_removed}개")
+    print(f"   노드 제거 (isolated): {total_nodes_removed}개")
+    print(f"   Qualifier 제거:   {total_qualifiers_removed}개")
     print(f"   Qualifier 재매핑: {total_qualifiers_remapped}개")
     
     
 if __name__ == "__main__":
-    INPUT_FILE  = "./Dataset/HypeRelDocRED/train/train_enriched_v4.jsonl"
-    OUTPUT_FILE = "./Dataset/HypeRelDocRED/train/train_enriched_v4_clean.jsonl"
+    INPUT_FILE  = "./Dataset/HypeRelDocRED/train/train_enriched_v5.jsonl"
+    OUTPUT_FILE = "./Dataset/HypeRelDocRED/train/train_enriched_v5_clean.jsonl"
 
     run_postprocess(INPUT_FILE, OUTPUT_FILE)
