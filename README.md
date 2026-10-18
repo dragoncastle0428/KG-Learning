@@ -1,6 +1,6 @@
 # HypeRelDocRED: Does Hyper-Relational Context Help GraphRAG?
 
-> **Status: experimental, unfinished.** This is a personal research project (Spring 2026). The dataset is not complete and the evaluation is small-scale and LLM-judged. Treat the numbers below as preliminary evidence, not a benchmark result.
+> **Status: paused (June 2026), unfinished.** This was a personal research project carried out in the first half of 2026. The dataset is not complete and the evaluation is small-scale and LLM-judged. Treat the numbers below as preliminary evidence, not a benchmark result.
 
 ## Motivation
 
@@ -72,7 +72,7 @@ Only the `train` split has been processed (Re-DocRED train has ~3,000 documents)
 | `train_enriched_v4_clean.jsonl` | 2,970 | 41,465 | 38,793 | v4 after cleaning |
 | `train_enriched_v5.jsonl` | 1,080 | 14,386 | 12,827 | correction pass (partial) |
 | `train_enriched_v5_clean.jsonl` | 1,053 | 14,017 | 12,483 | v5 after `postProcess.py` |
-| `train_enriched_v6.jsonl` | 1,512 | 23,399 | 22,997 | recall + correction passes; **in progress** |
+| `train_enriched_v6.jsonl` | 1,512 | 23,399 | 22,997 | recall + correction passes; **partial** (stopped when the project paused) |
 
 ## Evaluation
 
@@ -133,7 +133,7 @@ Example questions from this test: *"What was the worldwide sales figure for Maev
 - **Low absolute scores and many ties.** Both systems often failed, which points at retrieval as much as at graph content.
 - **No standard baselines** such as text-chunk RAG or existing GraphRAG frameworks.
 
-## Next steps
+## If the project is resumed
 
 - Finish v6 over the full train split, then the validation and test splits
 - Improve Cypher retrieval (entity matching that tolerates name variants)
